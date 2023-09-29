@@ -40,12 +40,13 @@ jobs:
         run: ./gradlew build -x test
         shell: bash
 
-      - name: create application-prod.yml
+      - name: create application.yml
         if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
         run: |
+          mkdir ./src/main/resources
           cd ./src/main/resources
-          touch ./application-prod.yml
-          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
+          touch ./application.yml
+          echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
         shell: bash
 
       - name: Build With Gradle
