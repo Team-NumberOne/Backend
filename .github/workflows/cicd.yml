@@ -41,7 +41,7 @@ jobs:
         shell: bash
 
       - name: create application-prod.yml
-        if: contains(github.ref, 'main', 'feat/cicd')
+        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
         run: |
           cd ./src/main/resources
           touch ./application-prod.yml
@@ -49,12 +49,12 @@ jobs:
         shell: bash
 
       - name: Build With Gradle
-        if: contains(github.ref, 'main', 'feat/cicd')
+        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
         run: ./gradlew build -x test
 
       ## docker build & push to production
       - name: Docker build & push to prod
-        if: contains(github.ref, 'main', 'feat/cicd')
+        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/versatile0010 .
@@ -64,7 +64,7 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@master
         id: deploy-prod
-        if: contains(github.ref, 'main', 'feat/cicd')
+        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
