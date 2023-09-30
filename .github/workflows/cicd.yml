@@ -79,10 +79,13 @@ jobs:
             docker image prune -f
 
       ## notify at Slack
-      - name: Notify Slack
-        uses: rtCamp/action-slack-notify@v2.0.0
+      - name: Send Slack Message
+        uses: 8398a7/action-slack@v3
+        with:
+          fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
         env:
           SLACK_COLOR: '#00FF00'
           SLACK_TITLE: '[CI/CD 알림] 빌드 및 배포 작업을 완료했습니다.'
           SLACK_TEXT: 'The build and deployment process has been completed successfully.'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
