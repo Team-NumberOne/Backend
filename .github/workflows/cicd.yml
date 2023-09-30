@@ -85,8 +85,5 @@ jobs:
           status: ${{ job.status }}
           fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
         env:
-          SLACK_COLOR: '#00FF00'
-          SLACK_TITLE: '[CI/CD 알림] 빌드 및 배포 작업을 완료했습니다.'
-          SLACK_TEXT: 'The build and deployment process has been completed successfully.'
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
