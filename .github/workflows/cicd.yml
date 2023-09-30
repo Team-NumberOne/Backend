@@ -76,4 +76,5 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             sudo docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.yml up --build -d
+            docker-compose up -d
             docker image prune -f
