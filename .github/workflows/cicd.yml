@@ -82,6 +82,7 @@ jobs:
       - name: Send Slack Message
         uses: 8398a7/action-slack@v3
         with:
+          status: ${{ job.status }}
           fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
         env:
           SLACK_COLOR: '#00FF00'
