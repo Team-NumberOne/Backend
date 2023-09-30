@@ -12,7 +12,7 @@ permissions: write-all
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       ## jdk setting
       - uses: actions/checkout@v3
