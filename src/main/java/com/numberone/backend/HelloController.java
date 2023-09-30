@@ -11,4 +11,9 @@ public class HelloController {
         log.info("[hello controller is called]");
         return "Hello, NumberOne";
     }
+    @RequestMapping("/test")
+    public String test(){
+        log.info("[test controller is called]");
+        return "Test, NumberOne";
+    }
 }
