@@ -4,7 +4,7 @@ name: NumberOne-Backend-CICD
 # event trigger
 on:
   push:
-    branches: [ "main", "feat/cicd" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -41,7 +41,7 @@ jobs:
         shell: bash
 
       - name: create application.yml
-        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
+        if: contains(github.ref, 'main')
         run: |
           mkdir ./src/main/resources
           cd ./src/main/resources
@@ -50,12 +50,12 @@ jobs:
         shell: bash
 
       - name: Build With Gradle
-        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
+        if: contains(github.ref, 'main')
         run: ./gradlew build -x test
 
       ## docker build & push to production
       - name: Docker build & push to prod
-        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
+        if: contains(github.ref, 'main')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }} .
@@ -66,7 +66,7 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@master
         id: deploy-prod
-        if: contains(github.ref, 'main') || contains(github.ref, 'feat/cicd')
+        if: contains(github.ref, 'main')
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
