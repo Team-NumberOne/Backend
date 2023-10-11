@@ -54,17 +54,6 @@ jobs:
         run: ./gradlew build -x test
 
 
-      - name:  docker-compose.yml to EC2 server
-        uses: appleboy/scp-action@v0.1.3
-        with:
-          username: ubuntu
-          host: ${{ secrets.EC2_HOST }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: ${{ secrets.EC2_PORT }}
-          source: "./docker-compose.yml"
-          target: "/home/ubuntu/"
-
-
       ## docker build & push to production
       - name: Docker build & push to prod
         if: contains(github.ref, 'main')
