@@ -1,7 +1,8 @@
 package com.numberone.backend.domain.token.service;
 
 import com.numberone.backend.domain.token.dto.request.TokenRequest;
-import com.numberone.backend.domain.token.dto.response.KakaoResponse;
+import com.numberone.backend.domain.token.dto.response.KakaoInfoResponse;
+import com.numberone.backend.domain.token.dto.response.KakaoTokenResponse;
 import com.numberone.backend.domain.token.dto.response.TokenResponse;
 import com.numberone.backend.properties.KakaoProperties;
 import com.numberone.backend.util.JwtUtil;
@@ -22,7 +23,7 @@ public class TokenService {
     private final RestTemplate restTemplate;
     private final KakaoProperties kakaoProperties;
 
-    public TokenResponse login(TokenRequest tokenRequest) {
+    public TokenResponse loginKakao(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
@@ -33,23 +34,23 @@ public class TokenService {
         bodys.add("redirect_uri", kakaoProperties.getRedirect_uri());
         bodys.add("code", tokenRequest.getCode());
 
-        System.out.println(bodys);
 
-        KakaoResponse kakaoResponse = restTemplate.postForObject("https://kauth.kakao.com/oauth/token", new HttpEntity<>(bodys, headers), KakaoResponse.class);
-
-        System.out.println(kakaoResponse.getAccess_token());
+        KakaoTokenResponse kakaoResponse = restTemplate.postForObject("https://kauth.kakao.com/oauth/token", new HttpEntity<>(bodys, headers), KakaoTokenResponse.class);
 
         headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
         headers.add("Authorization", "Bearer " + kakaoResponse.getAccess_token());
 
-        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, new HttpEntity<>(null, headers), String.class);
+        ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
 
-        String body = response.getBody();
-        System.out.println(body);
+        System.out.println(response.getBody().getKakao_account().getEmail());
 
-        String token = jwtUtil.createToken("shane9747@naver.com", 1000L * 60 * 60 * 24 * 14);
+        String token = jwtUtil.createToken(response.getBody().getKakao_account().getEmail(), 1000L * 60 * 60 * 24 * 14);
 
         return new TokenResponse(token);
+    }
+
+    public TokenResponse loginNaver(TokenRequest tokenRequest){
+        return null;
     }
 }

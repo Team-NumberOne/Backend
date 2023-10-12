@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenController {
     private final TokenService tokenService;
 
-    @PostMapping()
-    public TokenResponse login(@RequestBody TokenRequest tokenRequest){
-        return tokenService.login(tokenRequest);
+    @PostMapping("/kakao")
+    public TokenResponse loginKakao(@RequestBody TokenRequest tokenRequest) {
+        return tokenService.loginKakao(tokenRequest);
+    }
+
+    @PostMapping("/naver")
+    public TokenResponse loginNaver(@RequestBody TokenRequest tokenRequest) {
+        return tokenService.loginNaver(tokenRequest);
     }
 }

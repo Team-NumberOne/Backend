@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor
-public class KakaoResponse {
+public class KakaoTokenResponse {
     private String token_type;
     private String access_token;
     private String id_token;

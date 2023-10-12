@@ -27,7 +27,6 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(mvcMatcherBuilder.pattern("/login")).permitAll()
                         .anyRequest().authenticated() // 모든 요청에 대한 인증 처리하도록 설정
                 );
         return http.build();
@@ -41,7 +40,8 @@ public class SecurityConfig {
                         "/error",
                         "/swagger-ui/**",
                         "/swagger-resources/**",
-                        "/v3/api-docs/**")
+                        "/v3/api-docs/**",
+                        "/login/**")
                 .requestMatchers("/*"); // 인증 처리 하지 않을 케이스
     }
 }
