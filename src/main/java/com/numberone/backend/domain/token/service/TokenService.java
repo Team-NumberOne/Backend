@@ -28,7 +28,7 @@ public class TokenService {
     public TokenResponse loginKakao(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
-        headers.add("Authorization", "Bearer " + tokenRequest.getCode());
+        headers.add("Authorization", "Bearer " + tokenRequest.getToken());
 
         ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
         String email = response.getBody().getKakao_account().getEmail();
@@ -38,7 +38,7 @@ public class TokenService {
     public TokenResponse loginNaver(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.add("Authorization", "Bearer " + tokenRequest.getCode());
+        headers.add("Authorization", "Bearer " + tokenRequest.getToken());
 
         ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
         String email = response.getBody().getResponse().getEmail();

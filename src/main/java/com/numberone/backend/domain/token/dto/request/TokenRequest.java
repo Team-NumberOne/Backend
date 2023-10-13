@@ -9,5 +9,5 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 public class TokenRequest {
-    private String code;
+    private String token;
 }
