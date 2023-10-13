@@ -29,7 +29,6 @@ public class JwtUtil {
     public String createToken(String email, long period) {
         Claims claims = Jwts.claims().setSubject(email);
         Date now = new Date();
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -38,20 +37,15 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean verifyToken(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token);
-            return claims.getBody()
-                    .getExpiration()
-                    .after(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    public String getEmail(String token) {
+        return getClaims(token).getSubject();
     }
 
-    public String getEmail(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    public boolean isExpired(String token) {
+        return getClaims(token).getExpiration().before(new Date());
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 }

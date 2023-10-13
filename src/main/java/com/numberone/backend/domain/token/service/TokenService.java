@@ -1,5 +1,7 @@
 package com.numberone.backend.domain.token.service;
 
+import com.numberone.backend.domain.member.repository.MemberRepository;
+import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.token.dto.request.TokenRequest;
 import com.numberone.backend.domain.token.dto.response.*;
 import com.numberone.backend.properties.KakaoProperties;
@@ -19,63 +21,27 @@ public class TokenService {
     private final RestTemplate restTemplate;
     private final KakaoProperties kakaoProperties;
     private final NaverProperties naverProperties;
+    private final MemberService memberService;
 
     public TokenResponse loginKakao(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> bodys = new LinkedMultiValueMap<>();
-
-        bodys.add("grant_type", "authorization_code");
-        bodys.add("client_id", kakaoProperties.getClient_id());
-        bodys.add("redirect_uri", kakaoProperties.getRedirect_uri());
-        bodys.add("code", tokenRequest.getCode());
-
-
-        KakaoTokenResponse kakaoResponse = restTemplate.postForObject("https://kauth.kakao.com/oauth/token", new HttpEntity<>(bodys, headers), KakaoTokenResponse.class);
-
-        headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
-        headers.add("Authorization", "Bearer " + kakaoResponse.getAccess_token());
+        headers.add("Authorization", "Bearer " + tokenRequest.getCode());
 
-        ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
-
-        System.out.println(response.getBody().getKakao_account().getEmail());
-
+        ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
         String token = jwtUtil.createToken(response.getBody().getKakao_account().getEmail(), 1000L * 60 * 60 * 24 * 14);
-
+        memberService.login(response.getBody().getKakao_account().getEmail());
         return new TokenResponse(token);
     }
 
     public TokenResponse loginNaver(TokenRequest tokenRequest) {
-        System.out.println(tokenRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.add("Authorization", "Bearer " + tokenRequest.getCode());
 
-        NaverTokenResponse naverResponse = restTemplate.postForObject(
-                "https://nid.naver.com/oauth2.0/token?grant_type={grant_type}&client_id={client_id}&client_secret={client_secret}&code={code}&state={state}",
-                new HttpEntity<>(null, headers),
-                NaverTokenResponse.class,
-                "authorization_code",
-                naverProperties.getClient_id(),
-                naverProperties.getClient_secret(),
-                tokenRequest.getCode(),
-                "kusitms"
-        );
-
-        System.out.println(naverResponse);
-        System.out.println(naverResponse.getAccess_token());
-
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.add("Authorization", "Bearer " + naverResponse.getAccess_token());
-
-        ResponseEntity<NaverInfoResponse> response = restTemplate.exchange("https://openapi.naver.com/v1/nid/me", HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
-
-        System.out.println(response.getBody().getResponse().getEmail());
-
+        ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
         String token = jwtUtil.createToken(response.getBody().getResponse().getEmail(), 1000L * 60 * 60 * 24 * 14);
-
+        memberService.login(response.getBody().getResponse().getEmail());
         return new TokenResponse(token);
     }
 }
