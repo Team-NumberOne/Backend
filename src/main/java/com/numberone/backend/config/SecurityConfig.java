@@ -33,6 +33,6 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/swagger-resources/**",
                         "/v3/api-docs/**")
-                .requestMatchers("/*"); // 인증 처리 하지 않을 케이스
+                .requestMatchers("/**"); // 인증 처리 하지 않을 케이스
     }
 }
