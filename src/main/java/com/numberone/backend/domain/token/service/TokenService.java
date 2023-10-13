@@ -12,6 +12,7 @@ import com.numberone.backend.domain.token.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -43,6 +44,17 @@ public class TokenService {
         ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
         String email = response.getBody().getResponse().getEmail();
         return new TokenResponse(getAccessToken(email));
+    }
+
+    @Transactional
+    public TokenResponse refresh(TokenRequest tokenRequest) {
+        String email = jwtUtil.getEmail(tokenRequest.getToken());
+        Token token = tokenRepository.findById(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 토큰"));
+        String newToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);
+        token.updateAccessToken(newToken);
+        tokenRepository.save(token);//redis의 경우 jpa와 달리 transactional을 이용해도 데이터 수정시에 명시적으로 save를 해줘야 함
+        return new TokenResponse(newToken);
     }
 
     private String getAccessToken(String email) {

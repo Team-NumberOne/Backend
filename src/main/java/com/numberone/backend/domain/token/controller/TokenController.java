@@ -43,4 +43,15 @@ public class TokenController {
     public TokenResponse loginNaver(@RequestBody TokenRequest tokenRequest) {
         return tokenService.loginNaver(tokenRequest);
     }
+
+    @Operation(summary = "만료된 JWT 토큰 갱신하기", description =
+            """
+            만료된 JWT 토큰을 body 에 담아서 post 요청 해주세요.
+            
+            새로 사용할 수 있는 JWT 토큰이 발급됩니다.
+            """)
+    @PostMapping("/refresh")
+    public TokenResponse refresh(@RequestBody TokenRequest tokenRequest) {
+        return tokenService.refresh(tokenRequest);
+    }
 }
