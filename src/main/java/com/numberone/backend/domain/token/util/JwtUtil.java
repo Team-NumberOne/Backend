@@ -1,4 +1,4 @@
-package com.numberone.backend.util;
+package com.numberone.backend.domain.token.util;
 
 import com.numberone.backend.domain.token.service.TokenService;
 import com.numberone.backend.properties.JwtProperties;
@@ -19,12 +19,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtil {
     private final JwtProperties jwtProperties;
-    private String secretKey;
-
-    @PostConstruct
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(jwtProperties.getSecret().getBytes());
-    }
 
     public String createToken(String email, long period) {
         Claims claims = Jwts.claims().setSubject(email);
@@ -33,7 +27,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + period))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret().getBytes())
                 .compact();
     }
 
@@ -46,6 +40,6 @@ public class JwtUtil {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(jwtProperties.getSecret().getBytes()).parseClaimsJws(token).getBody();
     }
 }

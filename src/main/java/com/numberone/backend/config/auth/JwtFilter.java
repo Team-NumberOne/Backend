@@ -1,9 +1,8 @@
 package com.numberone.backend.config.auth;
 
 import com.numberone.backend.domain.member.entity.Member;
-import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
-import com.numberone.backend.util.JwtUtil;
+import com.numberone.backend.domain.token.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -38,6 +35,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authorizationHeader.split(" ")[1];
         if (jwtUtil.isExpired(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has expired");
             filterChain.doFilter(request, response);
             return;
         }

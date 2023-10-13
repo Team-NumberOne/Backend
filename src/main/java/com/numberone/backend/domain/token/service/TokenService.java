@@ -4,14 +4,14 @@ import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.token.dto.request.TokenRequest;
 import com.numberone.backend.domain.token.dto.response.*;
+import com.numberone.backend.domain.token.entity.Token;
+import com.numberone.backend.domain.token.repository.TokenRepository;
 import com.numberone.backend.properties.KakaoProperties;
 import com.numberone.backend.properties.NaverProperties;
-import com.numberone.backend.util.JwtUtil;
+import com.numberone.backend.domain.token.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -22,6 +22,8 @@ public class TokenService {
     private final KakaoProperties kakaoProperties;
     private final NaverProperties naverProperties;
     private final MemberService memberService;
+    private final TokenRepository tokenRepository;
+    private final MemberRepository memberRepository;
 
     public TokenResponse loginKakao(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
@@ -29,9 +31,8 @@ public class TokenService {
         headers.add("Authorization", "Bearer " + tokenRequest.getCode());
 
         ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
-        String token = jwtUtil.createToken(response.getBody().getKakao_account().getEmail(), 1000L * 60 * 60 * 24 * 14);
-        memberService.login(response.getBody().getKakao_account().getEmail());
-        return new TokenResponse(token);
+        String email = response.getBody().getKakao_account().getEmail();
+        return new TokenResponse(getAccessToken(email));
     }
 
     public TokenResponse loginNaver(TokenRequest tokenRequest) {
@@ -40,8 +41,26 @@ public class TokenService {
         headers.add("Authorization", "Bearer " + tokenRequest.getCode());
 
         ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
-        String token = jwtUtil.createToken(response.getBody().getResponse().getEmail(), 1000L * 60 * 60 * 24 * 14);
-        memberService.login(response.getBody().getResponse().getEmail());
-        return new TokenResponse(token);
+        String email = response.getBody().getResponse().getEmail();
+        return new TokenResponse(getAccessToken(email));
+    }
+
+    private String getAccessToken(String email) {
+        if (!memberRepository.existsByEmail(email))
+            memberService.create(email);
+        if (tokenRepository.existsById(email)) {
+            Token token = tokenRepository.findById(email)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 토큰"));
+            return token.getAccessToken();
+        } else {
+            String accessToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);//14일
+            String refreshToken = jwtUtil.createToken(email, 1000L * 60 * 30);//30분
+            tokenRepository.save(Token.builder()
+                    .email(email)
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build());
+            return accessToken;
+        }
     }
 }

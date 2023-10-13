@@ -1,15 +1,15 @@
 package com.numberone.backend.domain.token.entity;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 
 @Getter
-@AllArgsConstructor
 @RedisHash(value = "token", timeToLive = 60 * 60 * 24 * 14)//@Entity가 RDBMS에 테이블을 생성했다면 @RedisHash는 Redis에 테이블(?)을 생성
 public class Token implements Serializable {
     @Id
@@ -19,6 +19,13 @@ public class Token implements Serializable {
     private String accessToken;
 
     private String refreshToken;
+
+    @Builder
+    public Token(String email, String accessToken, String refreshToken) {
+        this.email = email;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 
     public void updateAccessToken(String accessToken) {
         this.accessToken = accessToken;
