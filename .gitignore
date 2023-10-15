@@ -38,4 +38,4 @@ application.properties
 ### VS Code ###
 .vscode/
 
-!**/src/main/generated/
+**/src/main/generated/
