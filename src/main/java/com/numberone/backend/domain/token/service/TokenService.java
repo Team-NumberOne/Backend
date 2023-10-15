@@ -6,6 +6,7 @@ import com.numberone.backend.domain.token.dto.request.TokenRequest;
 import com.numberone.backend.domain.token.dto.response.*;
 import com.numberone.backend.domain.token.entity.Token;
 import com.numberone.backend.domain.token.repository.TokenRepository;
+import com.numberone.backend.exception.badrequest.BadRequestTokenException;
 import com.numberone.backend.properties.KakaoProperties;
 import com.numberone.backend.properties.NaverProperties;
 import com.numberone.backend.domain.token.util.JwtUtil;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TokenService {
     private final JwtUtil jwtUtil;
     private final RestTemplate restTemplate;
@@ -33,7 +35,7 @@ public class TokenService {
 
         ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
         String email = response.getBody().getKakao_account().getEmail();
-        return new TokenResponse(getAccessToken(email));
+        return TokenResponse.of(getAccessToken(email));
     }
 
     public TokenResponse loginNaver(TokenRequest tokenRequest) {
@@ -43,7 +45,7 @@ public class TokenService {
 
         ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
         String email = response.getBody().getResponse().getEmail();
-        return new TokenResponse(getAccessToken(email));
+        return TokenResponse.of(getAccessToken(email));
     }
 
     @Transactional
@@ -54,7 +56,7 @@ public class TokenService {
         String newToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);
         token.updateAccessToken(newToken);
         tokenRepository.save(token);//redis의 경우 jpa와 달리 transactional을 이용해도 데이터 수정시에 명시적으로 save를 해줘야 함
-        return new TokenResponse(newToken);
+        return TokenResponse.of(newToken);
     }
 
     private String getAccessToken(String email) {
@@ -62,16 +64,12 @@ public class TokenService {
             memberService.create(email);
         if (tokenRepository.existsById(email)) {
             Token token = tokenRepository.findById(email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 토큰"));
+                    .orElseThrow(BadRequestTokenException::new);
             return token.getAccessToken();
         } else {
-            String accessToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);//14일
-            String refreshToken = jwtUtil.createToken(email, 1000L * 60 * 30);//30분
-            tokenRepository.save(Token.builder()
-                    .email(email)
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .build());
+            String refreshToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);//14일
+            String accessToken = jwtUtil.createToken(email, 1000L * 60 * 30);//30분
+            tokenRepository.save(Token.of(email, accessToken, refreshToken));
             return accessToken;
         }
     }

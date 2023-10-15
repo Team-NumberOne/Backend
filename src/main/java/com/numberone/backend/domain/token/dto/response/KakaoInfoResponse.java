@@ -1,12 +1,13 @@
 package com.numberone.backend.domain.token.dto.response;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoInfoResponse {
     private Long id;
     private String connected_at;
@@ -15,7 +16,7 @@ public class KakaoInfoResponse {
 
     @ToString
     @Getter
-    @NoArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public class Properties {
         private String nickname;
         private String profile_image;
@@ -24,7 +25,7 @@ public class KakaoInfoResponse {
 
     @ToString
     @Getter
-    @NoArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public class KakaoAccount {
         static class profile {
             private String nickname;

@@ -23,4 +23,10 @@ public class Member {
     public Member(String email) {
         this.email = email;
     }
+
+    public static Member of(String email){
+        return Member.builder()
+                .email(email)
+                .build();
+    }
 }

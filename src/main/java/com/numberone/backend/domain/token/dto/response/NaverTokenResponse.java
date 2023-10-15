@@ -1,12 +1,13 @@
 package com.numberone.backend.domain.token.dto.response;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NaverTokenResponse {
     private String access_token;
     private String refresh_token;

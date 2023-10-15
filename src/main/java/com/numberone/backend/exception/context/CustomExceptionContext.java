@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CustomExceptionContext implements ExceptionContext {
     // MEMBER 관련 예외
-    NOT_FOUND_MEMBER("존재하지 않는 회원을 조회할 수 없습니다.", 1000);
+    NOT_FOUND_MEMBER("존재하지 않는 회원을 조회할 수 없습니다.", 1000),
+
+    BAD_REQUEST_TOKEN("존재하지 않는 토큰을 요청하였습니다.", 2000);
 
     /** 2023. 10. 02. versatile0010
 
