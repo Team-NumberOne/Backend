@@ -16,7 +16,7 @@ public class KakaoInfoResponse {
 
     @ToString
     @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor
     public class Properties {
         private String nickname;
         private String profile_image;
@@ -25,7 +25,7 @@ public class KakaoInfoResponse {
 
     @ToString
     @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor
     public class KakaoAccount {
         static class profile {
             private String nickname;

@@ -15,7 +15,7 @@ public class NaverInfoResponse {
 
     @ToString
     @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor
     public class Response {
         private String id;
         private String nickname;
