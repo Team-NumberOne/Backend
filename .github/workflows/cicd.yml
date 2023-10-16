@@ -4,9 +4,13 @@ name: NumberOne-Backend-CICD
 # event trigger
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - 'fix/*'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+      - 'fix/*'
 
 permissions: write-all
 
@@ -61,6 +65,7 @@ jobs:
           cd ./src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
+          cat ./application.yml
         shell: bash
 
       - name: Build With Gradle
