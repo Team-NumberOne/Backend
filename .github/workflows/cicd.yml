@@ -65,6 +65,7 @@ jobs:
           cd ./src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
+          ls -la
           cat ./application.yml
         shell: bash
 
