@@ -32,7 +32,8 @@ public class SecurityConfig {
                         "/error",
                         "/swagger-ui/**",
                         "/swagger-resources/**",
-                        "/v3/api-docs/**")
+                        "/v3/api-docs/**",
+                        "/shelters/**") // 테스트 용도 (추후 제거 예정)
                 .requestMatchers("/**"); // 인증 처리 하지 않을 케이스
     }
 }
