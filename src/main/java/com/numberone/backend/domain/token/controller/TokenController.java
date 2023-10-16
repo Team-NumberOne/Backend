@@ -1,7 +1,9 @@
 package com.numberone.backend.domain.token.controller;
 
-import com.numberone.backend.domain.token.dto.request.TokenRequest;
-import com.numberone.backend.domain.token.dto.response.TokenResponse;
+import com.numberone.backend.domain.token.dto.request.GetTokenRequest;
+import com.numberone.backend.domain.token.dto.request.RefreshTokenRequest;
+import com.numberone.backend.domain.token.dto.response.GetTokenResponse;
+import com.numberone.backend.domain.token.dto.response.RefreshTokenResponse;
 import com.numberone.backend.domain.token.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +29,7 @@ public class TokenController {
             이후 서버에 API 요청시 이 JWT 토큰을 같이 담아서 요청해야 정상적으로 API가 호출 됩니다.  
             """)
     @PostMapping("/kakao")
-    public TokenResponse loginKakao(@RequestBody TokenRequest tokenRequest) {
+    public GetTokenResponse loginKakao(@RequestBody GetTokenRequest tokenRequest) {
         return tokenService.loginKakao(tokenRequest);
     }
 
@@ -40,7 +42,7 @@ public class TokenController {
             이후 서버에 API 요청시 이 JWT 토큰을 같이 담아서 요청해야 정상적으로 API가 호출 됩니다.  
             """)
     @PostMapping("/naver")
-    public TokenResponse loginNaver(@RequestBody TokenRequest tokenRequest) {
+    public GetTokenResponse loginNaver(@RequestBody GetTokenRequest tokenRequest) {
         return tokenService.loginNaver(tokenRequest);
     }
 
@@ -51,7 +53,7 @@ public class TokenController {
             새로 사용할 수 있는 JWT 토큰이 발급됩니다.
             """)
     @PostMapping("/refresh")
-    public TokenResponse refresh(@RequestBody TokenRequest tokenRequest) {
+    public RefreshTokenResponse refresh(@RequestBody RefreshTokenRequest tokenRequest) {
         return tokenService.refresh(tokenRequest);
     }
 }

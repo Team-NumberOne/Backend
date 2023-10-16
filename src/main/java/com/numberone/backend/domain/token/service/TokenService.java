@@ -2,11 +2,14 @@ package com.numberone.backend.domain.token.service;
 
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
-import com.numberone.backend.domain.token.dto.request.TokenRequest;
+import com.numberone.backend.domain.token.dto.request.GetTokenRequest;
+import com.numberone.backend.domain.token.dto.request.RefreshTokenRequest;
 import com.numberone.backend.domain.token.dto.response.*;
 import com.numberone.backend.domain.token.entity.Token;
 import com.numberone.backend.domain.token.repository.TokenRepository;
-import com.numberone.backend.exception.badrequest.BadRequestTokenException;
+import com.numberone.backend.exception.badrequest.BadRequestSocialTokenException;
+import com.numberone.backend.exception.forbidden.WrongAccessTokenException;
+import com.numberone.backend.exception.forbidden.WrongRefreshTokenException;
 import com.numberone.backend.properties.KakaoProperties;
 import com.numberone.backend.properties.NaverProperties;
 import com.numberone.backend.domain.token.util.JwtUtil;
@@ -27,52 +30,63 @@ public class TokenService {
     private final MemberService memberService;
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
+    private long refreshPeroid = 1000L * 60 * 60 * 24 * 14;//14일
+    private long accessPeroid = 1000L * 60 * 1;//30분, 테스트를 위해 잠시 1분으로 변경
 
     @Transactional
-    public TokenResponse loginKakao(TokenRequest tokenRequest) {
+    public GetTokenResponse loginKakao(GetTokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
         headers.add("Authorization", "Bearer " + tokenRequest.getToken());
 
-        ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
-        String email = response.getBody().getKakao_account().getEmail();
-        return TokenResponse.of(getAccessToken(email));
+        try {
+            ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
+            String email = response.getBody().getKakao_account().getEmail();
+            return getTokenResponse(email);
+        } catch (Exception e) {
+            throw new BadRequestSocialTokenException();
+        }
     }
 
     @Transactional
-    public TokenResponse loginNaver(TokenRequest tokenRequest) {
+    public GetTokenResponse loginNaver(GetTokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.add("Authorization", "Bearer " + tokenRequest.getToken());
 
-        ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
-        String email = response.getBody().getResponse().getEmail();
-        return TokenResponse.of(getAccessToken(email));
+        try {
+            ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
+            String email = response.getBody().getResponse().getEmail();
+            return getTokenResponse(email);
+        } catch (Exception e) {
+            throw new BadRequestSocialTokenException();
+        }
     }
 
     @Transactional
-    public TokenResponse refresh(TokenRequest tokenRequest) {
+    public RefreshTokenResponse refresh(RefreshTokenRequest tokenRequest) {
         String email = jwtUtil.getEmail(tokenRequest.getToken());
         Token token = tokenRepository.findById(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 토큰"));
-        String newToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);
+                .orElseThrow(WrongRefreshTokenException::new);
+        String newToken = jwtUtil.createToken(email, accessPeroid);
         token.updateAccessToken(newToken);
         tokenRepository.save(token);//redis의 경우 jpa와 달리 transactional을 이용해도 데이터 수정시에 명시적으로 save를 해줘야 함
-        return TokenResponse.of(newToken);
+        return RefreshTokenResponse.of(newToken);
     }
 
-    private String getAccessToken(String email) {
+    @Transactional
+    private GetTokenResponse getTokenResponse(String email) {
         if (!memberRepository.existsByEmail(email))
             memberService.create(email);
         if (tokenRepository.existsById(email)) {
             Token token = tokenRepository.findById(email)
-                    .orElseThrow(BadRequestTokenException::new);
-            return token.getAccessToken();
+                    .orElseThrow(WrongAccessTokenException::new);
+            return GetTokenResponse.of(token.getAccessToken(), token.getRefreshToken());
         } else {
-            String refreshToken = jwtUtil.createToken(email, 1000L * 60 * 60 * 24 * 14);//14일
-            String accessToken = jwtUtil.createToken(email, 1000L * 60 * 30);//30분
-            tokenRepository.save(Token.of(email, accessToken, refreshToken));
-            return accessToken;
+            String refreshToken = jwtUtil.createToken(email, refreshPeroid);
+            String accessToken = jwtUtil.createToken(email, accessPeroid);
+            Token token = tokenRepository.save(Token.of(email, accessToken, refreshToken));
+            return GetTokenResponse.of(token.getAccessToken(), token.getRefreshToken());
         }
     }
 }
