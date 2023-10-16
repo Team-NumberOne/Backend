@@ -18,6 +18,7 @@ public class MemberService {
                 .orElseThrow(NotFoundMemberException::new);
     }
 
+    @Transactional
     public void create(String email) {
         memberRepository.save(Member.of(email));
     }

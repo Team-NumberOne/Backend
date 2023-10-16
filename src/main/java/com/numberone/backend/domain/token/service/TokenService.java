@@ -28,6 +28,7 @@ public class TokenService {
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public TokenResponse loginKakao(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
@@ -38,6 +39,7 @@ public class TokenService {
         return TokenResponse.of(getAccessToken(email));
     }
 
+    @Transactional
     public TokenResponse loginNaver(TokenRequest tokenRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
