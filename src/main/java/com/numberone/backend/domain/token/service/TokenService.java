@@ -31,7 +31,7 @@ public class TokenService {
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
     private long refreshPeroid = 1000L * 60 * 60 * 24 * 14;//14일
-    private long accessPeroid = 1000L * 60 * 1;//30분, 테스트를 위해 잠시 1분으로 변경
+    private long accessPeroid = 1000L * 60 * 30;//30분
 
     @Transactional
     public GetTokenResponse loginKakao(GetTokenRequest tokenRequest) {
