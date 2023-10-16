@@ -6,3 +6,9 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  redis:
+    hostname: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
