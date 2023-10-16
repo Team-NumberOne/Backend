@@ -1,5 +1,6 @@
 package com.numberone.backend.domain.token.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoInfoResponse {
     private Long id;
     private String connected_at;
@@ -17,6 +19,7 @@ public class KakaoInfoResponse {
     @ToString
     @Getter
     @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class Properties {
         private String nickname;
         private String profile_image;
@@ -26,6 +29,7 @@ public class KakaoInfoResponse {
     @ToString
     @Getter
     @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class KakaoAccount {
         static class profile {
             private String nickname;
