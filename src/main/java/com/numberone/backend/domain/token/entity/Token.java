@@ -17,9 +17,9 @@ public class Token implements Serializable {
     private String email;
 
     @Indexed//특정 컬럼을 인덱스(보조 id)로 지정하여 효율적인 검색이 가능하게 함
-    private String accessToken;
-
     private String refreshToken;
+
+    private String accessToken;
 
     @Builder
     public Token(String email, String accessToken, String refreshToken) {

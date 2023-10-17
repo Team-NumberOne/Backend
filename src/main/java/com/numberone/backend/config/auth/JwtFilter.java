@@ -3,9 +3,10 @@ package com.numberone.backend.config.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.service.MemberService;
-import com.numberone.backend.domain.token.dto.response.ErrorResponse;
 import com.numberone.backend.domain.token.util.JwtUtil;
 import com.numberone.backend.exception.context.ExceptionContext;
+import com.numberone.backend.exception.dto.ErrorResponse;
+import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.numberone.backend.exception.context.CustomExceptionContext.WRONG_ACCESS_TOKEN;
+import static com.numberone.backend.exception.context.CustomExceptionContext.*;
 
 @RequiredArgsConstructor
 @Component
@@ -42,33 +43,32 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            //여기서는 클라이언트에 응답시에 토큰이 잘못되었다는 exception을 날리고싶다.
-            setErrorResponse(response,WRONG_ACCESS_TOKEN);
+            setErrorResponse(response, WRONG_ACCESS_TOKEN);
             return;
         }
-
         String token = authorizationHeader.split(" ")[1];
+        if (!jwtUtil.isValid(token)) {
+            setErrorResponse(response, WRONG_ACCESS_TOKEN);
+            return;
+        }
         if (jwtUtil.isExpired(token)) {
-            //여기서는 클라이언트에 응답시에 만료된 토큰이라는 exception을 날리고싶다. 만료 체크와 jwt형식 유효성 체크 구분이 힘드네요. 한번에 처리했습니다
-            setErrorResponse(response,WRONG_ACCESS_TOKEN);
+            setErrorResponse(response, EXPIRED_ACCESS_TOKEN);
             return;
         }
 
         String email = jwtUtil.getEmail(token);
-        if (email == null)//jwt토큰 자체가 형식에 안맞아서 이메일 추출에 실패했을 경우
-        {
-            setErrorResponse(response,WRONG_ACCESS_TOKEN);
+        try {
+            Member member = memberService.findByEmail(email);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    member.getEmail(), null, Collections.emptyList());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            filterChain.doFilter(request, response);
+        } catch (NotFoundMemberException e) {
+            setErrorResponse(response, NOT_FOUND_MEMBER);
             return;
         }
-        Member member = memberService.findByEmail(email);
-        //토큰이 jwt토큰이라 이메일 추출은 됬지만 해당 이메일을 가진 멤버가 없을경우 WrongAccessToken예외가 아니라 NotFoundMember예외를 발생시킴
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                member.getEmail(), null, Collections.emptyList());
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        filterChain.doFilter(request, response);
     }
 
     private void setErrorResponse(

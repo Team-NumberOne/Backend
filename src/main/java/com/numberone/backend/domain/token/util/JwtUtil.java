@@ -28,18 +28,29 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String getEmail(String token) {
-        return getClaims(token).getSubject();//claim에서 subject를 제대로 추출하지 못하면 내부적으로 null값을 리턴한다고 함.
+
+    public boolean isValid(String token) {
+        try {
+            getClaims(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean isExpired(String token) {
         try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(jwtProperties.getSecret().getBytes()).parseClaimsJws(token);
             return getClaims(token).getExpiration().before(new Date());
-        } catch (JwtException e) {
-            // 하드코딩.......
-            // 만료된 토큰 또는 유효하지 않은 토큰에 대한 예외 처리
-            return true; // 해당 토큰이 유효하지 않다고 가정하고 만료된 것으로 처리
+        } catch (ExpiredJwtException e) {
+            return true;
         }
+    }
+
+    public String getEmail(String token) {
+        return getClaims(token).getSubject();
     }
 
     private Claims getClaims(String token) {
