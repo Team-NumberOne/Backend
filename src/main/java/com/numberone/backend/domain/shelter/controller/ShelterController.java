@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "shelters", description = "대피소 관련 API")
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/shelters")
+@RequestMapping("/api/shelters")
 @RestController
 public class ShelterController {
     private final ShelterService shelterService;
