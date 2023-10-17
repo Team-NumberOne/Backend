@@ -9,7 +9,7 @@ import com.numberone.backend.domain.token.entity.Token;
 import com.numberone.backend.domain.token.repository.TokenRepository;
 import com.numberone.backend.exception.badrequest.BadRequestSocialTokenException;
 import com.numberone.backend.exception.forbidden.WrongAccessTokenException;
-import com.numberone.backend.exception.forbidden.WrongRefreshTokenException;
+import com.numberone.backend.exception.notfound.NotFoundRefreshTokenException;
 import com.numberone.backend.properties.KakaoProperties;
 import com.numberone.backend.properties.NaverProperties;
 import com.numberone.backend.domain.token.util.JwtUtil;
@@ -66,9 +66,9 @@ public class TokenService {
     @Transactional
     public RefreshTokenResponse refresh(RefreshTokenRequest tokenRequest) {
         if(!jwtUtil.isValid(tokenRequest.getToken()))
-            throw new WrongRefreshTokenException();
+            throw new NotFoundRefreshTokenException();
         Token token = tokenRepository.findByRefreshToken(tokenRequest.getToken())
-                .orElseThrow(WrongRefreshTokenException::new);
+                .orElseThrow(NotFoundRefreshTokenException::new);
         String email = jwtUtil.getEmail(tokenRequest.getToken());
         String newToken = jwtUtil.createToken(email, accessPeroid);
         token.updateAccessToken(newToken);

@@ -7,6 +7,7 @@ import com.numberone.backend.domain.token.dto.response.RefreshTokenResponse;
 import com.numberone.backend.domain.token.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class TokenController {
             이후 서버에 API 요청시 이 JWT 토큰을 같이 담아서 요청해야 정상적으로 API가 호출 됩니다.  
             """)
     @PostMapping("/kakao")
-    public GetTokenResponse loginKakao(@RequestBody GetTokenRequest tokenRequest) {
+    public GetTokenResponse loginKakao(@RequestBody @Valid GetTokenRequest tokenRequest) {
         return tokenService.loginKakao(tokenRequest);
     }
 
@@ -42,7 +43,7 @@ public class TokenController {
             이후 서버에 API 요청시 이 JWT 토큰을 같이 담아서 요청해야 정상적으로 API가 호출 됩니다.  
             """)
     @PostMapping("/naver")
-    public GetTokenResponse loginNaver(@RequestBody GetTokenRequest tokenRequest) {
+    public GetTokenResponse loginNaver(@RequestBody @Valid GetTokenRequest tokenRequest) {
         return tokenService.loginNaver(tokenRequest);
     }
 
@@ -53,7 +54,7 @@ public class TokenController {
             새로 사용할 수 있는 JWT 토큰이 발급됩니다.
             """)
     @PostMapping("/refresh")
-    public RefreshTokenResponse refresh(@RequestBody RefreshTokenRequest tokenRequest) {
+    public RefreshTokenResponse refresh(@RequestBody @Valid RefreshTokenRequest tokenRequest) {
         return tokenService.refresh(tokenRequest);
     }
 }
