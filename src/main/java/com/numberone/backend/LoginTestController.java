@@ -19,7 +19,7 @@ public class LoginTestController {
                     앞으로 서버에 api 요청을 날릴때 이렇게 Authorization 헤더에 발급받은 액세스 토큰을 담아 전달해주세요.
                     """)
     @GetMapping("/api/logintest")
-    public String test(Authentication authentication) {
-        return "Hello " + authentication.getName();
+    public LoginTestResponse test(Authentication authentication) {
+        return LoginTestResponse.of(authentication.getName());
     }
 }
