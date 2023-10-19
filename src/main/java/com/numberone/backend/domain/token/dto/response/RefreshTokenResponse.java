@@ -9,15 +9,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public class RefreshTokenResponse {
     private String accessToken;
+    private String refreshToken;
 
     @Builder
-    public RefreshTokenResponse(String accessToken) {
+    public RefreshTokenResponse(String accessToken,String refreshToken) {
         this.accessToken = accessToken;
+        this.refreshToken= refreshToken;
     }
 
-    public static RefreshTokenResponse of(String accessToken) {
+    public static RefreshTokenResponse of(String accessToken, String refreshToken) {
         return RefreshTokenResponse.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }

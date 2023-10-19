@@ -70,10 +70,11 @@ public class TokenService {
         Token token = tokenRepository.findByRefreshToken(tokenRequest.getToken())
                 .orElseThrow(NotFoundRefreshTokenException::new);
         String email = jwtUtil.getEmail(tokenRequest.getToken());
-        String newToken = jwtUtil.createToken(email, accessPeroid);
-        token.updateAccessToken(newToken);
+        String newAccessToken = jwtUtil.createToken(email, accessPeroid);
+        String newRefreshToken = jwtUtil.createToken(email, refreshPeroid);
+        token.update(newAccessToken,newRefreshToken);
         tokenRepository.save(token);//redis의 경우 jpa와 달리 transactional을 이용해도 데이터 수정시에 명시적으로 save를 해줘야 함
-        return RefreshTokenResponse.of(newToken);
+        return RefreshTokenResponse.of(newAccessToken,newRefreshToken);
     }
 
     @Transactional

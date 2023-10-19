@@ -28,7 +28,7 @@ public class Token implements Serializable {
         this.refreshToken = refreshToken;
     }
 
-    public static Token of(String email, String accessToken, String refreshToken){
+    public static Token of(String email, String accessToken, String refreshToken) {
         return Token.builder()
                 .email(email)
                 .accessToken(accessToken)
@@ -36,7 +36,8 @@ public class Token implements Serializable {
                 .build();
     }
 
-    public void updateAccessToken(String accessToken) {
+    public void update(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }
