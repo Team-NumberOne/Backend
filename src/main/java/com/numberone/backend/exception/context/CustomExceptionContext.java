@@ -16,7 +16,12 @@ public enum CustomExceptionContext implements ExceptionContext {
     BAD_REQUEST_SOCIAL_TOKEN("요청하신 네이버 또는 카카오 소셜 토큰이 유효하지 않습니다.", 2004),
 
     // SHELTER 관련 예외
-    NOT_FOUND_SHELTER("주변에 가까운 대피소가 존재하지 않습니다.", 3000);
+    NOT_FOUND_SHELTER("주변에 가까운 대피소가 존재하지 않습니다.", 3000),
+
+    // S3 관련 예외
+    S3_FILE_UPLOAD_FAILED("S3 파일 업로드에 실패했습니다.", 4000),
+    S3_MULTIPART_MISSING("Multipart 파일이 null 이거나 없습니다.", 4001)
+    ;
 
 
     /**
