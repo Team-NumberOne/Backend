@@ -12,6 +12,15 @@ public class Address {
     @Comment("(구) 주소")
     private String fullAddress;
 
+    @Comment("행정시")
+    private String city;
+
+    @Comment("행정구")
+    private String district;
+
+    @Comment("행정동(읍/면)")
+    private String dong;
+
     @Comment("도로명 주소")
     private String roadNameAddress;
 
@@ -20,6 +29,7 @@ public class Address {
 
     @Comment("EPSG:2097 좌표 정보(x)")
     private Double coordinateX;
+
     @Comment("EPSG:2097 좌표 정보(y)")
     private Double coordinateY;
 
