@@ -1,7 +1,9 @@
 package com.numberone.backend.support;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.numberone.backend.exception.badrequest.FileMissingException;
@@ -71,4 +73,16 @@ public class S3Provider {
         }
     }
 
+    public String getS3FileUrl(String fileName) {
+        java.util.Date expiration = new java.util.Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60; /* 해당 링크는 1 시간 동안만 유효 합니다. */
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucket, fileName)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(new java.util.Date(expTimeMillis));
+
+        return amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
+    }
 }

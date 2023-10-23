@@ -1,11 +1,9 @@
 package com.numberone.backend.domain.shelter.controller;
 
 import com.numberone.backend.domain.shelter.dto.request.NearbyShelterRequest;
-import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
+import com.numberone.backend.domain.shelter.dto.response.GetShelterDatabaseUrlResponse;
 import com.numberone.backend.domain.shelter.dto.response.NearbyShelterListResponse;
 import com.numberone.backend.domain.shelter.dto.response.NearestShelterResponse;
-import com.numberone.backend.domain.shelter.dto.response.ShelterMapper;
-import com.numberone.backend.domain.shelter.entity.Shelter;
 import com.numberone.backend.domain.shelter.service.ShelterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "shelters", description = "대피소 관련 API")
 @Slf4j
@@ -87,4 +83,23 @@ public class ShelterController {
     }
 
 
+    @Operation(summary = "대피소 정보 온보딩", description =
+                    """
+                    현재 대피소 database 에 저장된 정보를 지역별, 유형 별로 
+                                        
+                    json 형태로 요약한 데이터가 저장된 url 을 가져옵니다.
+                                        
+                    response 로 받은 url 을 통해서 
+                                        
+                    로컬에서 저장할 대피소 정보들을 얻어올 수 있습니다.
+                    
+                    (주의🔥) 발급된 링크는 1 시간 동안만 유효합니다.
+                                        
+                    access token 을 헤더에 담아서 요청해주세요.
+                                        
+                     """)
+    @GetMapping("/init")
+    public ResponseEntity<GetShelterDatabaseUrlResponse> getShelterDatabaseUrl() {
+        return ResponseEntity.ok(shelterService.getShelterDatabaseInitUrl());
+    }
 }

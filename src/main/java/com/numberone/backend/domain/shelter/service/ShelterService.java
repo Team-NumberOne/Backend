@@ -1,15 +1,14 @@
 package com.numberone.backend.domain.shelter.service;
 
 import com.numberone.backend.domain.shelter.dto.request.NearbyShelterRequest;
-import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
-import com.numberone.backend.domain.shelter.dto.response.NearbyShelterListResponse;
-import com.numberone.backend.domain.shelter.dto.response.NearestShelterResponse;
-import com.numberone.backend.domain.shelter.dto.response.ShelterMapper;
+import com.numberone.backend.domain.shelter.dto.response.*;
 import com.numberone.backend.domain.shelter.repository.ShelterRepository;
 import com.numberone.backend.domain.shelter.util.ShelterType;
 import com.numberone.backend.exception.notfound.NotFoundShelterException;
+import com.numberone.backend.support.S3Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +22,11 @@ import java.util.Objects;
 public class ShelterService {
 
     private final ShelterRepository shelterRepository;
+
+    private final S3Provider s3Provider;
+
+    @Value("${storage-path.shelter-database-init-path}")
+    private String databaseUploadPath;
 
     public NearestShelterResponse getNearestShelter(NearbyShelterRequest request) {
 
@@ -58,5 +62,9 @@ public class ShelterService {
         /* type 이 null 이면 type(대피소 유형 별) 에 상관없이 쿼리 결과를 반환합니다. */
         result = shelterRepository.findNearbyAnyShelterList(request.getLongitude(), request.getLatitude());
         return NearbyShelterListResponse.of(result);
+    }
+
+    public GetShelterDatabaseUrlResponse getShelterDatabaseInitUrl(){
+        return GetShelterDatabaseUrlResponse.of(s3Provider.getS3FileUrl(databaseUploadPath));
     }
 }
