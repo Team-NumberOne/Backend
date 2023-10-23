@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -28,16 +29,18 @@ public class AdminService {
     @Value("${storage-path.shelter-database-init-path}")
     private String databaseUploadPath;
 
-    public void getShelterDatabase() {
+    public String uploadShelterJsonFile() {
+        String filePath = "";
         try {
             List<GetAllSheltersResponse> result = shelterRepository.findAllSheltersGroupByRegions();
             String jsonResult = objectMapper.writeValueAsString(result);
             InputStream inputStream = new ByteArrayInputStream(jsonResult.getBytes());
-            s3Provider.uploadJsonFile(databaseUploadPath, inputStream);
             log.info("[파일 업로드 완료]");
+            filePath = s3Provider.uploadJsonFile(databaseUploadPath, inputStream);
         } catch (Exception e) {
             log.error("Shelter database 파일 생성 중 error 발생 {}", e.getMessage());
         }
+        return filePath;
     }
 
 }
