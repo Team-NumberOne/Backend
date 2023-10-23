@@ -86,8 +86,5 @@ public class ShelterController {
         return ResponseEntity.ok(shelterService.getNearbyShelterList(request));
     }
 
-    @GetMapping
-    public ResponseEntity<List<GetAllSheltersResponse>> getAllSheltersInfo() {
-        return ResponseEntity.ok(shelterService.getAllSheltersInfo());
-    }
+
 }
