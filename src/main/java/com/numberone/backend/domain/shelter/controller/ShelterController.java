@@ -37,7 +37,7 @@ public class ShelterController {
                     
             """)
     @PostMapping
-    public ResponseEntity<NearestShelterResponse> getNearestShelter(
+    public ResponseEntity<NearestShelterResponse> getNearestAnyShelter(
             @RequestBody @Valid NearbyShelterRequest request) {
         return ResponseEntity.ok(shelterService.getNearbyShelter(request));
     }
@@ -59,7 +59,7 @@ public class ShelterController {
             access token 을 헤더에 담아서 요청해주세요.
             """)
     @PostMapping("/list")
-    public ResponseEntity<NearbyShelterListResponse> getNearbyShelterList(
+    public ResponseEntity<NearbyShelterListResponse> getNearbyAnyShelterList(
             @RequestBody @Valid NearbyShelterRequest request) {
         return ResponseEntity.ok(shelterService.getNearbyShelterList(request));
     }

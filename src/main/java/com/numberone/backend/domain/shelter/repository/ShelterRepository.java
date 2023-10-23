@@ -22,7 +22,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long> {
             " ORDER BY distance " +
             " LIMIT 10",
             nativeQuery = true)
-    List<ShelterMapper> findNearbyShelterList(@Param("longitude") double longitude, @Param("latitude") double latitude);
+    List<ShelterMapper> findNearbyAnyShelterList(@Param("longitude") double longitude, @Param("latitude") double latitude);
 
     @Query(value =
             " SELECT shelter.shelter_id AS id, shelter.facility_full_name as name, " +
@@ -35,5 +35,5 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long> {
                     " ORDER BY distance " +
                     " LIMIT 1",
             nativeQuery = true)
-    Optional<ShelterMapper> findNearestShelter(@Param("longitude") double longitude, @Param("latitude") double latitude);
+    Optional<ShelterMapper> findNearestAnyShelter(@Param("longitude") double longitude, @Param("latitude") double latitude);
 }

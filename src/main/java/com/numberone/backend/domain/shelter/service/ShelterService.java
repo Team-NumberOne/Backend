@@ -21,13 +21,13 @@ public class ShelterService {
     private final ShelterRepository shelterRepository;
 
     public NearestShelterResponse getNearbyShelter(NearbyShelterRequest request) {
-        ShelterMapper result = shelterRepository.findNearestShelter(request.getLongitude(), request.getLatitude())
+        ShelterMapper result = shelterRepository.findNearestAnyShelter(request.getLongitude(), request.getLatitude())
                 .orElseThrow(NotFoundShelterException::new);
         return NearestShelterResponse.of(result);
     }
 
     public NearbyShelterListResponse getNearbyShelterList(NearbyShelterRequest request) {
-        List<ShelterMapper> shelters = shelterRepository.findNearbyShelterList(request.getLongitude(), request.getLatitude());
+        List<ShelterMapper> shelters = shelterRepository.findNearbyAnyShelterList(request.getLongitude(), request.getLatitude());
         if (shelters.isEmpty()) {
             throw new NotFoundShelterException();
         }
