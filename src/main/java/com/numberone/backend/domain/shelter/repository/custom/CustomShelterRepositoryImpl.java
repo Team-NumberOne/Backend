@@ -65,10 +65,7 @@ public class CustomShelterRepositoryImpl implements CustomShelterRepository {
                         .and(shelter.address.dong.eq(dong))
                         .and(shelter.shelterType.eq(type))
                         .and(shelter.status.eq(ShelterStatus.OPEN))
-                ).groupBy(
-                        shelter.address.city,
-                        shelter.address.district,
-                        shelter.address.dong)
+                )
                 .fetch();
     }
 
