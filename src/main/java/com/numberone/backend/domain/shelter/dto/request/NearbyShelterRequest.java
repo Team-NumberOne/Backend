@@ -20,7 +20,7 @@ public class NearbyShelterRequest {
     @NotNull(message = "위도 정보는 null 일 수 없습니다.")
     private Double latitude;
 
-    @Schema(defaultValue = "CIVIL_DEFENCE")
+    @Schema(defaultValue = "민방위")
     private String shelterType;
 
     public static NearbyShelterRequest of(Double longitude, Double latitude, String shelterType) {
