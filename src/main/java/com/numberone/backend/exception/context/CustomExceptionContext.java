@@ -17,6 +17,7 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     // SHELTER 관련 예외
     NOT_FOUND_SHELTER("주변에 가까운 대피소가 존재하지 않습니다.", 3000),
+    INVALID_SHELTER_TYPE("올바른 대피소 유형을 입력해주세요. (민방위, 수해, 지진) ", 3001),
 
     // S3 관련 예외
     S3_FILE_UPLOAD_FAILED("S3 파일 업로드에 실패했습니다.", 4000),

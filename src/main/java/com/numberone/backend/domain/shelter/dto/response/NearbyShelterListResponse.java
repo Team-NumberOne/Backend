@@ -33,7 +33,8 @@ public class NearbyShelterListResponse {
                         .facilityName(result.getName())
                         .distance(result.getDistance())
                         .longitude(result.getLongitude())
-                        .latitude(result.getLatitude()).build())
+                        .latitude(result.getLatitude())
+                        .build())
                 .toList();
         return NearbyShelterListResponse.builder()
                 .shelterList(shelterList)
