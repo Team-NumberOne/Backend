@@ -8,6 +8,7 @@ import com.numberone.backend.exception.badrequest.FileMissingException;
 import com.numberone.backend.exception.badrequest.FileUploadException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,16 @@ public class S3Provider {
             throw new FileUploadException();
         }
         return amazonS3Client.getUrl(bucket, fileName).toString();
+    }
+
+    public String uploadJsonFile(String originName, InputStream inputStream) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(ContentType.APPLICATION_JSON.toString());
+
+        amazonS3Client.putObject(new PutObjectRequest(bucket, originName, inputStream, objectMetadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        return amazonS3Client.getUrl(bucket, originName).toString();
     }
 
     private void checkInvalidUploadFile(MultipartFile multipartFile) {
