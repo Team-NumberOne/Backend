@@ -59,9 +59,4 @@ public class ShelterService {
         result = shelterRepository.findNearbyAnyShelterList(request.getLongitude(), request.getLatitude());
         return NearbyShelterListResponse.of(result);
     }
-
-    public List<GetAllSheltersResponse> getAllSheltersInfo() {
-        return shelterRepository.findAllSheltersGroupByRegions();
-
-    }
 }
