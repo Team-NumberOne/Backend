@@ -1,6 +1,7 @@
 package com.numberone.backend.domain.shelter.service;
 
 import com.numberone.backend.domain.shelter.dto.request.NearbyShelterRequest;
+import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
 import com.numberone.backend.domain.shelter.dto.response.NearbyShelterListResponse;
 import com.numberone.backend.domain.shelter.dto.response.NearestShelterResponse;
 import com.numberone.backend.domain.shelter.dto.response.ShelterMapper;
@@ -57,5 +58,10 @@ public class ShelterService {
         /* type 이 null 이면 type(대피소 유형 별) 에 상관없이 쿼리 결과를 반환합니다. */
         result = shelterRepository.findNearbyAnyShelterList(request.getLongitude(), request.getLatitude());
         return NearbyShelterListResponse.of(result);
+    }
+
+    public List<GetAllSheltersResponse> getAllSheltersInfo() {
+        return shelterRepository.findAllSheltersGroupByRegions();
+
     }
 }
