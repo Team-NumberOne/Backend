@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+@ToString
 @Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
