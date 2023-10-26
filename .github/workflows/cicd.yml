@@ -4,13 +4,7 @@ name: NumberOne-Backend-CICD
 # event trigger
 on:
   push:
-    branches:
-      - main
-      - 'dev-check'
-  pull_request:
-    branches:
-      - main
-      - 'dev'
+    branches: [ "main", "dev", "dev-check"]
 
 permissions: write-all
 
