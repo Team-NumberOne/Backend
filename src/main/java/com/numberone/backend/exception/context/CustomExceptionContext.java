@@ -21,7 +21,10 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     // S3 관련 예외
     S3_FILE_UPLOAD_FAILED("S3 파일 업로드에 실패했습니다.", 4000),
-    S3_MULTIPART_MISSING("Multipart 파일이 null 이거나 없습니다.", 4001)
+    S3_MULTIPART_MISSING("Multipart 파일이 null 이거나 없습니다.", 4001),
+
+    // DISASTER 관련 예외
+    INVALID_DISASTER_TYPE("존재하지 않는 대피소 유형입니다.",5000)
     ;
 
 
