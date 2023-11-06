@@ -1,5 +1,7 @@
 package com.numberone.backend.domain.shelter.repository.custom;
 
+import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
+import com.numberone.backend.domain.admin.dto.response.QGetAddressResponse;
 import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
 import com.numberone.backend.domain.shelter.dto.response.QGetAllSheltersResponse_AddressDetail;
 import com.numberone.backend.domain.shelter.dto.response.QGetAllSheltersResponse_ShelterDetail;
@@ -66,6 +68,25 @@ public class CustomShelterRepositoryImpl implements CustomShelterRepository {
                         .and(shelter.shelterType.eq(type))
                         .and(shelter.status.eq(ShelterStatus.OPEN))
                 )
+                .fetch();
+    }
+
+    @Override
+    public List<GetAddressResponse> getAllAddressList() {
+        return queryFactory.select(new QGetAddressResponse(
+                        shelter.address.fullAddress,
+                        shelter.address.city,
+                        shelter.address.district,
+                        shelter.address.dong,
+                        shelter.shelterType
+                ))
+                .from(shelter)
+                .where(shelter.address.city.isNotNull()
+                        .and(shelter.address.district.isNotNull())
+                        .and(shelter.address.dong.isNotNull())
+                        .and(shelter.status.eq(ShelterStatus.OPEN))
+                )
+                .orderBy(shelter.shelterType.asc())
                 .fetch();
     }
 
