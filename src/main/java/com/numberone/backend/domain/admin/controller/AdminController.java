@@ -1,14 +1,17 @@
 package com.numberone.backend.domain.admin.controller;
 
+import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
 import com.numberone.backend.domain.admin.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +32,8 @@ public class AdminController {
             대피소 db 를 업데이트 한 경우에, 실행하는 api 입니다. 
             
             """)
-    @GetMapping("/shelter-init")
-    public ResponseEntity<String> CreateAllShelterInfo() {
+    @PostMapping("/shelter-init")
+    public ResponseEntity<String> uploadAllShelterInfo() {
         return ResponseEntity.created(URI.create("/api/admin/shelter-init"))
                 .body(adminService.uploadAllShelterInfo());
     }
@@ -43,10 +46,16 @@ public class AdminController {
             대피소 db 를 업데이트 한 경우에, 실행하는 api 입니다. 
             
             """)
-    @GetMapping("/address-info")
-    public ResponseEntity<String> CreateAllAddressInfo() {
+    @PostMapping("/address-info")
+    public ResponseEntity<String> uploadAllAddressInfo() {
         return ResponseEntity.created(URI.create("/api/admin/address-info"))
                 .body(adminService.uploadAllAddressInfo());
+    }
+
+    @Operation(summary = "주소 정보 Json 파일로 조회하기")
+    @GetMapping("/address-info")
+    public ResponseEntity<List<GetAddressResponse>> getAllAddressInfo() {
+        return ResponseEntity.ok(adminService.getAllAddressInfo());
     }
 
 }

@@ -58,4 +58,8 @@ public class AdminService {
         return filePath;
     }
 
+    public List<GetAddressResponse> getAllAddressInfo(){
+        return shelterRepository.getAllAddressList();
+    }
+
 }
