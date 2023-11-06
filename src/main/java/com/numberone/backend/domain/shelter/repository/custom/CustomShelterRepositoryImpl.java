@@ -74,6 +74,7 @@ public class CustomShelterRepositoryImpl implements CustomShelterRepository {
     @Override
     public List<GetAddressResponse> getAllAddressList() {
         return queryFactory.select(new QGetAddressResponse(
+                        shelter.id,
                         shelter.address.fullAddress,
                         shelter.address.city,
                         shelter.address.district,
