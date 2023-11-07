@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetAddressResponse {
     private Long id;
+    private String facilityFullName;
     private String fullAddress;
     private String city;
     private String district;
@@ -17,8 +18,9 @@ public class GetAddressResponse {
     private ShelterType shelterType;
 
     @QueryProjection
-    public GetAddressResponse(Long id, String fullAddress, String city, String district, String dong, ShelterType shelterType) {
+    public GetAddressResponse(Long id, String facilityFullName, String fullAddress, String city, String district, String dong, ShelterType shelterType) {
         this.id = id;
+        this.facilityFullName = facilityFullName;
         this.fullAddress = fullAddress;
         this.city = city;
         this.district = district;
