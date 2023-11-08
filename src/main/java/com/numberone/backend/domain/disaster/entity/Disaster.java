@@ -4,6 +4,8 @@ import com.numberone.backend.domain.disaster.util.DisasterType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,30 +17,31 @@ public class Disaster {
     @Enumerated(EnumType.STRING)
     private DisasterType disasterType;
 
-    private Integer severity;
-
-    private String title;
+    private String location;
 
     private String msg;
 
-    private String info;
+    private Long disasterNum;
+
+    private LocalDateTime createdAt;
 
     @Builder
-    public Disaster(DisasterType disasterType, Integer severity, String title, String msg, String info) {
+    public Disaster(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime createdAt) {
         this.disasterType = disasterType;
-        this.severity = severity;
-        this.title = title;
+        this.location = location;
         this.msg = msg;
-        this.info = info;
+        this.disasterNum = disasterNum;
+        this.createdAt = createdAt;
     }
 
-    public static Disaster of(DisasterType disasterType, Integer severity, String title, String msg, String info) {
+    @Builder
+    public static Disaster of(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime createdAt) {
         return Disaster.builder()
                 .disasterType(disasterType)
-                .severity(severity)
-                .title(title)
+                .location(location)
                 .msg(msg)
-                .info(info)
+                .disasterNum(disasterNum)
+                .createdAt(createdAt)
                 .build();
     }
 }

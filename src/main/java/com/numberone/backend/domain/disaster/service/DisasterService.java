@@ -1,25 +1,40 @@
 package com.numberone.backend.domain.disaster.service;
 
 import com.numberone.backend.domain.disaster.dto.request.LatestDisasterRequest;
+import com.numberone.backend.domain.disaster.dto.request.SaveDisasterRequest;
 import com.numberone.backend.domain.disaster.dto.response.LatestDisasterResponse;
 import com.numberone.backend.domain.disaster.entity.Disaster;
+import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.disaster.util.DisasterType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DisasterService {
+    private final DisasterRepository disasterRepository;
     public LatestDisasterResponse getLatestDisaster(LatestDisasterRequest latestDisasterRequest) {
-        Disaster disaster = Disaster.of(
-                DisasterType.kor2code("화재"),
-                2,
-                "서울특별시 강남구 동작동 화재 발생",
-                "금일 10.23. 19:39경 소촌동 855 화재 발생, 인근주민은 안전유의 및 차량우회바랍니다. 960-8222",
-                "서울특별시 강남구 ・ 오후 2시 46분"
-        );
+        //
+        Disaster disaster = null;
         return LatestDisasterResponse.of(disaster);
+    }
+
+    @Transactional
+    public void save(SaveDisasterRequest saveDisasterRequest){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(saveDisasterRequest.getCreatedAt(), formatter);
+        Disaster disaster = Disaster.of(
+                saveDisasterRequest.getDisasterType(),
+                saveDisasterRequest.getLocation(),
+                saveDisasterRequest.getMsg(),
+                saveDisasterRequest.getDisasterNum(),
+                dateTime
+        );
+        disasterRepository.save(disaster);
     }
 }
