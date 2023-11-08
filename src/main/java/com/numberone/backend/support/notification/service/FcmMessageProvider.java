@@ -4,7 +4,7 @@ import com.google.firebase.messaging.*;
 import com.numberone.backend.exception.conflict.FirebaseMessageSendException;
 import com.numberone.backend.support.notification.dto.FcmNotificationDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Slf4j
-@Service
-public class FirebaseService {
+@Component
+public class FcmMessageProvider {
 
     public void sendFcmToMembers(List<String> tokens, FcmNotificationDto fcmDto) {
         List<Message> messages = tokens.stream().map(
