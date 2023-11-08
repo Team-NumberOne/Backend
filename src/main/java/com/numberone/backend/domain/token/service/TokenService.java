@@ -77,7 +77,6 @@ public class TokenService {
         return RefreshTokenResponse.of(newAccessToken,newRefreshToken);
     }
 
-    @Transactional
     private GetTokenResponse getTokenResponse(String email) {
         if (!memberRepository.existsByEmail(email))
             memberService.create(email);
