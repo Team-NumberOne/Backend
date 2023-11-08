@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin' # https://github.com/actions/setup-java
 
       ## gradle caching
-      - name: Gradle Caching
+      - name: 🐧 Gradle Caching
         uses: actions/cache@v3
         with:
           path: |
@@ -31,14 +31,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
+      - name: 🐧 Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew build -x test
         shell: bash
 
-      - name:  docker-compose.yml to EC2 server
+      - name:  🐙 docker-compose.yml to EC2 server
 #        if: contains(github.ref, 'main')
         uses: appleboy/scp-action@master
         with:
@@ -52,7 +52,7 @@ jobs:
           overwrite: true
           timeout: 1m
 
-      - name: create application.yml
+      - name: 🐧 create application.yml
 #        if: contains(github.ref, 'main')
         run: |
           mkdir ./src/main/resources
@@ -62,22 +62,21 @@ jobs:
           ls -la
         shell: bash
 
-      - name: create service-account.json
+      - name: 🐧 create service-account.json
         run: |
-          mkdir ./src/main/resources
           cd ./src/main/resources
           touch ./service-account.json
           echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
           ls -la
         shell: bash
 
-      - name: Build With Gradle
+      - name: 🐧 Build With Gradle
 #        if: contains(github.ref, 'main')
         run: ./gradlew build -x test
 
 
       ## docker build & push to production
-      - name: Docker build & push to prod
+      - name: 🐋 Docker build & push to prod
 #        if: contains(github.ref, 'main')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -86,7 +85,7 @@ jobs:
       
 
       ## deploy to production
-      - name: Deploy
+      - name: 🌿 Deploy
         uses: appleboy/ssh-action@master
         id: deploy-prod
 #        if: contains(github.ref, 'main')
@@ -102,7 +101,7 @@ jobs:
             docker image prune -f
 
       ## notify at Slack
-      - name: Send Slack Message
+      - name: 🔔 Send Slack Message
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
