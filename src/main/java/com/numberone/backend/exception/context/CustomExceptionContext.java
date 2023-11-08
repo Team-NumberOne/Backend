@@ -27,6 +27,10 @@ public enum CustomExceptionContext implements ExceptionContext {
     INVALID_DISASTER_TYPE("존재하지 않는 재난 유형입니다.",5000),
     NOT_FOUND_API("데이터 수집을 위한 API 요청이 실패했습니다.",5001),
     NOT_FOUND_CRAWLING("데이터 수집을 위한 크롤링이 실패했습니다.",5002),
+
+    // fcm 관련 예외
+    FIREBASE_INITIALIZATION_FAILED("Firebase Application 초기 설정에 실패하였습니다.", 5000),
+    FIREBASE_MESSAGE_SEND_ERROR("Fcm 푸시 메세지를 보내는 과정에서 오류가 발생했습니다.", 5001),
     ;
 
 
