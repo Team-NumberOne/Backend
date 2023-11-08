@@ -62,6 +62,15 @@ jobs:
           ls -la
         shell: bash
 
+      - name: create service-account.json
+        run: |
+          mkdir ./src/main/resources
+          cd ./src/main/resources
+          touch ./service-account.json
+          echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
+          ls -la
+        shell: bash
+
       - name: Build With Gradle
 #        if: contains(github.ref, 'main')
         run: ./gradlew build -x test
