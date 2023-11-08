@@ -7,45 +7,17 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DisasterType {
-    TYPHOON("태풍"),
-    DRYNESS("건조"),
-    WILDFIRE("산불"),
-    LANDSLIDE("산사태"),
-    FLOOD("홍수"),
-    HEAVY_RAIN("호우"),
-    HEATWAVE("폭염"),
-    FOG("안개"),
-    ROUGH_SEA("풍랑"),
-    FINE_DUST("미세먼지"),
-    TIDAL_WAVE("대조기"),
-    DROUGHT("가뭄"),
-    HEAVY_SNOWFALL("대설"),
-    TSUNAMI("지진해일"),
-    EARTHQUAKE("지진"),
-    COLD_WAVE("한파"),
-    YELLOW_DUST("황사"),
-    STRONG_WIND("강풍"),
-    TRAFFIC_CONTROL("교통통제"),
-    FIRE("화재"),
-    COLLAPSE("붕괴"),
-    EXPLOSION("폭발"),
-    TRAFFIC_ACCIDENT("교통사고"),
-    ENVIRONMENTAL_POLLUTION("환경오염사고"),
-    ENERGY("에너지"),
-    COMMUNICATION("통신"),
-    TRAFFIC("교통"),
-    FINANCE("금융"),
-    MEDICAL("의료"),
-    WATER_SUPPLY("수도"),
-    INFECTIOUS_DISEASE("전염병"),
-    POWER_OUTAGE("정전"),
-    GAS("가스"),
-    AI("AI"),
-    CHEMICAL("화생방사고"),
-    RIOT("폭동"),
-    TERROR("테러"),
-    EMERGENCY("비상사태"),
     CIVIL_DEFENSE("민방공"),
+    TERROR("테러"),
+    LANDSLIDE("산사태"),
+    EARTHQUAKE("지진"),
+    TSUNAMI("해일"),
+    FLOOD("홍수"),
+    TYPHOON("태풍"),
+    WILDFIRE("산불"),
+    NATURAL_DISASTER("자연재난"),
+    INFECTIOUS_DISEASE("감염병"),
+    FIRE("화재"),
     OTHERS("기타");
 
     private final String description;
@@ -55,9 +27,42 @@ public enum DisasterType {
     }
 
     public static DisasterType kor2code(String kor) {
-        for (DisasterType type : DisasterType.values()) {
-            if (type.getDescription().equals(kor)) {
-                return type;
+        switch (kor) {
+            case "민방공" -> {
+                return CIVIL_DEFENSE;
+            }
+            case "테러" -> {
+                return TERROR;
+            }
+            case "산사태" -> {
+                return LANDSLIDE;
+            }
+            case "지진" -> {
+                return EARTHQUAKE;
+            }
+            case "지진해일" -> {
+                return TSUNAMI;
+            }
+            case "홍수" -> {
+                return FLOOD;
+            }
+            case "태풍" -> {
+                return TYPHOON;
+            }
+            case "산불" -> {
+                return WILDFIRE;
+            }
+            case "건조", "폭염", "미세먼지", "대조기", "가뭄", "대설", "한파", "황사", "강풍", "호우", "풍랑", "안개" -> {
+                return NATURAL_DISASTER;
+            }
+            case "전염병" -> {
+                return INFECTIOUS_DISEASE;
+            }
+            case "화재" -> {
+                return FIRE;
+            }
+            case "화생방사고", "폭동", "비상사태", "기타", "교통통제", "붕괴", "폭발", "교통사고", "환경오염사고", "에너지", "통신", "교통", "금융", "의료", "수도", "정전", "가스", "AI" -> {
+                return OTHERS;
             }
         }
         throw new InvalidDisasterTypeException();
