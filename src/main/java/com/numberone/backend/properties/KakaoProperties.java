@@ -12,4 +12,5 @@ public class KakaoProperties {
     private String redirect_uri;
     private String token_api_url;
     private String user_api_url;
+    private String mapApiUrl;
 }

@@ -60,6 +60,7 @@ public class DisasterDataCollector {
     @Scheduled(fixedDelay = 10 * 1000)
     @Transactional
     public void collectData() {
+        log.info("collectData()");
         URI uri = UriComponentsBuilder
                 .fromUriString(disasterProperties.getApiUrl())
                 .queryParam("ServiceKey", disasterProperties.getSecretKey())

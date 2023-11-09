@@ -13,6 +13,8 @@ import java.util.Locale;
 @AllArgsConstructor
 @Builder
 public class LatestDisasterResponse {
+    @Schema(defaultValue = "true")
+    private Boolean isExist;
     @Schema(defaultValue = "화재")
     private String disasterType;
     @Schema(defaultValue = "서울특별시 강남구 동작동 화재 발생")
@@ -30,10 +32,17 @@ public class LatestDisasterResponse {
             category = disaster.getDisasterType().getDescription();
         time = disaster.getCreatedAt().format(DateTimeFormatter.ofPattern("a h시 m분", Locale.KOREAN));
         return LatestDisasterResponse.builder()
+                .isExist(true)
                 .disasterType(disaster.getDisasterType().getDescription())
                 .title(disaster.getLocation() + " " + category + " 발생")
                 .msg(disaster.getMsg())
                 .info(disaster.getLocation() + " ・ " + time)
+                .build();
+    }
+
+    public static LatestDisasterResponse notExist() {
+        return LatestDisasterResponse.builder()
+                .isExist(false)
                 .build();
     }
 }
