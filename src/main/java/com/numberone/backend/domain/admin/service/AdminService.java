@@ -1,6 +1,7 @@
 package com.numberone.backend.domain.admin.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
 import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
 import com.numberone.backend.domain.shelter.repository.ShelterRepository;
 import com.numberone.backend.support.S3Provider;
@@ -29,18 +30,36 @@ public class AdminService {
     @Value("${storage-path.shelter-database-init-path}")
     private String databaseUploadPath;
 
-    public String uploadShelterJsonFile() {
+    public String uploadAllShelterInfo() {
         String filePath = "";
         try {
             List<GetAllSheltersResponse> result = shelterRepository.findAllSheltersGroupByRegions();
             String jsonResult = objectMapper.writeValueAsString(result);
             InputStream inputStream = new ByteArrayInputStream(jsonResult.getBytes());
             log.info("[파일 업로드 완료]");
-            filePath = s3Provider.uploadJsonFile(databaseUploadPath, inputStream);
+            filePath = s3Provider.uploadFile(databaseUploadPath + "/rawdata", inputStream);
         } catch (Exception e) {
             log.error("Shelter database 파일 생성 중 error 발생 {}", e.getMessage());
         }
         return filePath;
+    }
+
+    public String uploadAllAddressInfo() {
+        String filePath = "";
+        try {
+            List<GetAddressResponse> result = shelterRepository.getAllAddressList();
+            String jsonResult = objectMapper.writeValueAsString(result);
+            InputStream inputStream = new ByteArrayInputStream(jsonResult.getBytes());
+            log.info("[파일 업로드 완료]");
+            filePath = s3Provider.uploadFile(databaseUploadPath + "/address", inputStream);
+        } catch (Exception e) {
+            log.error("Shelter database 파일 생성 중 error 발생 {}", e.getMessage());
+        }
+        return filePath;
+    }
+
+    public List<GetAddressResponse> getAllAddressInfo(){
+        return shelterRepository.getAllAddressList();
     }
 
 }

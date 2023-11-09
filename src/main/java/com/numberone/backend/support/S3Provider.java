@@ -57,7 +57,7 @@ public class S3Provider {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    public String uploadJsonFile(String originName, InputStream inputStream) {
+    public String uploadFile(String originName, InputStream inputStream) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(ContentType.APPLICATION_JSON.toString());
 
