@@ -1,8 +1,8 @@
-package com.numberone.backend.support.notification.service;
+package com.numberone.backend.support.fcm.service;
 
 import com.google.firebase.messaging.*;
 import com.numberone.backend.exception.conflict.FirebaseMessageSendException;
-import com.numberone.backend.support.notification.dto.FcmNotificationDto;
+import com.numberone.backend.support.fcm.dto.FcmNotificationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

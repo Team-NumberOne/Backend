@@ -1,4 +1,4 @@
-package com.numberone.backend.support.notification.dto;
+package com.numberone.backend.support.fcm.dto;
 
 import lombok.*;
 

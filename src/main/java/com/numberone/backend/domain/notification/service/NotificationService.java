@@ -1,14 +1,13 @@
 package com.numberone.backend.domain.notification.service;
 
 import com.numberone.backend.domain.notification.dto.SendFcmRequest;
-import com.numberone.backend.support.notification.dto.FcmNotificationDto;
-import com.numberone.backend.support.notification.service.FcmMessageProvider;
+import com.numberone.backend.support.fcm.dto.FcmNotificationDto;
+import com.numberone.backend.support.fcm.service.FcmMessageProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
