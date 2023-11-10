@@ -92,7 +92,7 @@ public class DisasterDataCollector {
                 for (String loc : locations) {
                     disasterService.save(SaveDisasterRequest.of(
                             disasterTypeMap.get(disasterNum),
-                            loc,//이 부분은 메시지 내부 파싱하여 더 정확한 주소를 저장하도록 수정해야함
+                            loc.replace(" 전체", ""),//이 부분은 메시지 내부 파싱하여 더 정확한 주소를 저장하도록 수정해야함
                             disaster.getMsg(),
                             disasterNum,
                             disaster.getCreateDate()
