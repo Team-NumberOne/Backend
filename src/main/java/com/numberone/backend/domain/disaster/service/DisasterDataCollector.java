@@ -55,12 +55,13 @@ public class DisasterDataCollector {
                     latestDisasterNum = disaster.getDisasterNum();
                 }
         );
+        log.info("init latestDisasterNum = " + latestDisasterNum);
     }
 
     @Scheduled(fixedDelay = 10 * 1000)
     @Transactional
     public void collectData() {
-        log.info("collectData()");
+        //log.info("collectData()");
         URI uri = UriComponentsBuilder
                 .fromUriString(disasterProperties.getApiUrl())
                 .queryParam("ServiceKey", disasterProperties.getSecretKey())
@@ -119,7 +120,7 @@ public class DisasterDataCollector {
         Elements types = doc.select("[id^=disasterSms_tr_][id$=_DSSTR_SE_NM]");
         for (int i = 0; i < nums.size(); i++) {
             disasterTypeMap.put(
-                        Long.parseLong(nums.get(i).text()),
+                    Long.parseLong(nums.get(i).text()),
                     DisasterType.kor2code(types.get(i).text())
             );
         }

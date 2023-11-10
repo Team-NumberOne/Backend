@@ -30,7 +30,7 @@ public class LatestDisasterResponse {
             category = "상황";
         else
             category = disaster.getDisasterType().getDescription();
-        time = disaster.getCreatedAt().format(DateTimeFormatter.ofPattern("a h시 m분", Locale.KOREAN));
+        time = disaster.getGeneratedAt().format(DateTimeFormatter.ofPattern("a h시 m분", Locale.KOREAN));
         return LatestDisasterResponse.builder()
                 .isExist(true)
                 .disasterType(disaster.getDisasterType().getDescription())

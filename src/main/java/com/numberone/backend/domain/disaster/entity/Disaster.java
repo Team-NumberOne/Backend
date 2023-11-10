@@ -30,25 +30,25 @@ public class Disaster {
     private Long disasterNum;
 
     @Comment("재난 발생 시각")
-    private LocalDateTime createdAt;
+    private LocalDateTime generatedAt;
 
     @Builder
-    public Disaster(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime createdAt) {
+    public Disaster(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime generatedAt) {
         this.disasterType = disasterType;
         this.location = location;
         this.msg = msg;
         this.disasterNum = disasterNum;
-        this.createdAt = createdAt;
+        this.generatedAt = generatedAt;
     }
 
     @Builder
-    public static Disaster of(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime createdAt) {
+    public static Disaster of(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime generatedAt) {
         return Disaster.builder()
                 .disasterType(disasterType)
                 .location(location)
                 .msg(msg)
                 .disasterNum(disasterNum)
-                .createdAt(createdAt)
+                .generatedAt(generatedAt)
                 .build();
     }
 }

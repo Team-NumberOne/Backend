@@ -5,12 +5,10 @@ import com.numberone.backend.domain.disaster.dto.request.SaveDisasterRequest;
 import com.numberone.backend.domain.disaster.dto.response.LatestDisasterResponse;
 import com.numberone.backend.domain.disaster.entity.Disaster;
 import com.numberone.backend.domain.disaster.repository.DisasterRepository;
-import com.numberone.backend.domain.disaster.util.DisasterType;
-import com.numberone.backend.util.LocationUtil;
+import com.numberone.backend.util.LocationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +22,10 @@ import java.util.List;
 @Slf4j
 public class DisasterService {
     private final DisasterRepository disasterRepository;
-    private final LocationUtil locationUtil;
+    private final LocationProvider locationProvider;
 
     public LatestDisasterResponse getLatestDisaster(LatestDisasterRequest latestDisasterRequest) {
-        String address = locationUtil.pos2address(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude());
+        String address = locationProvider.pos2address(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude());
         LocalDateTime time = LocalDateTime.now().minusDays(1);
         List<Disaster> disasters = disasterRepository.findDisastersInAddressAfterTime(address, time, PageRequest.of(0, 1));
         if (!disasters.isEmpty())

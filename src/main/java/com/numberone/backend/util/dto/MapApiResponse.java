@@ -6,20 +6,23 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MapApiResponse {
     private Meta meta;
     private List<Doc> documents;
 
-    @Data
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Meta{
         @JsonProperty("total_count")
         private Integer totalCount;
     }
 
-    @Data
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Doc{
         @JsonProperty("result_type")

@@ -17,7 +17,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @Slf4j
 //위치(주소나 GPS) 관련 기능들 작성할 util함수
-public class LocationUtil {
+public class LocationProvider {
     private final KakaoProperties kakaoProperties;
     private final RestTemplate restTemplate;
 

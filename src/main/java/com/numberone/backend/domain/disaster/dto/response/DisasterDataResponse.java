@@ -2,18 +2,23 @@ package com.numberone.backend.domain.disaster.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DisasterDataResponse {
 
     @JsonProperty("DisasterMsg")
     private List<Message> disasterMsg;
 
-    @Data
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Message {
 
@@ -24,7 +29,8 @@ public class DisasterDataResponse {
         private List<RowItem> rowItems;
     }
 
-    @Data
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Head {
 
@@ -44,7 +50,8 @@ public class DisasterDataResponse {
         private Result result;
     }
 
-    @Data
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Result {
 
@@ -55,7 +62,8 @@ public class DisasterDataResponse {
         private String resultMsg;
     }
 
-    @Data
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RowItem {
 
