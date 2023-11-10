@@ -58,7 +58,7 @@ public class DisasterDataCollector {
         log.info("init latestDisasterNum = " + latestDisasterNum);
     }
 
-    @Scheduled(fixedDelay = 10 * 1000)
+    @Scheduled(fixedDelay = 60 * 1000)
     @Transactional
     public void collectData() {
         //log.info("collectData()");
