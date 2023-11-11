@@ -29,24 +29,10 @@ public enum CustomExceptionContext implements ExceptionContext {
     NOT_FOUND_CRAWLING("데이터 수집을 위한 크롤링이 실패했습니다.",5002),
 
     // fcm 관련 예외
-    FIREBASE_INITIALIZATION_FAILED("Firebase Application 초기 설정에 실패하였습니다.", 5000),
-    FIREBASE_MESSAGE_SEND_ERROR("Fcm 푸시 메세지를 보내는 과정에서 오류가 발생했습니다.", 5001),
+    FIREBASE_INITIALIZATION_FAILED("Firebase Application 초기 설정에 실패하였습니다.", 6000),
+    FIREBASE_MESSAGE_SEND_ERROR("Fcm 푸시 메세지를 보내는 과정에서 오류가 발생했습니다.", 6001),
     ;
 
-
-    /**
-     * 2023. 10. 02. versatile0010
-     * <p>
-     * 이 곳에서 각 예외 별 메세지와 예외 코드를 관리합니다.
-     * <p>
-     * 예를 들어,
-     * // MEMBER
-     * NOT_FOUND_MEMBER("존재하지 않는 회원을 조회할 수 없습니다.", 2000),
-     * DUPLICATED_MEMBER_NAME("회원의 이름은 중복될 수 없습니다, 2001),
-     * // STATION
-     * NOT_FOUND_STATION("존재하지 않는 지하철역을 조회할 수 없습니다.", 3000);
-     * 과 같이 작성할 수 있습니다.
-     */
     private final String message;
     private final int code;
 }
