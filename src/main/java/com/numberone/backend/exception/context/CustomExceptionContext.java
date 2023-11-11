@@ -27,6 +27,10 @@ public enum CustomExceptionContext implements ExceptionContext {
     INVALID_DISASTER_TYPE("존재하지 않는 재난 유형입니다.",5000),
     NOT_FOUND_API("데이터 수집을 위한 API 요청이 실패했습니다.",5001),
     NOT_FOUND_CRAWLING("데이터 수집을 위한 크롤링이 실패했습니다.",5002),
+
+    //후원 페이지 관련 예외
+    NOT_FOUND_SUPPORT("존재하지 않는 후원 관계입니다.", 7000),
+    NOT_FOUND_SPONSOR("존재하지 않는 후원입니다.", 7001)
     ;
 
 
