@@ -21,10 +21,14 @@ public class Sponsor {
     private Long id;
 
     @Comment("재난 유형")
+    @Enumerated(EnumType.STRING)
     private DisasterType disasterType;
 
     @Comment("제목")
     private String title;
+
+    @Comment("부제목")
+    private String subtitle;
 
     @Comment("세부 내용")
     private String content;
@@ -36,7 +40,10 @@ public class Sponsor {
     private LocalDate dueDate;
 
     @Comment("후원 받을 마음 목표치")
-    private Integer heartTarget;
+    private Integer targetHeart;
+
+    @Comment("현재 후원받은 마음")
+    private Integer currentHeart;
 
     @Comment("후원사 이름")
     private String sponsorName;
