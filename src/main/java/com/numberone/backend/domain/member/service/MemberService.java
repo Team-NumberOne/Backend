@@ -93,4 +93,5 @@ public class MemberService {
 
         return UploadProfileImageResponse.of(imageUrl);
     }
+
 }
