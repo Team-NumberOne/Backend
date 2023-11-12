@@ -1,6 +1,7 @@
 package com.numberone.backend.domain.member.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
+import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +19,11 @@ import org.hibernate.annotations.Comment;
 import java.util.ArrayList;
 import java.util.List;
 
+@Comment("회원 정보")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "MEMBER")
 public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +43,12 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Support> supports = new ArrayList<>();
+
+    @Comment("회원 프로필 사진 URL")
+    private String profileImageUrl;
+
+    @Comment("FCM 토큰")
+    private String fcmToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<NotificationDisaster> notificationDisasters = new ArrayList<>();
@@ -61,6 +70,10 @@ public class Member extends BaseTimeEntity {
                 .realName(realName)
                 .heartCnt(0)
                 .build();
+    }
+
+    public void updateProfileImageUrl(String imageUrl){
+        this.profileImageUrl = imageUrl;
     }
 
     public void updateNickname(String nickname) {
