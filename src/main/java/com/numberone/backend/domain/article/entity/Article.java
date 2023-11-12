@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
@@ -53,8 +54,13 @@ public class Article extends BaseTimeEntity {
     @Comment("게시글 작성 당시 주소")
     private String address;
 
+    @ColumnDefault("0")
     @Comment("게시글 좋아요 개수")
     private Integer likeCount; // todo: 동시성 처리
+
+    @ColumnDefault("0")
+    @Comment("게시글에 달린 댓글 개수")
+    private Integer commentCount;
 
     @Comment("작성자 ID")
     private Long articleOwnerId;

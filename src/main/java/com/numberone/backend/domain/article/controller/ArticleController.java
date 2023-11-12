@@ -1,15 +1,15 @@
 package com.numberone.backend.domain.article.controller;
 
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
-import com.numberone.backend.domain.article.dto.response.DeleteArticleResponse;
-import com.numberone.backend.domain.article.dto.response.GetArticleDetailResponse;
-import com.numberone.backend.domain.article.dto.response.UploadArticleResponse;
+import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,5 +62,30 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticleDetail(articleId));
     }
 
+
+    @Operation(summary = "게시글 리스트 조회 no offset Paging API 입니다.", description = """
+            
+           요청 예시 url 은 다음과 같습니다.
+           `/api/articles?size=5`
+           size 는 페이지의 사이즈를 의미하고, default 는 20 입니다.
+           
+           정렬 순서는 articleId 순입니다. ( = 생성 시간 순 )
+           
+           ModelAttribute 로 lastArticleId 와 tag 를 넘겨주세요 ( 둘 다 nullable )
+           
+           tag 가 null 이면, tag 상관 없이 전체 조회를 수행합니다.
+           tag 가 null 이 아니면, 해당 tag 에 해당하는 게시글만 조회합니다.
+           
+           lastArticleId 는 직전에 조회한 게시글 중 가장 먀지막(작은) articleId 를 의미합니다.
+           - 첫 페이지를 요청할 경우에는 lastArticleId 를 null 로 보내야합니다.
+           - 첫 페이지 이후에 대한 요청은, 직전 페이지 요청에서 얻어온 lastArticleId 를 넣어서 보내면 그 다음 페이지를 호출합니다.
+           
+            """)
+    @GetMapping
+    public ResponseEntity<Slice<GetArticleListResponse>> getArticlePages(
+            Pageable pageable,
+            @ModelAttribute ArticleSearchParameter param){
+        return ResponseEntity.ok(articleService.getArticleListPaging(param, pageable));
+    }
 
 }

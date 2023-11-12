@@ -1,9 +1,7 @@
 package com.numberone.backend.domain.article.service;
 
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
-import com.numberone.backend.domain.article.dto.response.DeleteArticleResponse;
-import com.numberone.backend.domain.article.dto.response.GetArticleDetailResponse;
-import com.numberone.backend.domain.article.dto.response.UploadArticleResponse;
+import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.entity.Article;
 import com.numberone.backend.domain.article.entity.ArticleStatus;
 import com.numberone.backend.domain.article.repository.ArticleRepository;
@@ -15,10 +13,14 @@ import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
+import com.numberone.backend.exception.notfound.NotFoundArticleImageException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.support.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,7 +119,26 @@ public class ArticleService {
             thumbNailImageUrl = thumbNailImage.get().getImageUrl();
         }
 
-
         return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner);
     }
+
+    public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
+        return new SliceImpl<>(
+                articleRepository.getArticlesNoOffSetPaging(param, pageable)
+                        .stream()
+                        .peek(this::updateArticleInfo)
+                        .toList()
+        );
+    }
+
+    public void updateArticleInfo(GetArticleListResponse articleInfo) {
+        Long ownerId = articleInfo.getOwnerId();
+        Long thumbNailImageUrlId = articleInfo.getThumbNailImageId();
+
+        Optional<Member> owner = memberRepository.findById(ownerId);
+        Optional<ArticleImage> articleImage = articleImageRepository.findById(thumbNailImageUrlId);
+
+        articleInfo.updateInfo(owner, articleImage);
+    }
+
 }
