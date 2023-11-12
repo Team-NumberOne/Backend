@@ -14,6 +14,7 @@ public enum CustomExceptionContext implements ExceptionContext {
     EXPIRED_ACCESS_TOKEN("만료된 액세스 토큰입니다. 리프레쉬 토큰을 이용하여 갱신해주세요.", 2002),
     WRONG_REFRESH_TOKEN("존재하지 않거나 만료된 리프레쉬 토큰입니다. 다시 리프레쉬 토큰을 발급받아주세요.", 2003),
     BAD_REQUEST_SOCIAL_TOKEN("요청하신 네이버 또는 카카오 소셜 토큰이 유효하지 않습니다.", 2004),
+    BAD_USER_AUTHENTICATION("해당 토큰의 인증 정보가 유효하지 않습니다.", 2005),
 
     // SHELTER 관련 예외
     NOT_FOUND_SHELTER("주변에 가까운 대피소가 존재하지 않습니다.", 3000),
