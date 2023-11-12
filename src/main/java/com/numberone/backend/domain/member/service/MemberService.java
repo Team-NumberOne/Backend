@@ -15,7 +15,7 @@ import com.numberone.backend.domain.notificationdisaster.repository.Notification
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.support.S3Provider;
+import com.numberone.backend.support.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
