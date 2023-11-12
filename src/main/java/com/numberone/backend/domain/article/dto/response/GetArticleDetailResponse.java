@@ -70,4 +70,5 @@ public class GetArticleDetailResponse {
                 .build();
     }
 
+
 }
