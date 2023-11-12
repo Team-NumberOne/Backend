@@ -26,6 +26,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -35,10 +36,9 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Component
+@Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class DisasterDataCollector {
     private final RestTemplate restTemplate;
     private final DisasterProperties disasterProperties;
@@ -59,7 +59,6 @@ public class DisasterDataCollector {
     }
 
     @Scheduled(fixedDelay = 60 * 1000)
-    @Transactional
     public void collectData() {
         //log.info("collectData()");
         URI uri = UriComponentsBuilder

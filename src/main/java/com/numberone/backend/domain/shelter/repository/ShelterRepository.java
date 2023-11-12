@@ -19,7 +19,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long>, CustomS
                     " FROM shelter " +
                     " WHERE shelter.longitude != 0 and shelter.latitude != 0 " +
                     " AND shelter.status = 'OPEN' " +
-                    " HAVING distance <= 1500 " +
+                    " HAVING distance <= 1000 " +
                     " ORDER BY distance " +
                     " LIMIT 10",
             nativeQuery = true)
@@ -32,7 +32,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long>, CustomS
                     " FROM shelter " +
                     " WHERE shelter.longitude != 0 and shelter.latitude != 0 " +
                     " AND shelter.status = 'OPEN' " +
-                    " HAVING distance <= 1500 " +
+                    " HAVING distance <= 1000 " +
                     " ORDER BY distance " +
                     " LIMIT 1",
             nativeQuery = true)
@@ -45,7 +45,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long>, CustomS
                     " FROM shelter " +
                     " WHERE (shelter.longitude != 0 and shelter.latitude != 0) and shelter.shelter_type = :shelter_type " +
                     " AND shelter.status = 'OPEN' " +
-                    " HAVING distance <= 1500 " +
+                    " HAVING distance <= 1000 " +
                     " ORDER BY distance " +
                     " LIMIT 10",
             nativeQuery = true)
@@ -58,7 +58,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long>, CustomS
                     " FROM shelter " +
                     " WHERE shelter.longitude != 0 and shelter.latitude != 0 and shelter.shelter_type = :shelter_type " +
                     " AND shelter.status = 'OPEN' " +
-                    " HAVING distance <= 1500 " +
+                    " HAVING distance <= 1000 " +
                     " ORDER BY distance " +
                     " LIMIT 1",
             nativeQuery = true)
