@@ -72,4 +72,8 @@ public class Article extends BaseTimeEntity {
         this.thumbNailImageUrlId = thumbNailImageUrlId;
     }
 
+    public void updateArticleStatus(ArticleStatus status){
+        this.articleStatus = status;
+    }
+
 }

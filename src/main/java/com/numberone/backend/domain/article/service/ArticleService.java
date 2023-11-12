@@ -1,8 +1,11 @@
 package com.numberone.backend.domain.article.service;
 
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
+import com.numberone.backend.domain.article.dto.response.DeleteArticleResponse;
+import com.numberone.backend.domain.article.dto.response.GetArticleDetailResponse;
 import com.numberone.backend.domain.article.dto.response.UploadArticleResponse;
 import com.numberone.backend.domain.article.entity.Article;
+import com.numberone.backend.domain.article.entity.ArticleStatus;
 import com.numberone.backend.domain.article.repository.ArticleRepository;
 import com.numberone.backend.domain.articleimage.entity.ArticleImage;
 import com.numberone.backend.domain.articleimage.repository.ArticleImageRepository;
@@ -11,6 +14,7 @@ import com.numberone.backend.domain.articleparticipant.repository.ArticlePartici
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
+import com.numberone.backend.exception.notfound.NotFoundArticleException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.support.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -83,4 +88,36 @@ public class ArticleService {
         return UploadArticleResponse.of(article, imageUrls, thumbNailImageUrl);
     }
 
+
+    @Transactional
+    public DeleteArticleResponse deleteArticle(Long articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+        article.updateArticleStatus(ArticleStatus.DELETED);
+        return DeleteArticleResponse.of(article);
+    }
+
+    public GetArticleDetailResponse getArticleDetail(Long articleId) {
+        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
+        Member owner = memberRepository.findByEmail(principal)
+                .orElseThrow(NotFoundMemberException::new);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+
+        List<String> imageUrls = articleImageRepository.findByArticle(article)
+                .stream()
+                .map(ArticleImage::getImageUrl)
+                .toList();
+
+
+        Optional<ArticleImage> thumbNailImage = articleImageRepository.findById(article.getThumbNailImageUrlId());
+
+        String thumbNailImageUrl = "";
+        if (thumbNailImage.isPresent()) {
+            thumbNailImageUrl = thumbNailImage.get().getImageUrl();
+        }
+
+
+        return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner);
+    }
 }

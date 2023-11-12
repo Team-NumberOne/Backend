@@ -36,7 +36,13 @@ public enum CustomExceptionContext implements ExceptionContext {
     //후원 페이지 관련 예외
     NOT_FOUND_SUPPORT("존재하지 않는 후원 관계입니다.", 7000),
     NOT_FOUND_SPONSOR("존재하지 않는 후원입니다.", 7001),
-    BAD_REQUEST_HEART("후원을 하기에는 사용자의 마음 갯수가 부족합니다.",7002)
+    BAD_REQUEST_HEART("후원을 하기에는 사용자의 마음 갯수가 부족합니다.",7002),
+
+    // article 관련 예외
+    NOT_FOUND_ARTICLE("해당 게시글을 찾을 수 없습니다.", 8000),
+
+    // article image 관련 예외
+    NOT_FOUND_ARTICLE_IMAGE("해당 이미지를 찾을 수 없습니다.", 9000),
     ;
 
     private final String message;
