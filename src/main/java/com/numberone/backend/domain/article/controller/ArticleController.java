@@ -46,19 +46,19 @@ public class ArticleController {
     }
 
     @Operation(summary = "게시글을 삭제하는 API 입니다.", description = """
-            게시글 id 를 path parameter 으로 넘겨주세요.
+            게시글 id 를 PathVariable 으로 넘겨주세요.
             해당 게시글을 삭제 상태로 변경합니다.
             """)
     @PutMapping("{article-id}/delete")
-    public ResponseEntity<DeleteArticleResponse> deleteArticle(@PathParam("article-id") Long articleId) {
+    public ResponseEntity<DeleteArticleResponse> deleteArticle(@PathVariable("article-id") Long articleId) {
         return ResponseEntity.ok(articleService.deleteArticle(articleId));
     }
 
     @Operation(summary = "게시글 상세 조회 API 입니다.", description = """
-            게시글 id 를 path parameter 으로 넘겨주세요.
+            게시글 id 를 PathVariable 으로 넘겨주세요.
             """)
     @GetMapping("{article-id}")
-    public ResponseEntity<GetArticleDetailResponse> getArticleDetails(@PathParam("article-id") Long articleId) {
+    public ResponseEntity<GetArticleDetailResponse> getArticleDetails(@PathVariable("article-id") Long articleId) {
         return ResponseEntity.ok(articleService.getArticleDetail(articleId));
     }
 

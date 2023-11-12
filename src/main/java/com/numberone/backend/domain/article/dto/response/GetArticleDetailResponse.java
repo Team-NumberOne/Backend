@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @ToString
 @Builder
@@ -19,6 +20,8 @@ public class GetArticleDetailResponse {
     private Integer likeCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private String title;
+    private String content;
 
     // 작성자 관련
     private String memberName;
@@ -33,7 +36,13 @@ public class GetArticleDetailResponse {
     public static GetArticleDetailResponse of(Article article, List<String> imageUrls, String thumbNailImageUrl, Member member){
         return GetArticleDetailResponse.builder()
                 .articleId(article.getId())
-                .likeCount(article.getLikeCount())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .likeCount(
+                        Optional.ofNullable(
+                                article.getLikeCount()
+                        ).orElse(0)
+                )
                 .createdAt(article.getCreatedAt())
                 .modifiedAt(article.getModifiedAt())
                 .ownerMemberId(member.getId())
