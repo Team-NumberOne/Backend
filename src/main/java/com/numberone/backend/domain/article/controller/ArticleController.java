@@ -34,16 +34,16 @@ public class ArticleController {
                         
             1. title 은 글 제목 입니다 (not null)
             2. content 는 글 내용 입니다 (not null)
-            3. articleTag 는 게시글 태그 입니다. LIFE(일상), FRAUD(사기), SAFETY(안전), REPORT(제보)
+            3. articleTag 는 게시글 태그 입니다. LIFE(일상), TRAFFIC(교통), SAFETY(치안), NONE(기타) -> 영어로 보내주세요
             4. imageList 는 이미지 (MultiPart) 리스트 입니다.
-            5. thumbNailImageIdx 는 썸네일 이미지의 인덱스 입니다. (0,1,2, ...
+            5. imageList 의 첫 원소를 썸네일로 지정합니다.
             imageList 에 이미지를 담아서 보내는 경우,
             idx 에 따라서 썸네일 이미지를 결정합니다.
                         
             """)
 
     @PostMapping
-    public ResponseEntity<UploadArticleResponse> uploadArticle(@RequestBody @Valid UploadArticleRequest request) {
+    public ResponseEntity<UploadArticleResponse> uploadArticle(@ModelAttribute @Valid UploadArticleRequest request) {
         return ResponseEntity.created(URI.create("/api/articles"))
                 .body(articleService.uploadArticle(request));
     }

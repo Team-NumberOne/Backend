@@ -9,6 +9,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @ToString
@@ -32,6 +33,7 @@ public class GetArticleListResponse {
 
     private Integer articleLikeCount;
     private Integer commentCount;
+    private Boolean isLiked;
 
 
     @QueryProjection
@@ -57,7 +59,7 @@ public class GetArticleListResponse {
         this.thumbNailImageUrl = thumbNailImageUrl;
     }
 
-    public void updateInfo(Optional<Member> owner, Optional<ArticleImage> articleImage){
+    public void updateInfo(Optional<Member> owner, Optional<ArticleImage> articleImage, List<Long> memberLikedArticleIdList){
         owner.ifPresentOrElse(
                 o -> setOwnerNickName(o.getNickName()),
                 () -> setOwnerNickName("알 수 없는 사용자")
@@ -66,7 +68,7 @@ public class GetArticleListResponse {
                 image -> setThumbNailImageUrl(image.getImageUrl()),
                 () -> setThumbNailImageUrl("")
         );
+        this.isLiked = memberLikedArticleIdList.contains(id);
     }
-
 
 }

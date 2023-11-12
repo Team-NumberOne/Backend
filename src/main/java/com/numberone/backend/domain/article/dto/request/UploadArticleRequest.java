@@ -30,7 +30,6 @@ public class UploadArticleRequest {
 
     // 이미지 관련
     private List<MultipartFile> imageList; // 이미지 리스트
-    private Long thumbNailImageIdx; // 썸네일 이미지의 순서 (0,1,2,...)
 
     private Double longitude;
     private Double latitude;

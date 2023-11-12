@@ -31,7 +31,7 @@ public class CommentEntity extends BaseTimeEntity {
     private Integer depth;
 
     @Comment("댓글 좋아요 개수")
-    private Integer likeCount; // todo: 동시성 처리
+    private Integer likeCount;
 
     @Comment("댓글 내용")
     private String content;

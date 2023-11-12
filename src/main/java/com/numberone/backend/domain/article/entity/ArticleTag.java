@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ArticleTag {
     LIFE, // 일상
-    FRAUD, // 사기
+    TRAFFIC, // 교통
     SAFETY, // 치안
-    REPORT; // 제보
+    NONE; // 기타
     private String value;
 }

@@ -56,7 +56,7 @@ public class Article extends BaseTimeEntity {
 
     @ColumnDefault("0")
     @Comment("게시글 좋아요 개수")
-    private Integer likeCount; // todo: 동시성 처리
+    private Integer likeCount;
 
     @ColumnDefault("0")
     @Comment("게시글에 달린 댓글 개수")

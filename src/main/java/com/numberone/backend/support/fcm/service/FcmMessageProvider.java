@@ -27,6 +27,7 @@ public class FcmMessageProvider {
         String token = member.getFcmToken();
         if (Objects.isNull(token)){
             log.error("해당 회원의 fcm 토큰이 존재하지 않아, 푸시알람을 전송할 수 없습니다.");
+            // todo : 예외 핸들링
            return;
         }
 

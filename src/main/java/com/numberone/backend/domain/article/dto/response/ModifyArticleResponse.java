@@ -25,7 +25,7 @@ public class ModifyArticleResponse {
     private String thumbNailImageUrl;
 
     // 작성자 주소
-    private String address; // todo: 더미 데이터
+    private String address;
 
     public static ModifyArticleResponse of(Article article, List<String> imageUrls, String thumbNailImageUrl){
         return ModifyArticleResponse.builder()
@@ -34,7 +34,7 @@ public class ModifyArticleResponse {
                 .modifiedAt(article.getModifiedAt())
                 .imageUrls(imageUrls)
                 .thumbNailImageUrl(thumbNailImageUrl)
-                .address("서울시 광진구 자양동")
+                .address(article.getAddress())
                 .build();
     }
 

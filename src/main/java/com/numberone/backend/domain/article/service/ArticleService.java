@@ -14,6 +14,8 @@ import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
 import com.numberone.backend.domain.comment.entity.CommentEntity;
 import com.numberone.backend.domain.comment.repository.CommentRepository;
+import com.numberone.backend.domain.like.entity.ArticleLike;
+import com.numberone.backend.domain.like.repository.ArticleLikeRepository;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
@@ -50,6 +52,7 @@ public class ArticleService {
     private final ArticleParticipantRepository articleParticipantRepository;
     private final ArticleImageRepository articleImageRepository;
     private final CommentRepository commentRepository;
+    private final ArticleLikeRepository articleLikeRepository;
     private final S3Provider s3Provider;
     private final LocationProvider locationProvider;
     private final FcmMessageProvider fcmMessageProvider;
@@ -68,6 +71,7 @@ public class ArticleService {
                         owner.getId(),
                         request.getArticleTag())
         );
+
         articleParticipantRepository.save(
                 new ArticleParticipant(article, owner)
         );
@@ -89,7 +93,7 @@ public class ArticleService {
                         new ArticleImage(article, imageUrl)
                 );
                 articleImages.add(savedArticleImage);
-                if (Objects.equals(i, request.getThumbNailImageIdx())) {
+                if (i == 0) {
                     thumbNailImageUrl = imageUrl;
                     thumbNailImageId = savedArticleImage.getId();
                 }
@@ -104,6 +108,7 @@ public class ArticleService {
         Double latitude = request.getLatitude();
         Double longitude = request.getLongitude();
         if (latitude != null && longitude != null) {
+            // 주소가 null 이 아닌 경우에만 api 요청하여 update
             String address = locationProvider.pos2address(request.getLatitude(), request.getLongitude());
             article.updateAddress(address);
         }
@@ -122,10 +127,12 @@ public class ArticleService {
 
     public GetArticleDetailResponse getArticleDetail(Long articleId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member owner = memberRepository.findByEmail(principal)
+        Member member = memberRepository.findByEmail(principal) // 회원
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
+        Member owner = memberRepository.findById(article.getArticleOwnerId()) // 작성자
+                .orElseThrow(NotFoundMemberException::new);
 
         List<String> imageUrls = articleImageRepository.findByArticle(article)
                 .stream()
@@ -140,26 +147,38 @@ public class ArticleService {
             thumbNailImageUrl = thumbNailImage.get().getImageUrl();
         }
 
-        return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner);
+        // 내가 좋아요 한 게시글의 ID 리스트
+        List<Long> memberLikedArticleIdList = articleLikeRepository.findByMember(member)
+                .stream().map(ArticleLike::getArticleId)
+                .toList();
+
+        return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner, memberLikedArticleIdList);
     }
 
     public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
+        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
+        Member member = memberRepository.findByEmail(principal)
+                .orElseThrow(NotFoundMemberException::new);
+        List<Long> memberLikedArticleIdList = articleLikeRepository.findByMember(member)
+                .stream().map(ArticleLike::getArticleId)
+                .toList();
         return new SliceImpl<>(
                 articleRepository.getArticlesNoOffSetPaging(param, pageable)
                         .stream()
-                        .peek(this::updateArticleInfo)
-                        .toList()
-        );
+                        .peek(article -> {
+                            updateArticleInfo(article, memberLikedArticleIdList);
+                        })
+                        .toList());
     }
 
-    public void updateArticleInfo(GetArticleListResponse articleInfo) {
+    public void updateArticleInfo(GetArticleListResponse articleInfo, List<Long> memberLikedArticleIdList) {
         Long ownerId = articleInfo.getOwnerId();
         Long thumbNailImageUrlId = articleInfo.getThumbNailImageId();
 
         Optional<Member> owner = memberRepository.findById(ownerId);
         Optional<ArticleImage> articleImage = articleImageRepository.findById(thumbNailImageUrlId);
 
-        articleInfo.updateInfo(owner, articleImage);
+        articleInfo.updateInfo(owner, articleImage, memberLikedArticleIdList);
     }
 
     @Transactional
