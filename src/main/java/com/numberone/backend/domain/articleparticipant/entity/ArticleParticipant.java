@@ -1,4 +1,4 @@
-package com.numberone.backend.domain.communityparticipant.entity;
+package com.numberone.backend.domain.articleparticipant.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.article.entity.Article;
@@ -12,12 +12,12 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "COMMUNITY_PARTICIPANT")
-public class CommunityParticipant extends BaseTimeEntity {
+@Table(name = "ARTICLE_PARTICIPANT")
+public class ArticleParticipant extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "community_participant_id")
+    @Column(name = "article_participant_id")
     private Long id;
 
 

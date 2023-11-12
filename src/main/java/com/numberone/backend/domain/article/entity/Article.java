@@ -2,7 +2,7 @@ package com.numberone.backend.domain.article.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.comment.entity.CommentEntity;
-import com.numberone.backend.domain.communityparticipant.entity.CommunityParticipant;
+import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Article extends BaseTimeEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
     @OneToMany(mappedBy =  "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<CommunityParticipant> communityParticipants = new ArrayList<>();
+    private List<ArticleParticipant> articleParticipants = new ArrayList<>();
 
     @Comment("게시글 제목")
     private String title;
