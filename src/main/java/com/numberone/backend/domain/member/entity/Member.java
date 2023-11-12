@@ -1,5 +1,10 @@
 package com.numberone.backend.domain.member.entity;
 
+import com.numberone.backend.config.basetime.BaseTimeEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.domain.support.entity.Support;
@@ -16,7 +21,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
