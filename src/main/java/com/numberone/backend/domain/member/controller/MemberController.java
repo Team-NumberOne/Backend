@@ -3,6 +3,7 @@ package com.numberone.backend.domain.member.controller;
 import com.numberone.backend.domain.member.dto.request.OnboardingRequest;
 import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
+import com.numberone.backend.domain.member.dto.response.UploadProfileImageResponse;
 import com.numberone.backend.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URI;
 
 @Tag(name = "members", description = "사용자 관련 API")
 @RestController
@@ -25,6 +29,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
+
+    @PostMapping("/profile-image")
+    public ResponseEntity<UploadProfileImageResponse> uploadMemberProfileImage(@RequestPart MultipartFile image){
+        return ResponseEntity.created(URI.create("/api/members/profile-image"))
+                .body(memberService.uploadProfileImage(image));
+    }
 
     @PostMapping("/heart")
     @Operation(summary = "마음 구입하기", description = """
