@@ -46,6 +46,10 @@ public class Article extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ArticleTag articleTag;
 
+    @Comment("게시글 상태 (ACTIVATED, DELETED)")
+    @Enumerated(EnumType.STRING)
+    private ArticleStatus articleStatus;
+
     @Comment("게시글 작성 당시 주소")
     private String address;
 
@@ -60,6 +64,7 @@ public class Article extends BaseTimeEntity {
         this.content = content;
         this.articleOwnerId = articleOwnerId;
         this.articleTag = tag;
+        this.articleStatus = ArticleStatus.ACTIVATED;
     }
 
     public void updateArticleImage(List<ArticleImage> images, Long thumbNailImageUrlId) {
