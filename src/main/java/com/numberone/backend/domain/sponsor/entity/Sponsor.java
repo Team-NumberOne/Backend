@@ -30,7 +30,9 @@ public class Sponsor {
     @Comment("부제목")
     private String subtitle;
 
-    @Comment("세부 내용")
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    @Comment("내용")
     private String content;
 
     @Comment("시작 날짜")
@@ -48,6 +50,19 @@ public class Sponsor {
     @Comment("후원사 이름")
     private String sponsorName;
 
+    @Comment("썸네일 이미지")
+    private String thumbnail;
+
+    @Comment("상세페이지 이미지")
+    private String image;
+
+    @Comment("후원사 링크")
+    private String sponsorUrl;
+
     @OneToMany(mappedBy = "sponsor", cascade = CascadeType.ALL)
     private List<Support> supports = new ArrayList<>();
+
+    public void increaseHeart(int heart) {
+        currentHeart += heart;
+    }
 }

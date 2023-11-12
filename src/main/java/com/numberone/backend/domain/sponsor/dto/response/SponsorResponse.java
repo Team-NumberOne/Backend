@@ -2,6 +2,7 @@ package com.numberone.backend.domain.sponsor.dto.response;
 
 import com.numberone.backend.domain.sponsor.entity.Sponsor;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -24,6 +25,9 @@ public class SponsorResponse {
     private Integer currentHeart;
     private String sponsorName;
     private String period;
+    private String thumbnail;
+    private String image;
+    private String sponsorUrl;
 
     public static SponsorResponse of(Boolean isSupported, Sponsor sponsor) {
         int dday = Period.between(LocalDate.now(), sponsor.getDueDate()).getDays();
@@ -43,6 +47,9 @@ public class SponsorResponse {
                 .currentHeart(sponsor.getCurrentHeart())
                 .sponsorName(sponsor.getSponsorName())
                 .period(startDate + " ~ " + dueDate)
+                .thumbnail(sponsor.getThumbnail())
+                .image(sponsor.getImage())
+                .sponsorUrl(sponsor.getSponsorUrl())
                 .build();
     }
 }

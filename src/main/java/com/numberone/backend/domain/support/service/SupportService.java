@@ -33,16 +33,17 @@ public class SupportService {
     }
 
     @Transactional
-    public CreateSupportResponse create(CreateSupportRequest createSupportRequest, String email){
+    public CreateSupportResponse create(CreateSupportRequest createSupportRequest, String email) {
         Sponsor sponsor = sponsorRepository.findById(createSupportRequest.getSponsorId())
                 .orElseThrow(NotFoundSupportException::new);
-        Member member=memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
         Support support = Support.of(
                 null,
                 sponsor,
                 member
         );
+        sponsor.increaseHeart(createSupportRequest.getHeartCnt());
         support = supportRepository.save(support);
         return CreateSupportResponse.of(support.getId());
     }
