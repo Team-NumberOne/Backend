@@ -1,6 +1,5 @@
-package com.numberone.backend.domain.articleparticipant.entity;
+package com.numberone.backend.domain.articleimage.entity;
 
-import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.article.entity.Article;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,28 +7,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-@Comment("동네생활 게시글 참여자")
+@Comment("동네생활 게시글 이미지 정보")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "ARTICLE_PARTICIPANT")
-public class ArticleParticipant extends BaseTimeEntity {
+@Table(name = "ARTICLE_IMAGE")
+public class ArticleImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "article_participant_id")
     private Long id;
-
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @Comment("회원 id")
-    private Long memberId;
+    @Comment("동네생활 게시글 이미지 URL")
+    private String imageUrl;
 
-    public ArticleParticipant(Article article, Long memberId){
+
+    public ArticleImage(Article article, String imageUrl){
         this.article = article;
-        this.memberId= memberId;
+        this.imageUrl = imageUrl;
     }
 }

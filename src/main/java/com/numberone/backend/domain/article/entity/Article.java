@@ -1,8 +1,9 @@
 package com.numberone.backend.domain.article.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
-import com.numberone.backend.domain.comment.entity.CommentEntity;
+import com.numberone.backend.domain.articleimage.entity.ArticleImage;
 import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant;
+import com.numberone.backend.domain.comment.entity.CommentEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,11 +24,17 @@ public class Article extends BaseTimeEntity {
     @Column(name = "article_id")
     private Long id;
 
-    @OneToMany(mappedBy =  "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<CommentEntity> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy =  "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ArticleParticipant> articleParticipants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<ArticleImage> articleImages = new ArrayList<>();
+
+    @Comment("썸네일 이미지 url ID")
+    private Long thumbNailImageUrlId;
 
     @Comment("게시글 제목")
     private String title;
@@ -44,4 +51,20 @@ public class Article extends BaseTimeEntity {
 
     @Comment("게시글 좋아요 개수")
     private Integer likeCount; // todo: 동시성 처리
+
+    @Comment("작성자 ID")
+    private Long articleOwnerId;
+
+    public Article(String title, String content, Long articleOwnerId, ArticleTag tag) {
+        this.title = title;
+        this.content = content;
+        this.articleOwnerId = articleOwnerId;
+        this.articleTag = tag;
+    }
+
+    public void updateArticleImage(List<ArticleImage> images, Long thumbNailImageUrlId) {
+        this.articleImages = images;
+        this.thumbNailImageUrlId = thumbNailImageUrlId;
+    }
+
 }
