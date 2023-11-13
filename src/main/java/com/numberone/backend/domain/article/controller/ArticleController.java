@@ -1,5 +1,6 @@
 package com.numberone.backend.domain.article.controller;
 
+import com.numberone.backend.domain.article.dto.request.ModifyArticleRequest;
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
 import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
@@ -50,7 +51,7 @@ public class ArticleController {
             게시글 id 를 PathVariable 으로 넘겨주세요.
             해당 게시글을 삭제 상태로 변경합니다.
             """)
-    @PutMapping("{article-id}/delete")
+    @PatchMapping("{article-id}/delete")
     public ResponseEntity<DeleteArticleResponse> deleteArticle(@PathVariable("article-id") Long articleId) {
         return ResponseEntity.ok(articleService.deleteArticle(articleId));
     }
@@ -92,7 +93,7 @@ public class ArticleController {
     @Operation(summary = "게시글에 댓글 작성하기", description = """
             게시글에 댓글을 작성하는 API 입니다.
             
-            게시글 아이디는 Path Parameter 으로 넘겨주세요 (article-id)
+            게시글 아이디는 Path variable 으로 넘겨주세요 (article-id)
             
             """)
     @PostMapping("comments/{article-id}")
@@ -103,6 +104,20 @@ public class ArticleController {
                 URI.create(String.format("/api/articles/comment/%s", articleId)))
                 .body(articleService.createComment(articleId, request));
 
+    }
+
+    @Operation(summary = "게시글 수정하기", description = """
+            게시글 내용을 수정하는 API 입니다.
+           
+            반드시 access token 을 헤더에 포함해서 요청해주세요.
+            
+            article-id 는 path variable 으로 넘겨주세요.
+            """)
+    @PutMapping("{article-id}/modify")
+    public ResponseEntity<ModifyArticleResponse> modifyArticle(
+            @PathVariable("article-id") Long articleId,
+            @RequestBody @Valid ModifyArticleRequest request ){
+        return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
     }
 
 

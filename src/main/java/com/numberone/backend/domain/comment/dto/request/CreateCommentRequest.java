@@ -14,4 +14,7 @@ public class CreateCommentRequest {
     @NotNull
     private String content;
 
+    private Double longitude;
+    private Double latitude;
+
 }

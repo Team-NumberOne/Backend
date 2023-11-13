@@ -1,5 +1,6 @@
 package com.numberone.backend.domain.article.service;
 
+import com.numberone.backend.domain.article.dto.request.ModifyArticleRequest;
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
 import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.entity.Article;
@@ -71,6 +72,7 @@ public class ArticleService {
         String thumbNailImageUrl = "";
         Long thumbNailImageId = 1L;
         if (!Objects.isNull(request.getImageList())) {
+            // todo: refactoring
             List<MultipartFile> imageList = request.getImageList();
 
             for (int i = 0; i < imageList.size(); i++) {
@@ -128,6 +130,7 @@ public class ArticleService {
     }
 
     public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
+        // todo: 게시글 상태 고려하여 조회하기 (삭제 여부)
         return new SliceImpl<>(
                 articleRepository.getArticlesNoOffSetPaging(param, pageable)
                         .stream()
@@ -162,4 +165,42 @@ public class ArticleService {
         return CreateCommentResponse.of(savedComment);
     }
 
+    @Transactional
+    public ModifyArticleResponse modifyArticle(Long articleId, ModifyArticleRequest request){
+        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
+        Member member = memberRepository.findByEmail(principal)
+                .orElseThrow(NotFoundMemberException::new);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+
+        article.modifyArticle(request.getTitle(), request.getContent(), request.getArticleTag());
+
+
+        List<ArticleImage> articleImages = new ArrayList<>();
+        List<String> imageUrls = new ArrayList<>();
+        String thumbNailImageUrl = "";
+        Long thumbNailImageId = 1L;
+        if (!Objects.isNull(request.getImageList())) {
+            // todo: refactoring
+            List<MultipartFile> imageList = request.getImageList();
+
+            for (int i = 0; i < imageList.size(); i++) {
+                String imageUrl = s3Provider.uploadImage(imageList.get(i));
+                imageUrls.add(imageUrl);
+
+                ArticleImage savedArticleImage = articleImageRepository.save(
+                        new ArticleImage(article, imageUrl)
+                );
+                articleImages.add(savedArticleImage);
+                if (Objects.equals(i, request.getThumbNailImageIdx())) {
+                    thumbNailImageUrl = imageUrl;
+                    thumbNailImageId = savedArticleImage.getId();
+                }
+
+            }
+            article.updateArticleImage(articleImages, thumbNailImageId);
+        }
+
+        return ModifyArticleResponse.of(article, imageUrls, thumbNailImageUrl);
+    }
 }

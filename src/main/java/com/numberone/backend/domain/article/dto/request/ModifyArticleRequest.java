@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UploadArticleRequest {
+public class ModifyArticleRequest {
 
     // 글 관련
     @NotNull(message = "글 제목은 null 일 수 없습니다.")
