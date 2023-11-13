@@ -154,7 +154,7 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         CommentEntity savedComment = commentRepository.save(
-                new CommentEntity(request.getContent(), article)
+                new CommentEntity(request.getContent(), article, member)
         );
 
         articleParticipantRepository.save(new ArticleParticipant(article, member));

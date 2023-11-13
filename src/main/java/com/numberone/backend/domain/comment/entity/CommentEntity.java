@@ -2,6 +2,7 @@ package com.numberone.backend.domain.comment.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.article.entity.Article;
+import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,18 +37,21 @@ public class CommentEntity extends BaseTimeEntity {
     @Comment("댓글 내용")
     private String content;
 
+    @Comment("작성자 아이디")
+    private Long authorId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private CommentEntity parent;
 
-    @Builder.Default
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<CommentEntity> childs = new ArrayList<>();
 
-    public CommentEntity(String content, Article article){
+    public CommentEntity(String content, Article article, Member author){
         this.depth = 0;
         this.content = content;
         this.article = article;
+        this.authorId = author.getId();
     }
 
     public void updateParent(CommentEntity parent){
