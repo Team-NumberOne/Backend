@@ -28,4 +28,14 @@ public class CommentEntity extends BaseTimeEntity {
 
     @Comment("댓글 좋아요 개수")
     private Integer likeCount; // todo: 동시성 처리
+
+    @Comment("댓글 내용")
+    private String content;
+
+    public CommentEntity(String content, Article article){
+        this.depth = 0;
+        this.content = content;
+        this.article = article;
+    }
+
 }

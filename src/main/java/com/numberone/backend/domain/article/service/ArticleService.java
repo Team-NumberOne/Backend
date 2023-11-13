@@ -9,6 +9,10 @@ import com.numberone.backend.domain.articleimage.entity.ArticleImage;
 import com.numberone.backend.domain.articleimage.repository.ArticleImageRepository;
 import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant;
 import com.numberone.backend.domain.articleparticipant.repository.ArticleParticipantRepository;
+import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
+import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
+import com.numberone.backend.domain.comment.entity.CommentEntity;
+import com.numberone.backend.domain.comment.repository.CommentRepository;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
@@ -40,6 +44,7 @@ public class ArticleService {
     private final MemberRepository memberRepository;
     private final ArticleParticipantRepository articleParticipantRepository;
     private final ArticleImageRepository articleImageRepository;
+    private final CommentRepository commentRepository;
     private final S3Provider s3Provider;
 
     @Transactional
@@ -57,7 +62,7 @@ public class ArticleService {
                         request.getArticleTag())
         );
         articleParticipantRepository.save(
-                new ArticleParticipant(article, owner.getId())
+                new ArticleParticipant(article, owner)
         );
 
         // 2. 이미지 업로드
@@ -139,6 +144,22 @@ public class ArticleService {
         Optional<ArticleImage> articleImage = articleImageRepository.findById(thumbNailImageUrlId);
 
         articleInfo.updateInfo(owner, articleImage);
+    }
+
+    @Transactional
+    public CreateCommentResponse createComment(Long articleId, CreateCommentRequest request){
+        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
+        Member member = memberRepository.findByEmail(principal)
+                .orElseThrow(NotFoundMemberException::new);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+        CommentEntity savedComment = commentRepository.save(
+                new CommentEntity(request.getContent(), article)
+        );
+
+        articleParticipantRepository.save(new ArticleParticipant(article, member));
+
+        return CreateCommentResponse.of(savedComment);
     }
 
 }

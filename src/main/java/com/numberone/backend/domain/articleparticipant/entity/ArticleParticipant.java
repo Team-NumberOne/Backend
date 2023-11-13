@@ -2,6 +2,7 @@ package com.numberone.backend.domain.articleparticipant.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.article.entity.Article;
+import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,8 +29,8 @@ public class ArticleParticipant extends BaseTimeEntity {
     @Comment("회원 id")
     private Long memberId;
 
-    public ArticleParticipant(Article article, Long memberId){
+    public ArticleParticipant(Article article, Member member){
         this.article = article;
-        this.memberId= memberId;
+        this.memberId= member.getId();
     }
 }
