@@ -39,7 +39,6 @@ public class SupportService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
         Support support = Support.of(
-                null,
                 sponsor,
                 member
         );

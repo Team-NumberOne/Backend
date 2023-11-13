@@ -37,9 +37,8 @@ public class Support {
         this.member = member;
     }
 
-    public static Support of(String message, Sponsor sponsor, Member member) {
+    public static Support of(Sponsor sponsor, Member member) {
         return Support.builder()
-                .message(message)
                 .sponsor(sponsor)
                 .member(member)
                 .build();
