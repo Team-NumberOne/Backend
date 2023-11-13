@@ -25,7 +25,6 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-
     @Operation(summary = "게시글 작성 API", description = """
                         
             동네생활 게시글 등록 api 입니다.
@@ -120,6 +119,6 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
     }
 
-
+    // todo: 작성자 위경도 주소 변환 처리, 게시글 좋아요, 게시글에 댓글 달리면 작성자에게 푸시알람 전송, 게시글 신고 기능
 
 }
