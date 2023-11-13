@@ -51,10 +51,10 @@ public class Sponsor {
     private String sponsorName;
 
     @Comment("썸네일 이미지")
-    private String thumbnail;
+    private String thumbnailUrl;
 
     @Comment("상세페이지 이미지")
-    private String image;
+    private String imageUrl;
 
     @Comment("후원사 링크")
     private String sponsorUrl;

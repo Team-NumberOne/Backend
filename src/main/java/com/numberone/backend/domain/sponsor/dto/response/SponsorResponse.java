@@ -49,10 +49,10 @@ public class SponsorResponse {
     private String period;
 
     @Schema(defaultValue = "https://numberone-dev-s3.s3.ap-northeast-2.amazonaws.com/static/sponsor_image.png")
-    private String thumbnail;
+    private String thumbnailUrl;
 
     @Schema(defaultValue = "https://www.naver.com")
-    private String image;
+    private String imageUrl;
 
     @Schema(defaultValue = "https://numberone-dev-s3.s3.ap-northeast-2.amazonaws.com/static/sponsor_thumbnail.png")
     private String sponsorUrl;
@@ -75,8 +75,8 @@ public class SponsorResponse {
                 .currentHeart(sponsor.getCurrentHeart())
                 .sponsorName(sponsor.getSponsorName())
                 .period(startDate + " ~ " + dueDate)
-                .thumbnail(sponsor.getThumbnail())
-                .image(sponsor.getImage())
+                .thumbnailUrl(sponsor.getThumbnailUrl())
+                .imageUrl(sponsor.getImageUrl())
                 .sponsorUrl(sponsor.getSponsorUrl())
                 .build();
     }
