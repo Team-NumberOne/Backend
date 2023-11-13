@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CreateCommentResponse {
+public class CreateChildCommentResponse {
+
     private LocalDateTime createdAt;
     private Long commentId;
 
-    public static CreateCommentResponse of (CommentEntity comment){
-        return CreateCommentResponse.builder()
+    public static CreateChildCommentResponse of (CommentEntity comment){
+        return CreateChildCommentResponse.builder()
                 .createdAt(comment.getCreatedAt())
                 .commentId(comment.getId())
                 .build();

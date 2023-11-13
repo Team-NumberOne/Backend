@@ -4,9 +4,13 @@ import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.article.entity.Article;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Comment("동네생활 댓글 정보")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,10 +36,22 @@ public class CommentEntity extends BaseTimeEntity {
     @Comment("댓글 내용")
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private CommentEntity parent;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<CommentEntity> childs = new ArrayList<>();
+
     public CommentEntity(String content, Article article){
         this.depth = 0;
         this.content = content;
         this.article = article;
+    }
+
+    public void updateParent(CommentEntity parent){
+        this.parent = parent;
     }
 
 }

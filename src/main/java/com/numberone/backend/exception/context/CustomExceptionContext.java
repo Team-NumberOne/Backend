@@ -43,6 +43,9 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     // article image 관련 예외
     NOT_FOUND_ARTICLE_IMAGE("해당 이미지를 찾을 수 없습니다.", 9000),
+
+    // comment 관련 예외
+    NOT_FOUND_COMMENT("해당 댓글을 찾을 수 없습니다.", 10000),
     ;
 
     private final String message;
