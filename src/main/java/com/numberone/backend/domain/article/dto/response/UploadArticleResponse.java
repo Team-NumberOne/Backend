@@ -29,7 +29,7 @@ public class UploadArticleResponse {
                 .createdAt(article.getCreatedAt())
                 .imageUrls(imageUrls)
                 .thumbNailImageUrl(thumbNailImageUrl)
-                .address("서울시 광진구 자양동")
+                .address(article.getAddress())
                 .build();
     }
 

@@ -3,6 +3,7 @@ package com.numberone.backend.domain.article.repository.custom;
 import com.numberone.backend.domain.article.dto.response.ArticleSearchParameter;
 import com.numberone.backend.domain.article.dto.response.GetArticleListResponse;
 import com.numberone.backend.domain.article.dto.response.QGetArticleListResponse;
+import com.numberone.backend.domain.article.entity.ArticleStatus;
 import com.numberone.backend.domain.article.entity.ArticleTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,7 +34,8 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
                 .from(article)
                 .where(
                         ltArticleId(param.getLastArticleId()),
-                        checkTagCondition(param.getTag())
+                        checkTagCondition(param.getTag()),
+                        article.articleStatus.eq(ArticleStatus.ACTIVATED)
                 )
                 .orderBy(article.id.desc())
                 .limit(pageable.getPageSize() + 1)

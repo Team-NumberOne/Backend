@@ -119,6 +119,6 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
     }
 
-    // todo: 작성자 위경도 주소 변환 처리, 게시글 좋아요, 게시글에 댓글 달리면 작성자에게 푸시알람 전송, 게시글 신고 기능
+    // todo: 게시글 좋아요, 게시글 신고 기능
 
 }

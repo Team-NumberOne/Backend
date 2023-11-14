@@ -18,9 +18,10 @@ import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
-import com.numberone.backend.exception.notfound.NotFoundArticleImageException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
+import com.numberone.backend.support.fcm.service.FcmMessageProvider;
 import com.numberone.backend.support.s3.S3Provider;
+import com.numberone.backend.util.LocationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.numberone.backend.support.notification.NotificationMessage.ARTICLE_COMMENT_FCM_ALARM;
+
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -47,6 +50,8 @@ public class ArticleService {
     private final ArticleImageRepository articleImageRepository;
     private final CommentRepository commentRepository;
     private final S3Provider s3Provider;
+    private final LocationProvider locationProvider;
+    private final FcmMessageProvider fcmMessageProvider;
 
     @Transactional
     public UploadArticleResponse uploadArticle(UploadArticleRequest request) {
@@ -94,6 +99,14 @@ public class ArticleService {
         // 3. 게시글 - 이미지 연관 관계 설정
         article.updateArticleImage(articleImages, thumbNailImageId);
 
+        // 4. 작성자 주소 설정
+        Double latitude = request.getLatitude();
+        Double longitude = request.getLongitude();
+        if (latitude != null && longitude != null) {
+            String address = locationProvider.pos2address(request.getLatitude(), request.getLongitude());
+            article.updateAddress(address);
+        }
+
         return UploadArticleResponse.of(article, imageUrls, thumbNailImageUrl);
     }
 
@@ -130,7 +143,6 @@ public class ArticleService {
     }
 
     public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
-        // todo: 게시글 상태 고려하여 조회하기 (삭제 여부)
         return new SliceImpl<>(
                 articleRepository.getArticlesNoOffSetPaging(param, pageable)
                         .stream()
@@ -150,7 +162,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public CreateCommentResponse createComment(Long articleId, CreateCommentRequest request){
+    public CreateCommentResponse createComment(Long articleId, CreateCommentRequest request) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -161,12 +173,13 @@ public class ArticleService {
         );
 
         articleParticipantRepository.save(new ArticleParticipant(article, member));
+        fcmMessageProvider.sendFcm(member, ARTICLE_COMMENT_FCM_ALARM);
 
         return CreateCommentResponse.of(savedComment);
     }
 
     @Transactional
-    public ModifyArticleResponse modifyArticle(Long articleId, ModifyArticleRequest request){
+    public ModifyArticleResponse modifyArticle(Long articleId, ModifyArticleRequest request) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
