@@ -42,7 +42,8 @@ public class TokenService {
         try {
             ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
             String email = response.getBody().getKakao_account().getEmail();
-            return getTokenResponse(email);
+            String realname = response.getBody().getKakao_account().getProfile().getNickname();
+            return getTokenResponse(email, realname);
         } catch (Exception e) {
             throw new BadRequestSocialTokenException();
         }
@@ -57,7 +58,8 @@ public class TokenService {
         try {
             ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
             String email = response.getBody().getResponse().getEmail();
-            return getTokenResponse(email);
+            String realname = response.getBody().getResponse().getName();
+            return getTokenResponse(email, realname);
         } catch (Exception e) {
             throw new BadRequestSocialTokenException();
         }
@@ -65,21 +67,21 @@ public class TokenService {
 
     @Transactional
     public RefreshTokenResponse refresh(RefreshTokenRequest tokenRequest) {
-        if(!jwtUtil.isValid(tokenRequest.getToken()))
+        if (!jwtUtil.isValid(tokenRequest.getToken()))
             throw new NotFoundRefreshTokenException();
         Token token = tokenRepository.findByRefreshToken(tokenRequest.getToken())
                 .orElseThrow(NotFoundRefreshTokenException::new);
         String email = jwtUtil.getEmail(tokenRequest.getToken());
         String newAccessToken = jwtUtil.createToken(email, accessPeroid);
         String newRefreshToken = jwtUtil.createToken(email, refreshPeroid);
-        token.update(newAccessToken,newRefreshToken);
+        token.update(newAccessToken, newRefreshToken);
         tokenRepository.save(token);//redis의 경우 jpa와 달리 transactional을 이용해도 데이터 수정시에 명시적으로 save를 해줘야 함
-        return RefreshTokenResponse.of(newAccessToken,newRefreshToken);
+        return RefreshTokenResponse.of(newAccessToken, newRefreshToken);
     }
 
-    private GetTokenResponse getTokenResponse(String email) {
+    private GetTokenResponse getTokenResponse(String email, String realname) {
         if (!memberRepository.existsByEmail(email))
-            memberService.create(email);
+            memberService.create(email, realname);
         if (tokenRepository.existsById(email)) {
             Token token = tokenRepository.findById(email)
                     .orElseThrow(WrongAccessTokenException::new);

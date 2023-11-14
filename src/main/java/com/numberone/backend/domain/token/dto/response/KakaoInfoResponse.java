@@ -31,7 +31,11 @@ public class KakaoInfoResponse {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class KakaoAccount {
-        static class profile {
+        @Getter
+        @NoArgsConstructor
+        @ToString
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public class profile {
             private String nickname;
             private String thumbnail_image_url;
             private String profile_image_url;
