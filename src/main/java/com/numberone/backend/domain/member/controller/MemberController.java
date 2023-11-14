@@ -1,4 +1,4 @@
-package com.numberone.backend.domain.member.contoller;
+package com.numberone.backend.domain.member.controller;
 
 import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
