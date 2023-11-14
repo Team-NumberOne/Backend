@@ -1,7 +1,7 @@
 package com.numberone.backend.domain.member.service;
 
-import com.numberone.backend.domain.member.dto.dto.request.BuyHeartRequest;
-import com.numberone.backend.domain.member.dto.dto.response.HeartCntResponse;
+import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
+import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;

@@ -1,4 +1,4 @@
-package com.numberone.backend.domain.member.dto.dto.request;
+package com.numberone.backend.domain.member.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

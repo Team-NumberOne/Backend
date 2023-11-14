@@ -1,4 +1,4 @@
-package com.numberone.backend.domain.member.dto.dto.response;
+package com.numberone.backend.domain.member.dto.response;
 
 import com.numberone.backend.domain.member.entity.Member;
 import lombok.*;
