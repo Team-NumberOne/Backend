@@ -38,10 +38,13 @@ public class SupportService {
                 .orElseThrow(NotFoundSupportException::new);
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
+        if (member.getHeartCnt() < createSupportRequest.getHeartCnt())
+            return CreateSupportResponse.fail();
         Support support = Support.of(
                 sponsor,
                 member
         );
+        member.decreaseHeart(createSupportRequest.getHeartCnt());
         sponsor.increaseHeart(createSupportRequest.getHeartCnt());
         support = supportRepository.save(support);
         return CreateSupportResponse.of(support.getId());

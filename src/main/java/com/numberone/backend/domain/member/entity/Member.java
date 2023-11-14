@@ -43,4 +43,8 @@ public class Member {
     public void increaseHeart(int heart) {
         heartCnt += heart;
     }
+
+    public void decreaseHeart(int heart) {
+        heartCnt -= heart;
+    }
 }
