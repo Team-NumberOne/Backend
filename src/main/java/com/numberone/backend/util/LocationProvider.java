@@ -16,22 +16,26 @@ import java.net.URI;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-//위치(주소나 GPS) 관련 기능들 작성할 util함수
 public class LocationProvider {
     private final KakaoProperties kakaoProperties;
     private final RestTemplate restTemplate;
 
     public String pos2address(double latitude, double longitude) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + kakaoProperties.getClient_id());
-        URI uri = UriComponentsBuilder
-                .fromUriString(kakaoProperties.getMapApiUrl())
-                .queryParam("x", longitude)
-                .queryParam("y", latitude)
-                .build()
-                .toUri();
-        MapApiResponse mapApiResponse = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(null, headers), MapApiResponse.class)
-                .getBody();
-        return mapApiResponse.getDocuments().get(0).getAddress();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "KakaoAK " + kakaoProperties.getClient_id());
+            URI uri = UriComponentsBuilder
+                    .fromUriString(kakaoProperties.getMapApiUrl())
+                    .queryParam("x", longitude)
+                    .queryParam("y", latitude)
+                    .build()
+                    .toUri();
+            MapApiResponse mapApiResponse = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(null, headers), MapApiResponse.class)
+                    .getBody();
+            return mapApiResponse.getDocuments().get(0).getAddress();
+        } catch (Exception e) {
+            log.error("Location Provider occurs error! {}", e.getMessage());
+            return "";
+        }
     }
 }
