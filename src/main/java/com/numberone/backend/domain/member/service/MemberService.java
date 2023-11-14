@@ -1,5 +1,7 @@
 package com.numberone.backend.domain.member.service;
 
+import com.numberone.backend.domain.member.dto.dto.request.BuyHeartRequest;
+import com.numberone.backend.domain.member.dto.dto.response.HeartCntResponse;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
@@ -21,5 +23,19 @@ public class MemberService {
     @Transactional
     public void create(String email) {
         memberRepository.save(Member.of(email));
+    }
+
+    @Transactional
+    public HeartCntResponse buyHeart(BuyHeartRequest buyHeartRequest, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NotFoundMemberException::new);
+        member.increaseHeart(buyHeartRequest.getHeartCnt());
+        return HeartCntResponse.of(member);
+    }
+
+    public HeartCntResponse getHeart(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NotFoundMemberException::new);
+        return HeartCntResponse.of(member);
     }
 }

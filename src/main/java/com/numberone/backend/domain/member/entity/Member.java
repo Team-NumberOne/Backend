@@ -28,13 +28,19 @@ public class Member {
     private List<Support> supports = new ArrayList<>();
 
     @Builder
-    public Member(String email) {
+    public Member(String email, Integer heartCnt) {
         this.email = email;
+        this.heartCnt = heartCnt;
     }
 
-    public static Member of(String email){
+    public static Member of(String email) {
         return Member.builder()
                 .email(email)
+                .heartCnt(0)
                 .build();
+    }
+
+    public void increaseHeart(int heart) {
+        heartCnt += heart;
     }
 }
