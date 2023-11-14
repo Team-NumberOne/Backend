@@ -11,4 +11,6 @@ import lombok.*;
 public class ArticleSearchParameter {
     private ArticleTag tag;
     private Long lastArticleId;
+    private Double longitude;
+    private Double latitude;
 }
