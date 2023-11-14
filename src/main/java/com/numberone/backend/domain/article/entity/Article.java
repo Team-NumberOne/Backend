@@ -93,4 +93,8 @@ public class Article extends BaseTimeEntity {
         this.address = address;
     }
 
+    public void increaseLikeCount(){
+        this.likeCount++;
+    }
+
 }

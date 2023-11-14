@@ -6,6 +6,7 @@ import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
 import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
+import com.numberone.backend.support.redis.like.service.RedisLockLikeFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.net.URI;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final RedisLockLikeFacade redisLockLikeFacade;
 
     @Operation(summary = "게시글 작성 API", description = """
                         
@@ -117,6 +119,14 @@ public class ArticleController {
             @PathVariable("article-id") Long articleId,
             @RequestBody @Valid ModifyArticleRequest request ){
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
+    }
+
+    @PutMapping("{article-id}/like")
+    public ResponseEntity<String> updateLikeCount(
+            @PathVariable("article-id") Long articleId
+    ) throws InterruptedException {
+        redisLockLikeFacade.increaseArticleLike(articleId);
+        return ResponseEntity.ok("up");
     }
 
     // todo: 게시글 좋아요, 게시글 신고 기능
