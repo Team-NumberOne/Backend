@@ -87,7 +87,7 @@ public class ArticleController {
     @GetMapping
     public ResponseEntity<Slice<GetArticleListResponse>> getArticlePages(
             Pageable pageable,
-            @ModelAttribute ArticleSearchParameter param) {
+            @ModelAttribute ArticleSearchParameter param) { // todo: 해당 유저가 좋아요를 눌렀는지 여부까지 표시되도록 수정
         return ResponseEntity.ok(articleService.getArticleListPaging(param, pageable));
     }
 
@@ -119,14 +119,6 @@ public class ArticleController {
             @PathVariable("article-id") Long articleId,
             @RequestBody @Valid ModifyArticleRequest request ){
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
-    }
-
-    @PutMapping("{article-id}/like")
-    public ResponseEntity<String> updateLikeCount(
-            @PathVariable("article-id") Long articleId
-    ) throws InterruptedException {
-        redisLockLikeFacade.increaseArticleLike(articleId);
-        return ResponseEntity.ok("up");
     }
 
     // todo: 게시글 좋아요, 게시글 신고 기능

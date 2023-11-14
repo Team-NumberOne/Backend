@@ -72,6 +72,7 @@ public class Article extends BaseTimeEntity {
         this.articleTag = tag;
         this.articleStatus = ArticleStatus.ACTIVATED;
         this.commentCount = 0;
+        this.likeCount = 0;
     }
 
     public void updateArticleImage(List<ArticleImage> images, Long thumbNailImageUrlId) {
@@ -89,12 +90,18 @@ public class Article extends BaseTimeEntity {
         this.articleTag = tag;
     }
 
-    public void updateAddress(String address){
+    public void updateAddress(String address) {
         this.address = address;
     }
 
-    public void increaseLikeCount(){
+    public void increaseLikeCount() {
         this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 
 }

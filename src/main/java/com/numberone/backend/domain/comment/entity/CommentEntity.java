@@ -5,7 +5,6 @@ import com.numberone.backend.domain.article.entity.Article;
 import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -47,15 +46,26 @@ public class CommentEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<CommentEntity> childs = new ArrayList<>();
 
-    public CommentEntity(String content, Article article, Member author){
+    public CommentEntity(String content, Article article, Member author) {
         this.depth = 0;
         this.content = content;
         this.article = article;
         this.authorId = author.getId();
+        this.likeCount = 0;
     }
 
-    public void updateParent(CommentEntity parent){
+    public void updateParent(CommentEntity parent) {
         this.parent = parent;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 
 }

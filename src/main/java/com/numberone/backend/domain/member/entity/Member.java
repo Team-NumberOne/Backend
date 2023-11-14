@@ -1,6 +1,8 @@
 package com.numberone.backend.domain.member.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
+import com.numberone.backend.domain.like.entity.ArticleLike;
+import com.numberone.backend.domain.like.entity.CommentLike;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,6 +46,12 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Support> supports = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<ArticleLike> articleLikes = new ArrayList<>();
+
     @Comment("회원 프로필 사진 URL")
     private String profileImageUrl;
 
@@ -72,7 +80,7 @@ public class Member extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateProfileImageUrl(String imageUrl){
+    public void updateProfileImageUrl(String imageUrl) {
         this.profileImageUrl = imageUrl;
     }
 
