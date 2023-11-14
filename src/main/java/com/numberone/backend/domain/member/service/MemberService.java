@@ -29,7 +29,7 @@ public class MemberService {
     public HeartCntResponse buyHeart(BuyHeartRequest buyHeartRequest, String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
-        member.increaseHeart(buyHeartRequest.getHeartCnt());
+        member.plusHeart(buyHeartRequest.getHeartCnt());
         return HeartCntResponse.of(member);
     }
 

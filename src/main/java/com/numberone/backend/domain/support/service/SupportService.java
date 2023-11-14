@@ -9,11 +9,10 @@ import com.numberone.backend.domain.support.dto.request.EditMessageRequest;
 import com.numberone.backend.domain.support.dto.response.CreateSupportResponse;
 import com.numberone.backend.domain.support.entity.Support;
 import com.numberone.backend.domain.support.repository.SupportRepository;
+import com.numberone.backend.exception.badrequest.BadRequestHeartException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.exception.notfound.NotFoundSupportException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +38,12 @@ public class SupportService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
         if (member.getHeartCnt() < createSupportRequest.getHeartCnt())
-            return CreateSupportResponse.fail();
+            throw new BadRequestHeartException();
         Support support = Support.of(
                 sponsor,
                 member
         );
-        member.decreaseHeart(createSupportRequest.getHeartCnt());
+        member.minusHeart(createSupportRequest.getHeartCnt());
         sponsor.increaseHeart(createSupportRequest.getHeartCnt());
         support = supportRepository.save(support);
         return CreateSupportResponse.of(support.getId());

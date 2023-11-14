@@ -40,11 +40,11 @@ public class Member {
                 .build();
     }
 
-    public void increaseHeart(int heart) {
+    public void plusHeart(int heart) {
         heartCnt += heart;
     }
 
-    public void decreaseHeart(int heart) {
+    public void minusHeart(int heart) {
         heartCnt -= heart;
     }
 }

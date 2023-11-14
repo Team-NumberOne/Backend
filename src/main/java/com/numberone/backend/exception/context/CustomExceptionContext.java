@@ -34,7 +34,8 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     //후원 페이지 관련 예외
     NOT_FOUND_SUPPORT("존재하지 않는 후원 관계입니다.", 7000),
-    NOT_FOUND_SPONSOR("존재하지 않는 후원입니다.", 7001)
+    NOT_FOUND_SPONSOR("존재하지 않는 후원입니다.", 7001),
+    BAD_REQUEST_HEART("후원을 하기에는 사용자의 마음 갯수가 부족합니다.",7002)
     ;
 
     private final String message;
