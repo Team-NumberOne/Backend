@@ -2,9 +2,13 @@ package com.numberone.backend.support.fcm.service;
 
 import com.google.firebase.messaging.*;
 import com.numberone.backend.domain.member.entity.Member;
+import com.numberone.backend.domain.notification.entity.NotificationEntity;
+import com.numberone.backend.domain.notification.entity.NotificationTag;
+import com.numberone.backend.domain.notification.repository.NotificationRepository;
 import com.numberone.backend.exception.conflict.FirebaseMessageSendException;
 import com.numberone.backend.support.fcm.dto.FcmNotificationDto;
 import com.numberone.backend.support.notification.NotificationMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,29 +20,35 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class FcmMessageProvider {
-
-    public void sendFcm(Member member, NotificationMessage notificationMessage){
+    private final NotificationRepository notificationRepository;
+    public void sendFcm(Member member, NotificationMessage notificationMessage, NotificationTag tag){
         String token = member.getFcmToken();
         if (Objects.isNull(token)){
             log.error("해당 회원의 fcm 토큰이 존재하지 않아, 푸시알람을 전송할 수 없습니다.");
            return;
         }
 
+        String title = notificationMessage.getTitle();
+        String body = member.getNickName() + "님, " + notificationMessage.getBody();
+
         Message message = Message.builder()
                 .putData("time", LocalDateTime.now().toString())
                 .setNotification(
                         Notification.builder()
-                                .setTitle(notificationMessage.getTitle())
-                                .setBody(notificationMessage.getBody())
+                                .setTitle(title)
+                                .setBody(body)
                                 .build()
                 )
                 .setToken(token)
                 .build();
         try {
             String response = FirebaseMessaging.getInstance().send(message);
-            log.info("Fcm 푸시 알람을 전송하였습니다.");
+            notificationRepository.save(new NotificationEntity(member, tag, title, body, true));
+            log.info("Fcm 푸시 알람을 성공적으로 전송하였습니다.");
         } catch (Exception e){
+            notificationRepository.save(new NotificationEntity(member, tag, title, body, false));
             log.error("Fcm 푸시 알람을 전송하는 도중에 에러가 발생했습니다. {}", e.getMessage());
         }
     }
