@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,8 +44,11 @@ public class TokenService {
         try {
             ResponseEntity<KakaoInfoResponse> response = restTemplate.exchange(kakaoProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), KakaoInfoResponse.class);
             String email = response.getBody().getKakao_account().getEmail();
-            String realname = response.getBody().getKakao_account().getProfile().getNickname();
-            return getTokenResponse(email, realname);
+            String realName = "실명을 가져올 수 없습니다.";
+            if(response.getBody().getKakao_account().getProfile() != null){
+                realName = response.getBody().getKakao_account().getProfile().getNickname();
+            }
+            return getTokenResponse(email, realName);
         } catch (Exception e) {
             throw new BadRequestSocialTokenException();
         }
@@ -58,8 +63,9 @@ public class TokenService {
         try {
             ResponseEntity<NaverInfoResponse> response = restTemplate.exchange(naverProperties.getUser_api_url(), HttpMethod.GET, new HttpEntity<>(null, headers), NaverInfoResponse.class);
             String email = response.getBody().getResponse().getEmail();
-            String realname = response.getBody().getResponse().getName();
-            return getTokenResponse(email, realname);
+            String realName = Optional.ofNullable(response.getBody().getResponse().getName())
+                    .orElse("실명을 가져올 수 없습니다.");
+            return getTokenResponse(email, realName);
         } catch (Exception e) {
             throw new BadRequestSocialTokenException();
         }
