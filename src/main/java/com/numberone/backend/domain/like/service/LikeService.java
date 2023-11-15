@@ -37,7 +37,7 @@ public class LikeService {
 
 
     @Transactional
-    public void increaseArticleLike(Long articleId) {
+    public Integer increaseArticleLike(Long articleId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -49,10 +49,12 @@ public class LikeService {
         }
         article.increaseLikeCount();
         articleLikeRepository.save(new ArticleLike(member, article));
+
+        return article.getLikeCount();
     }
 
     @Transactional
-    public void decreaseArticleLike(Long articleId) {
+    public Integer decreaseArticleLike(Long articleId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -67,10 +69,12 @@ public class LikeService {
         // 사용자의 게시글 좋아요 목록에서 제거
         List<ArticleLike> articleLikeList = articleLikeRepository.findByMember(member);
         articleLikeList.removeIf(articleLike -> articleLike.getArticleId().equals(articleId));
+
+        return article.getLikeCount();
     }
 
     @Transactional
-    public void increaseCommentLike(Long commentId) {
+    public Integer increaseCommentLike(Long commentId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -82,10 +86,12 @@ public class LikeService {
         }
         commentEntity.increaseLikeCount();
         commentLikeRepository.save(new CommentLike(member, commentEntity));
+
+        return commentEntity.getLikeCount();
     }
 
     @Transactional
-    public void decreaseCommentLike(Long commentId) {
+    public Integer decreaseCommentLike(Long commentId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -99,14 +105,16 @@ public class LikeService {
         // 사용자의 댓글 좋아요 목록에서 제거
         List<CommentLike> commentLikeList = commentLikeRepository.findByMember(member);
         commentLikeList.removeIf(commentLike -> commentLike.getCommentId().equals(commentId));
+
+        return commentEntity.getLikeCount();
     }
 
-    public boolean isAlreadyLikedArticle(Member member, Long articleId) {
+    private boolean isAlreadyLikedArticle(Member member, Long articleId) {
         return articleLikeRepository.findByMember(member).stream()
                 .anyMatch(articleLike -> articleLike.getArticleId().equals(articleId));
     }
 
-    public boolean isAlreadyLikedComment(Member member, Long commentId) {
+    private boolean isAlreadyLikedComment(Member member, Long commentId) {
         return commentLikeRepository.findByMember(member).stream()
                 .anyMatch(commentLike -> commentLike.getCommentId().equals(commentId));
     }
