@@ -25,10 +25,10 @@ public class Member {
     private String email;
 
     @Comment("닉네임")
-    private String nickname;
+    private String nickName;
 
     @Comment("본명")
-    private String realname;
+    private String realName;
 
     @Comment("마음 갯수")
     private Integer heartCnt;
@@ -43,23 +43,23 @@ public class Member {
     private List<NotificationRegion> notificationRegions = new ArrayList<>();
 
     @Builder
-    public Member(String email, String nickname, String realname, Integer heartCnt) {
+    public Member(String email, String nickName, String realName, Integer heartCnt) {
         this.email = email;
-        this.nickname = nickname;
-        this.realname = realname;
+        this.nickName = nickName;
+        this.realName = realName;
         this.heartCnt = heartCnt;
     }
 
-    public static Member of(String email, String realname) {
+    public static Member of(String email, String realName) {
         return Member.builder()
                 .email(email)
-                .realname(realname)
+                .realName(realName)
                 .heartCnt(0)
                 .build();
     }
 
     public void updateNickname(String nickname) {
-        this.nickname = nickname;
+        this.nickName = nickname;
     }
 
     public void plusHeart(int heart) {
