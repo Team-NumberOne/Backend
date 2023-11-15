@@ -23,8 +23,6 @@ public class RedisLockLikeFacade {
                     .currentLikeCount(likeCount)
                     .articleId(articleId)
                     .build();
-        } catch (Exception e) {
-            throw new RuntimeException();
         } finally {
             redisLockRepository.unlock(articleId);
         }
@@ -40,8 +38,6 @@ public class RedisLockLikeFacade {
                     .currentLikeCount(likeCount)
                     .articleId(articleId)
                     .build();
-        } catch (Exception e) {
-            throw new RuntimeException();
         } finally {
             redisLockRepository.unlock(articleId);
         }
@@ -57,8 +53,6 @@ public class RedisLockLikeFacade {
                     .currentLikeCount(likeCount)
                     .commentId(commentId)
                     .build();
-        } catch (Exception e) {
-            throw new RuntimeException();
         } finally {
             redisLockRepository.unlock(commentId);
         }
@@ -74,8 +68,6 @@ public class RedisLockLikeFacade {
                     .currentLikeCount(likeCount)
                     .commentId(commentId)
                     .build();
-        } catch (Exception e) {
-            throw new RuntimeException();
         } finally {
             redisLockRepository.unlock(commentId);
         }
