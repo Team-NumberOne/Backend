@@ -12,8 +12,11 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OnboardingRequest {
     @Schema(defaultValue = "초롱이")
-    @NotNull
+    @NotNull(message = "nickname은 null일 수 없습니다.")
     private String nickname;
+
+    @NotNull(message = "fcm token은 null일 수 없습니다.")
+    private String fcmToken;
 
     private List<OnboardingAddress> addresses;
 

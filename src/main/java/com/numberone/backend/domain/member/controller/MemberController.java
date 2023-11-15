@@ -29,6 +29,7 @@ import java.net.URI;
 @Tag(name = "members", description = "사용자 관련 API")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
 

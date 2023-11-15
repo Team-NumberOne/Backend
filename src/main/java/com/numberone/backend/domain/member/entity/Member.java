@@ -64,11 +64,12 @@ public class Member extends BaseTimeEntity {
     private List<NotificationRegion> notificationRegions = new ArrayList<>();
 
     @Builder
-    public Member(String email, String nickName, String realName, Integer heartCnt) {
+    public Member(String email, String nickName, String realName, Integer heartCnt, String fcmToken) {
         this.email = email;
         this.nickName = nickName;
         this.realName = realName;
         this.heartCnt = heartCnt;
+        this.fcmToken = fcmToken;
     }
 
     public static Member of(String email, String realName) {
@@ -83,8 +84,9 @@ public class Member extends BaseTimeEntity {
         this.profileImageUrl = imageUrl;
     }
 
-    public void updateNickName(String nickName) {
+    public void setOnboardingData(String nickName, String fcmToken) {
         this.nickName = nickName;
+        this.fcmToken = fcmToken;
     }
 
     public void plusHeart(int heart) {
