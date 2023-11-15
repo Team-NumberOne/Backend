@@ -4,6 +4,8 @@ import com.numberone.backend.domain.disaster.util.DisasterType;
 import com.numberone.backend.domain.member.dto.request.OnboardingAddress;
 import com.numberone.backend.domain.member.dto.request.OnboardingDisasterType;
 import com.numberone.backend.domain.member.dto.request.OnboardingRequest;
+import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
+import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
@@ -54,5 +56,19 @@ public class MemberService {
                     member
             ));
         }
+    }
+
+    @Transactional
+    public HeartCntResponse buyHeart(BuyHeartRequest buyHeartRequest, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NotFoundMemberException::new);
+        member.plusHeart(buyHeartRequest.getHeartCnt());
+        return HeartCntResponse.of(member);
+    }
+
+    public HeartCntResponse getHeart(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NotFoundMemberException::new);
+        return HeartCntResponse.of(member);
     }
 }

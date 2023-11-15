@@ -61,4 +61,12 @@ public class Member {
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void plusHeart(int heart) {
+        heartCnt += heart;
+    }
+
+    public void minusHeart(int heart) {
+        heartCnt -= heart;
+    }
 }
