@@ -60,6 +60,6 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
-    // todo: 댓글 삭제, 댓글 좋아요, 가장 많은 좋아요 상단 고정, 대댓글 달리면 푸시 알람 전송, 상단 고정된 작성자에게 푸시알람 전송, 댓글 신고 기능
+    // todo: 댓글 삭제, 가장 많은 좋아요 상단 고정, 대댓글 달리면 푸시 알람 전송, 상단 고정된 작성자에게 푸시알람 전송, 댓글 신고 기능
 
 }

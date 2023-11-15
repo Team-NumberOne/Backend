@@ -121,6 +121,6 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
     }
 
-    // todo: 게시글 좋아요, 게시글 신고 기능
+    // todo: 게시글 신고 기능
 
 }
