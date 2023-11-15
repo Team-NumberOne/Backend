@@ -43,6 +43,7 @@ public class NotificationEntity extends BaseTimeEntity {
 
     public NotificationEntity(Member member, NotificationTag tag, String title, String body, Boolean isSent) {
         this.receivedMemberId = member.getId();
+        this.nickName = member.getNickName();
         this.notificationTag = tag;
         this.title = title;
         this.body = body;
