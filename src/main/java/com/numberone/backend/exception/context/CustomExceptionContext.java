@@ -46,6 +46,10 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     // comment 관련 예외
     NOT_FOUND_COMMENT("해당 댓글을 찾을 수 없습니다.", 10000),
+
+    // like 관련 예외
+    ALREADY_LIKED_ERROR("이미 좋아요 처리된 엔티티입니다.", 11000),
+    ALREADY_UNLIKED_ERROR("이미 좋아요 해제 처리된 엔티티입니다.", 11001),
     ;
 
     private final String message;

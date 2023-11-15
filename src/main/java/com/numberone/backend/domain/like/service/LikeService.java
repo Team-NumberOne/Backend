@@ -11,6 +11,8 @@ import com.numberone.backend.domain.like.repository.CommentLikeRepository;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
+import com.numberone.backend.exception.conflict.AlreadyLikedException;
+import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
 import com.numberone.backend.exception.notfound.NotFoundApiException;
 import com.numberone.backend.exception.notfound.NotFoundCommentException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
@@ -42,7 +44,8 @@ public class LikeService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundApiException::new);
         if (isAlreadyLikedArticle(member, articleId)) {
-            // todo: 이미 좋아요를 누른 게시글입니다.
+            // 이미 좋아요를 누른 게시글입니다.
+            throw new AlreadyLikedException();
         }
         article.increaseLikeCount();
         articleLikeRepository.save(new ArticleLike(member, article));
@@ -56,7 +59,8 @@ public class LikeService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundApiException::new);
         if (!isAlreadyLikedArticle(member, articleId)) {
-            // todo: 좋아요를 누르지 않은 게시글이라 취소할 수 없습니다.
+            // 좋아요를 누르지 않은 게시글이라 취소할 수 없습니다.
+            throw new AlreadyUnLikedException();
         }
         article.decreaseLikeCount();
 
@@ -73,7 +77,8 @@ public class LikeService {
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
         if (isAlreadyLikedComment(member, commentId)) {
-            // todo: 이미 좋아요를 누른 댓글입니다.
+            // 이미 좋아요를 누른 댓글입니다.
+            throw new AlreadyLikedException();
         }
         commentEntity.increaseLikeCount();
         commentLikeRepository.save(new CommentLike(member, commentEntity));
@@ -87,7 +92,8 @@ public class LikeService {
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
         if (!isAlreadyLikedComment(member, commentId)){
-            // todo: 좋아요를 누르지 않은 댓글이라 좋아요를 취소할 수 없습니다.
+            // 좋아요를 누르지 않은 댓글이라 좋아요를 취소할 수 없습니다.
+            throw new AlreadyUnLikedException();
         }
         commentEntity.decreaseLikeCount();
         // 사용자의 댓글 좋아요 목록에서 제거
