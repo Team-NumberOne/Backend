@@ -18,7 +18,6 @@ import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.support.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,15 +38,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void create(String email, String realname) {
-        memberRepository.save(Member.of(email, realname));
+    public void create(String email, String realName) {
+        memberRepository.save(Member.of(email, realName));
     }
 
     @Transactional
     public void initMemberData(String email, OnboardingRequest onboardingRequest) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
-        member.updateNickname(onboardingRequest.getNickname());
+        member.updateNickName(onboardingRequest.getNickname());
         notificationDisasterRepository.deleteAllByMemberId(member.getId());
         notificationRegionRepository.deleteAllByMemberId(member.getId());
         for (OnboardingAddress address : onboardingRequest.getAddresses()) {

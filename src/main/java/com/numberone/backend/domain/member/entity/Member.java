@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.domain.support.entity.Support;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,8 +83,8 @@ public class Member extends BaseTimeEntity {
         this.profileImageUrl = imageUrl;
     }
 
-    public void updateNickname(String nickname) {
-        this.nickName = nickname;
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public void plusHeart(int heart) {
