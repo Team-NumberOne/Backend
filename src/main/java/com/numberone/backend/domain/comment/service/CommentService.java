@@ -6,6 +6,7 @@ import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant
 import com.numberone.backend.domain.articleparticipant.repository.ArticleParticipantRepository;
 import com.numberone.backend.domain.comment.dto.request.CreateChildCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateChildCommentResponse;
+import com.numberone.backend.domain.comment.dto.response.DeleteCommentResponse;
 import com.numberone.backend.domain.comment.dto.response.GetCommentDto;
 import com.numberone.backend.domain.comment.entity.CommentEntity;
 import com.numberone.backend.domain.comment.repository.CommentRepository;
@@ -91,6 +92,16 @@ public class CommentService {
         );
 
         return result;
+    }
+
+    @Transactional
+    public DeleteCommentResponse deleteComment(Long commentId){
+        CommentEntity commentEntity = commentRepository.findById(commentId)
+                .orElseThrow(NotFoundCommentException::new);
+        commentRepository.delete(commentEntity);
+        return DeleteCommentResponse.builder()
+                .commentId(commentId)
+                .build();
     }
 
 }

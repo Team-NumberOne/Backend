@@ -2,12 +2,14 @@ package com.numberone.backend.domain.comment.controller;
 
 import com.numberone.backend.domain.comment.dto.request.CreateChildCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateChildCommentResponse;
+import com.numberone.backend.domain.comment.dto.response.DeleteCommentResponse;
 import com.numberone.backend.domain.comment.dto.response.GetCommentDto;
 import com.numberone.backend.domain.comment.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +62,11 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
-    // todo: 댓글 삭제, 가장 많은 좋아요 상단 고정, 대댓글 달리면 푸시 알람 전송, 상단 고정된 작성자에게 푸시알람 전송, 댓글 신고 기능
+    @DeleteMapping("{comment-id}")
+    public ResponseEntity<DeleteCommentResponse> deleteComment(@PathVariable("comment-id") Long commentId){
+        return ResponseEntity.ok(commentService.deleteComment(commentId));
+    }
+
+    // todo: 가장 많은 좋아요 상단 고정, 대댓글 달리면 푸시 알람 전송, 상단 고정된 작성자에게 푸시알람 전송, 댓글 신고 기능
 
 }
