@@ -5,6 +5,7 @@ import com.numberone.backend.domain.comment.dto.response.GetCommentDto;
 import java.util.List;
 
 public interface CommentRepositoryCustom {
-    public List<GetCommentDto> findAllByArticle(Long articleId);
+    List<GetCommentDto> findAllByArticle(Long articleId);
+    Long countAllByArticle(Long articleId);
 
 }

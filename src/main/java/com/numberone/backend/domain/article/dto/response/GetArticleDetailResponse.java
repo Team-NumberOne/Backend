@@ -26,6 +26,7 @@ public class GetArticleDetailResponse {
     private String content;
     private boolean isLiked;
     private ArticleTag articleTag;
+    private Long commentCount;
 
     // 작성자 관련
     private String ownerName;
@@ -43,7 +44,8 @@ public class GetArticleDetailResponse {
             List<String> imageUrls,
             String thumbNailImageUrl,
             Member owner,
-            List<Long> memberLikedArticleList) {
+            List<Long> memberLikedArticleList,
+            Long commentCount ) {
         return GetArticleDetailResponse.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
@@ -64,8 +66,8 @@ public class GetArticleDetailResponse {
                 .ownerProfileImageUrl(owner.getProfileImageUrl())
                 .isLiked(memberLikedArticleList.contains(article.getId()))
                 .articleTag(article.getArticleTag())
+                .commentCount(commentCount)
                 .build();
     }
-
 
 }

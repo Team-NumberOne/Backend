@@ -141,6 +141,7 @@ public class ArticleService {
 
 
         Optional<ArticleImage> thumbNailImage = articleImageRepository.findById(article.getThumbNailImageUrlId());
+        Long commentCount = commentRepository.countAllByArticle(articleId);
 
         String thumbNailImageUrl = "";
         if (thumbNailImage.isPresent()) {
@@ -152,7 +153,7 @@ public class ArticleService {
                 .stream().map(ArticleLike::getArticleId)
                 .toList();
 
-        return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner, memberLikedArticleIdList);
+        return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner, memberLikedArticleIdList, commentCount);
     }
 
     public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
@@ -177,8 +178,9 @@ public class ArticleService {
 
         Optional<Member> owner = memberRepository.findById(ownerId);
         Optional<ArticleImage> articleImage = articleImageRepository.findById(thumbNailImageUrlId);
+        Long commentCount = commentRepository.countAllByArticle(articleInfo.getId());
 
-        articleInfo.updateInfo(owner, articleImage, memberLikedArticleIdList);
+        articleInfo.updateInfo(owner, articleImage, memberLikedArticleIdList, commentCount);
     }
 
     @Transactional
@@ -191,6 +193,8 @@ public class ArticleService {
         CommentEntity savedComment = commentRepository.save(
                 new CommentEntity(request.getContent(), article, member)
         );
+
+
 
         articleParticipantRepository.save(new ArticleParticipant(article, member));
         fcmMessageProvider.sendFcm(member, ARTICLE_COMMENT_FCM_ALARM, NotificationTag.COMMUNITY);

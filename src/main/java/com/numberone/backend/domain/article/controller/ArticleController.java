@@ -87,7 +87,7 @@ public class ArticleController {
     @GetMapping
     public ResponseEntity<Slice<GetArticleListResponse>> getArticlePages(
             Pageable pageable,
-            @ModelAttribute ArticleSearchParameter param) { // todo: 해당 유저가 좋아요를 눌렀는지 여부까지 표시되도록 수정
+            @ModelAttribute ArticleSearchParameter param) {
         return ResponseEntity.ok(articleService.getArticleListPaging(param, pageable));
     }
 
