@@ -62,6 +62,13 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "댓글 삭제 API 입니다", description = """
+            삭제할 댓글의 id 를 path variable 으로 보내주세요.
+            
+            대댓글이 존재하는 댓글을 삭제 요청하는 경우에는, 대댓글까지 모두 삭제됩니다.
+            
+            대댓글이 없는 댓글을 삭제 요청하는 경우에는 해당 댓글만 삭제됩니다.
+            """)
     @DeleteMapping("{comment-id}")
     public ResponseEntity<DeleteCommentResponse> deleteComment(@PathVariable("comment-id") Long commentId){
         return ResponseEntity.ok(commentService.deleteComment(commentId));
