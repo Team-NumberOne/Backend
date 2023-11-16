@@ -194,6 +194,8 @@ public class ArticleService {
                 new CommentEntity(request.getContent(), article, member)
         );
 
+
+
         articleParticipantRepository.save(new ArticleParticipant(article, member));
         // 게시글 작성자에게 알림을 보낸다.
         fcmMessageProvider.sendFcm(member, ARTICLE_COMMENT_FCM_ALARM, NotificationTag.COMMUNITY);
