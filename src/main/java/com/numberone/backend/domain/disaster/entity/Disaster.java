@@ -1,11 +1,13 @@
 package com.numberone.backend.domain.disaster.entity;
 
+import com.numberone.backend.domain.conversation.entity.Conversation;
 import com.numberone.backend.domain.disaster.util.DisasterType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +33,9 @@ public class Disaster {
 
     @Comment("재난 발생 시각")
     private LocalDateTime generatedAt;
+
+    @OneToMany(mappedBy = "disaster", cascade = CascadeType.ALL)
+    private List<Conversation> conversations;
 
     @Builder
     public Disaster(DisasterType disasterType, String location, String msg, Long disasterNum, LocalDateTime generatedAt) {

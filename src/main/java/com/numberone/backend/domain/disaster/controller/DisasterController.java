@@ -2,12 +2,14 @@ package com.numberone.backend.domain.disaster.controller;
 
 import com.numberone.backend.domain.disaster.dto.request.LatestDisasterRequest;
 import com.numberone.backend.domain.disaster.dto.response.LatestDisasterResponse;
+import com.numberone.backend.domain.disaster.dto.response.SituationHomeResponse;
 import com.numberone.backend.domain.disaster.service.DisasterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "disasters", description = "재난문자 관련 API")
@@ -28,5 +30,13 @@ public class DisasterController {
     @PostMapping("/latest")
     public ResponseEntity<LatestDisasterResponse> getLatestDisaster(@Valid @RequestBody LatestDisasterRequest latestDisasterRequest) {
         return ResponseEntity.ok(disasterService.getLatestDisaster(latestDisasterRequest));
+    }
+
+    @Operation(summary = "재난상황 커뮤니티 데이터 가져오기", description = """
+            재난상황 페이지에서 필요한 재난목록과 그와 관련된 대화(댓글)들을 가져옵니다.
+            """)
+    @PostMapping("/situation")
+    public ResponseEntity<SituationHomeResponse> getSituationHome(Authentication authentication){
+        return ResponseEntity.ok(disasterService.getSituationHome(authentication.getName()));
     }
 }

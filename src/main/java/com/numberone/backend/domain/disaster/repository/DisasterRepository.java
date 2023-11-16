@@ -16,5 +16,5 @@ public interface DisasterRepository extends JpaRepository<Disaster, Long> {
             "where :address like concat(d.location,'%') " +
             "and d.generatedAt > :time " +
             "order by d.generatedAt desc")
-    List<Disaster> findDisastersInAddressAfterTime(String address, LocalDateTime time, Pageable pageable);
+    List<Disaster> findDisastersInAddressAfterTime(String address, LocalDateTime time);
 }

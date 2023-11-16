@@ -3,6 +3,7 @@ package com.numberone.backend.domain.member.entity;
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.like.entity.ArticleLike;
 import com.numberone.backend.domain.like.entity.CommentLike;
+import com.numberone.backend.domain.like.entity.ConversationLike;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -62,6 +63,9 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<NotificationRegion> notificationRegions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ConversationLike> conversationLikes = new ArrayList<>();
 
     @Builder
     public Member(String email, String nickName, String realName, Integer heartCnt, String fcmToken) {
