@@ -58,10 +58,6 @@ public class Article extends BaseTimeEntity {
     @Comment("게시글 좋아요 개수")
     private Integer likeCount;
 
-    @ColumnDefault("0")
-    @Comment("게시글에 달린 댓글 개수")
-    private Integer commentCount;
-
     @Comment("작성자 ID")
     private Long articleOwnerId;
 
@@ -71,7 +67,6 @@ public class Article extends BaseTimeEntity {
         this.articleOwnerId = articleOwnerId;
         this.articleTag = tag;
         this.articleStatus = ArticleStatus.ACTIVATED;
-        this.commentCount = 0;
         this.likeCount = 0;
     }
 
