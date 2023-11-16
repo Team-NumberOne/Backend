@@ -57,7 +57,7 @@ public class LikeService {
         article.increaseLikeCount();
         articleLikeRepository.save(new ArticleLike(member, article));
 
-        if (article.getLikeCount() > BEST_ARTICLE_LIKE_COUNT) {
+        if (article.getLikeCount() >= BEST_ARTICLE_LIKE_COUNT) {
             Long ownerId = article.getArticleOwnerId();
             Member owner = memberRepository.findById(ownerId)
                     .orElseThrow(NotFoundMemberException::new);

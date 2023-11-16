@@ -58,7 +58,7 @@ public class CommentController {
             """)
     @GetMapping("{article-id}")
     public ResponseEntity<List<GetCommentDto>> getCommentsByArticle(@PathVariable("article-id") Long articleId){
-        List<GetCommentDto> response = commentService.getCommentsByArticle(articleId); // todo: 해당 유저가 좋아요를 눌렀는지 여부까지 표시되도록 수정
+        List<GetCommentDto> response = commentService.getCommentsByArticle(articleId);
         return ResponseEntity.ok(response);
     }
 
