@@ -26,7 +26,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@RequestMapping("/api/members")
 @Table(name = "MEMBER")
 public class Member extends BaseTimeEntity {
     @Id
