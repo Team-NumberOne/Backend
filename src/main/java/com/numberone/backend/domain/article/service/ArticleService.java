@@ -132,7 +132,7 @@ public class ArticleService {
                 .stream().map(NotificationRegion::getLv2).toList();
         String[] realRegions = realLocation.split(" ");
 
-        if (realRegions.length > 1 && !regionLv2List.contains(realRegions[1])) {
+        if (realRegions.length >= 1 && !regionLv2List.contains(realRegions[1])) {
             throw new UnauthorizedLocationException();
         }
     }
