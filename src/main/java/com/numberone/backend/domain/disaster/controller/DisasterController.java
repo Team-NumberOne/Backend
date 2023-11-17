@@ -2,6 +2,7 @@ package com.numberone.backend.domain.disaster.controller;
 
 import com.numberone.backend.domain.disaster.dto.request.LatestDisasterRequest;
 import com.numberone.backend.domain.disaster.dto.response.LatestDisasterResponse;
+import com.numberone.backend.domain.disaster.dto.response.SituationDetailResponse;
 import com.numberone.backend.domain.disaster.dto.response.SituationHomeResponse;
 import com.numberone.backend.domain.disaster.service.DisasterService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,5 +39,17 @@ public class DisasterController {
     @PostMapping("/situation")
     public ResponseEntity<SituationHomeResponse> getSituationHome(Authentication authentication){
         return ResponseEntity.ok(disasterService.getSituationHome(authentication.getName()));
+    }
+
+    @Operation(summary = "해당 재난과 관련된 모든 커뮤니티 대화 가져오기", description = """
+            재난상황 id를 파라미터로 전달해주세요.
+            
+            커뮤니티-재난상황-댓글더보기 페이지에서 사용하는 API입니다.
+            
+            정렬기준을 body에 같이 전달해주세요. (최신순: time, 인기순: popularity)
+            """)
+    @PostMapping("/{disasterId}")
+    public ResponseEntity<SituationDetailResponse> getSituationDetail(Authentication authentication, @PathVariable Long disasterId){
+        return ResponseEntity.ok(disasterService.getSituationDetail(authentication.getName(), disasterId));
     }
 }

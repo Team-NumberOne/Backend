@@ -81,7 +81,6 @@ public class ConversationService {
         for (Conversation child : conversation.getConversations()) {
             childs.add(GetConversationResponse.of(
                     child,
-                    conversationLikeRepository.countByConversation(child),
                     checkLike(member, child),
                     member.equals(child.getMember()),
                     new ArrayList<>()
@@ -89,10 +88,20 @@ public class ConversationService {
         }
         return GetConversationResponse.of(
                 conversation,
-                conversationLikeRepository.countByConversation(conversation),
                 checkLike(member, conversation),
                 member.equals(conversation.getMember()),
                 childs);
+    }
+
+    public GetConversationResponse getExceptChild(String email, Long conversationId) {
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(NotFoundConversationException::new);
+        Member member = memberService.findByEmail(email);
+        return GetConversationResponse.of(
+                conversation,
+                checkLike(member, conversation),
+                member.equals(conversation.getMember()),
+                new ArrayList<>());
     }
 
     @Transactional
@@ -106,6 +115,7 @@ public class ConversationService {
                 });
         ConversationLike conversationLike = ConversationLike.of(member, conversation);
         conversationLikeRepository.save(conversationLike);
+        conversation.increaseLike();
     }
 
     @Transactional
@@ -116,5 +126,6 @@ public class ConversationService {
         ConversationLike conversationLike = conversationLikeRepository.findByMemberAndConversation(member, conversation)
                 .orElseThrow(AlreadyUnLikedException::new);
         conversationLikeRepository.delete(conversationLike);
+        conversation.decreaseLike();
     }
 }

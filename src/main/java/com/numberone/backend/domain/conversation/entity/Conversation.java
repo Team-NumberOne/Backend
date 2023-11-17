@@ -28,6 +28,9 @@ public class Conversation extends BaseTimeEntity {
     @Comment("댓글 depth {0: 댓글, 1: 대댓글}")
     private Integer depth;
 
+    @Comment("좋아요 갯수")
+    private Long likeCnt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -47,12 +50,13 @@ public class Conversation extends BaseTimeEntity {
     private List<ConversationLike> likes = new ArrayList<>();
 
     @Builder
-    public Conversation(String content, Integer likeCnt, Integer depth, Member member, Disaster disaster, Conversation parent) {
+    public Conversation(String content, Long likeCnt, Integer depth, Member member, Disaster disaster, Conversation parent) {
         this.content = content;
         this.depth = depth;
         this.member = member;
         this.disaster = disaster;
         this.parent = parent;
+        this.likeCnt = likeCnt;
     }
 
     public static Conversation of(String content, Member member, Disaster disaster) {
@@ -61,7 +65,7 @@ public class Conversation extends BaseTimeEntity {
                 .member(member)
                 .disaster(disaster)
                 .depth(0)
-                .likeCnt(0)
+                .likeCnt(0L)
                 .build();
     }
 
@@ -71,8 +75,15 @@ public class Conversation extends BaseTimeEntity {
                 .member(member)
                 .parent(parent)
                 .depth(1)
-                .likeCnt(0)
+                .likeCnt(0L)
                 .build();
     }
 
+    public void increaseLike() {
+        likeCnt++;
+    }
+
+    public void decreaseLike() {
+        likeCnt--;
+    }
 }

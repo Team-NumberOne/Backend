@@ -46,10 +46,10 @@ public class GetConversationResponse {
         return info;
     }
 
-    public static GetConversationResponse of(Conversation conversation, Long like, Boolean isLiked, Boolean isEditable, List<GetConversationResponse> childs) {
+    public static GetConversationResponse of(Conversation conversation, Boolean isLiked, Boolean isEditable, List<GetConversationResponse> childs) {
         return GetConversationResponse.builder()
                 .conversationId(conversation.getId())
-                .like(like)
+                .like(conversation.getLikeCnt())
                 .info(makeInfo(conversation.getMember().getNickName(), conversation.getCreatedAt()))
                 .content(conversation.getContent())
                 .isLiked(isLiked)

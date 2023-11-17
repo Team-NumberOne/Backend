@@ -32,10 +32,13 @@ public class SituationResponse {
     @Schema(defaultValue = "서울특별시 강남구 ・ 오후 2시 46분")
     private String info;
 
+    @Schema(defaultValue = "6")
+    private Long conversationCnt;
+
     private List<GetConversationResponse> conversations;
 
 
-    public static SituationResponse of(Disaster disaster, List<GetConversationResponse> conversations) {
+    public static SituationResponse of(Disaster disaster, List<GetConversationResponse> conversations, Long conversationCnt) {
         String category, time;
         if (disaster.getDisasterType() == DisasterType.OTHERS)
             category = "상황";
@@ -49,6 +52,7 @@ public class SituationResponse {
                 .msg(disaster.getMsg())
                 .info(disaster.getLocation() + " ・ " + time)
                 .conversations(conversations)
+                .conversationCnt(conversationCnt)
                 .build();
     }
 }
