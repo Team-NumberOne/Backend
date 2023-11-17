@@ -35,7 +35,8 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
                 .where(
                         ltArticleId(param.getLastArticleId()),
                         checkTagCondition(param.getTag()),
-                        article.articleStatus.eq(ArticleStatus.ACTIVATED)
+                        article.articleStatus.eq(ArticleStatus.ACTIVATED),
+                        article.lv2.eq(param.getRegionLv2())
                 )
                 .orderBy(article.id.desc())
                 .limit(pageable.getPageSize() + 1)

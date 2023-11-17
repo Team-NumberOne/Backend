@@ -54,6 +54,15 @@ public class Article extends BaseTimeEntity {
     @Comment("게시글 작성 당시 주소")
     private String address;
 
+    @Comment("시/도")
+    private String lv1;
+
+    @Comment("구/군")
+    private String lv2;
+
+    @Comment("동/읍/면")
+    private String lv3;
+
     @ColumnDefault("0")
     @Comment("게시글 좋아요 개수")
     private Integer likeCount;
