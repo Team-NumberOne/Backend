@@ -15,4 +15,10 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     long countByParent(Conversation parent);
 
     List<Conversation> findAllByDisasterOrderByLikeCntDesc(Disaster disaster, Pageable pageable);
+
+    List<Conversation> findAllByDisasterOrderByLikeCntDesc(Disaster disaster);
+
+    List<Conversation> findAllByDisasterOrderByCreatedAtDesc(Disaster disaster);
+
+    List<Conversation> findAllByParentOrderByLikeCntDesc(Conversation parent);
 }

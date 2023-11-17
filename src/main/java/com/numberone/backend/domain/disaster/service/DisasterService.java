@@ -17,6 +17,7 @@ import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
+import com.numberone.backend.exception.badrequest.BadRequestConversationSortException;
 import com.numberone.backend.exception.notfound.NotFoundDisasterException;
 import com.numberone.backend.util.LocationProvider;
 import lombok.RequiredArgsConstructor;
@@ -102,11 +103,18 @@ public class DisasterService {
         return SituationHomeResponse.of(situationResponses);
     }
 
-    public SituationDetailResponse getSituationDetail(String email, Long disasterId) {
+    public SituationDetailResponse getSituationDetail(String email, Long disasterId, String sort) {
         Disaster disaster = disasterRepository.findById(disasterId)
                 .orElseThrow(NotFoundDisasterException::new);
         List<GetConversationResponse> conversationResponses = new ArrayList<>();
-        for (Conversation conversation : disaster.getConversations()) {
+        List<Conversation> conversations;
+        if(sort.equals("popularity"))
+            conversations = conversationRepository.findAllByDisasterOrderByLikeCntDesc(disaster);
+        else if(sort.equals("time"))
+            conversations = conversationRepository.findAllByDisasterOrderByCreatedAtDesc(disaster);
+        else
+            throw new BadRequestConversationSortException();
+        for (Conversation conversation : conversations) {
             conversationResponses.add(conversationService.get(email, conversation.getId()));
         }
         return SituationDetailResponse.of(conversationResponses);

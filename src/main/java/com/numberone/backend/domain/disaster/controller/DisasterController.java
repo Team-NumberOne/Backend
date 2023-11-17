@@ -36,20 +36,18 @@ public class DisasterController {
     @Operation(summary = "재난상황 커뮤니티 데이터 가져오기", description = """
             재난상황 페이지에서 필요한 재난목록과 그와 관련된 대화(댓글)들을 가져옵니다.
             """)
-    @PostMapping("/situation")
+    @GetMapping("/situation")
     public ResponseEntity<SituationHomeResponse> getSituationHome(Authentication authentication){
         return ResponseEntity.ok(disasterService.getSituationHome(authentication.getName()));
     }
 
     @Operation(summary = "해당 재난과 관련된 모든 커뮤니티 대화 가져오기", description = """
-            재난상황 id를 파라미터로 전달해주세요.
+            정렬기준(최신순: time, 인기순: popularity) 과 재난상황 id를 파라미터로 전달해주세요.
             
             커뮤니티-재난상황-댓글더보기 페이지에서 사용하는 API입니다.
-            
-            정렬기준을 body에 같이 전달해주세요. (최신순: time, 인기순: popularity)
             """)
-    @PostMapping("/{disasterId}")
-    public ResponseEntity<SituationDetailResponse> getSituationDetail(Authentication authentication, @PathVariable Long disasterId){
-        return ResponseEntity.ok(disasterService.getSituationDetail(authentication.getName(), disasterId));
+    @GetMapping("/{sort}/{disasterId}")
+    public ResponseEntity<SituationDetailResponse> getSituationDetail(Authentication authentication, @PathVariable Long disasterId, @PathVariable String sort){
+        return ResponseEntity.ok(disasterService.getSituationDetail(authentication.getName(), disasterId, sort));
     }
 }

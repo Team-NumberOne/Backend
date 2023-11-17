@@ -53,7 +53,8 @@ public enum CustomExceptionContext implements ExceptionContext {
     ALREADY_UNLIKED_ERROR("이미 좋아요 해제 처리된 엔티티입니다.", 11001),
 
     //conversation 관련 예외
-    NOT_FOUND_CONVERSATION("해당 대화를 찾을 수 없습니다.", 12000)
+    NOT_FOUND_CONVERSATION("해당 대화를 찾을 수 없습니다.", 12000),
+    BAD_REQUEST_CONVERSATION_SORT("정렬 기준 값을 올바르게 전달해주세요. (popularity 또는 time)",12001)
     ;
 
     private final String message;

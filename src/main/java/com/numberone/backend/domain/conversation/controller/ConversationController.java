@@ -47,13 +47,14 @@ public class ConversationController {
         conversationService.delete(conversationId);
     }
 
-    @Operation(summary = "대화 조회하기", description = """
-            조회할 대화 id를 파라미터로 전달해주세요.
-            """)
-    @GetMapping("/{conversationId}")
-    public ResponseEntity<GetConversationResponse> get(Authentication authentication, @PathVariable Long conversationId) {
-        return ResponseEntity.ok(conversationService.get(authentication.getName(), conversationId));
-    }
+//    만들었는데 필요없는 api인것 같아서 일단 주석처리
+//    @Operation(summary = "대화 조회하기", description = """
+//            조회할 대화 id를 파라미터로 전달해주세요.
+//            """)
+//    @GetMapping("/{conversationId}")
+//    public ResponseEntity<GetConversationResponse> get(Authentication authentication, @PathVariable Long conversationId) {
+//        return ResponseEntity.ok(conversationService.get(authentication.getName(), conversationId));
+//    }
 
     @Operation(summary = "대화 좋아요 등록하기", description = """
             사용자가 대화의 좋아요를 등록할 때 대화 id를 파라미터로 전달해주세요.

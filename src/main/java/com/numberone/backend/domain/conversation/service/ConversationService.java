@@ -78,7 +78,8 @@ public class ConversationService {
                 .orElseThrow(NotFoundConversationException::new);
         Member member = memberService.findByEmail(email);
         List<GetConversationResponse> childs = new ArrayList<>();
-        for (Conversation child : conversation.getConversations()) {
+        List<Conversation> childConversations = conversationRepository.findAllByParentOrderByLikeCntDesc(conversation);
+        for (Conversation child : childConversations) {
             childs.add(GetConversationResponse.of(
                     child,
                     checkLike(member, child),
