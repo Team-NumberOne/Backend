@@ -32,6 +32,7 @@ public class GetCommentDto {
     private Long authorId;
     private String authorNickName;
     private String authorProfileImageUrl;
+    private boolean isLiked;
 
 
     @QueryProjection
@@ -47,7 +48,7 @@ public class GetCommentDto {
         this.likeCount = comment.getLikeCount();
     }
 
-    public void updateCommentInfo(Optional<Member> author){
+    public void updateCommentInfo(Optional<Member> author, List<Long> likedCommentIdList){
         author.ifPresentOrElse(
                 a -> {
                     this.authorNickName = a.getNickName();
@@ -57,6 +58,7 @@ public class GetCommentDto {
                     this.authorNickName = "알 수 없는 사용자";
                 }
         );
+        this.isLiked = likedCommentIdList.contains(commentId);
     }
 
 }

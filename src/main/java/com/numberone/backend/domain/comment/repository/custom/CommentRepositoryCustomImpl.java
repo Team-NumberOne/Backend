@@ -31,4 +31,15 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
                 )
                 .fetch();
     }
+
+
+    @Override
+    public Long countAllByArticle(Long articleId) {
+        return queryFactory.select(commentEntity.count())
+                .from(commentEntity)
+                .innerJoin(article, article)
+                .where(article.id.eq(articleId))
+                .fetchOne();
+
+    }
 }

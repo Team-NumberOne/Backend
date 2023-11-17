@@ -28,8 +28,8 @@ import java.net.URI;
 @Slf4j
 @Tag(name = "members", description = "사용자 관련 API")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/members")
+@RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
 

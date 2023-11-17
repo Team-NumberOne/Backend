@@ -10,18 +10,23 @@ import com.numberone.backend.domain.like.repository.ArticleLikeRepository;
 import com.numberone.backend.domain.like.repository.CommentLikeRepository;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
+import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.conflict.AlreadyLikedException;
 import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
 import com.numberone.backend.exception.notfound.NotFoundApiException;
 import com.numberone.backend.exception.notfound.NotFoundCommentException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
+import com.numberone.backend.support.fcm.service.FcmMessageProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.id.IntegralDataTypeHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.numberone.backend.support.notification.NotificationMessage.BEST_ARTICLE_FCM_ALARM;
 
 @Slf4j
 @Service
@@ -34,7 +39,9 @@ public class LikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
+    private final FcmMessageProvider fcmMessageProvider;
 
+    private final Integer BEST_ARTICLE_LIKE_COUNT = 20;
 
     @Transactional
     public Integer increaseArticleLike(Long articleId) {
@@ -49,6 +56,13 @@ public class LikeService {
         }
         article.increaseLikeCount();
         articleLikeRepository.save(new ArticleLike(member, article));
+
+        if (article.getLikeCount() >= BEST_ARTICLE_LIKE_COUNT) {
+            Long ownerId = article.getArticleOwnerId();
+            Member owner = memberRepository.findById(ownerId)
+                    .orElseThrow(NotFoundMemberException::new);
+            fcmMessageProvider.sendFcm(owner, BEST_ARTICLE_FCM_ALARM, NotificationTag.COMMUNITY);
+        }
 
         return article.getLikeCount();
     }
@@ -97,7 +111,7 @@ public class LikeService {
                 .orElseThrow(NotFoundMemberException::new);
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
-        if (!isAlreadyLikedComment(member, commentId)){
+        if (!isAlreadyLikedComment(member, commentId)) {
             // 좋아요를 누르지 않은 댓글이라 좋아요를 취소할 수 없습니다.
             throw new AlreadyUnLikedException();
         }

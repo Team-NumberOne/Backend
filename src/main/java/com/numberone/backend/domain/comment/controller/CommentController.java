@@ -2,12 +2,14 @@ package com.numberone.backend.domain.comment.controller;
 
 import com.numberone.backend.domain.comment.dto.request.CreateChildCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateChildCommentResponse;
+import com.numberone.backend.domain.comment.dto.response.DeleteCommentResponse;
 import com.numberone.backend.domain.comment.dto.response.GetCommentDto;
 import com.numberone.backend.domain.comment.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,10 +58,22 @@ public class CommentController {
             """)
     @GetMapping("{article-id}")
     public ResponseEntity<List<GetCommentDto>> getCommentsByArticle(@PathVariable("article-id") Long articleId){
-        List<GetCommentDto> response = commentService.getCommentsByArticle(articleId); // todo: 해당 유저가 좋아요를 눌렀는지 여부까지 표시되도록 수정
+        List<GetCommentDto> response = commentService.getCommentsByArticle(articleId);
         return ResponseEntity.ok(response);
     }
 
-    // todo: 댓글 삭제, 가장 많은 좋아요 상단 고정, 대댓글 달리면 푸시 알람 전송, 상단 고정된 작성자에게 푸시알람 전송, 댓글 신고 기능
+    @Operation(summary = "댓글 삭제 API 입니다", description = """
+            삭제할 댓글의 id 를 path variable 으로 보내주세요.
+            
+            대댓글이 존재하는 댓글을 삭제 요청하는 경우에는, 대댓글까지 모두 삭제됩니다.
+            
+            대댓글이 없는 댓글을 삭제 요청하는 경우에는 해당 댓글만 삭제됩니다.
+            """)
+    @DeleteMapping("{comment-id}")
+    public ResponseEntity<DeleteCommentResponse> deleteComment(@PathVariable("comment-id") Long commentId){
+        return ResponseEntity.ok(commentService.deleteComment(commentId));
+    }
+
+    // todo: 가장 많은 좋아요 상단 고정, 대댓글 달리면 푸시 알람 전송, 상단 고정된 작성자에게 푸시알람 전송, 댓글 신고 기능
 
 }

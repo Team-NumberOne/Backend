@@ -46,8 +46,8 @@ public class MemberService {
     public void initMemberData(String email, OnboardingRequest onboardingRequest) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
-        member.setOnboardingData(onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
         notificationDisasterRepository.deleteAllByMemberId(member.getId());
+        member.setOnboardingData(onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
         notificationRegionRepository.deleteAllByMemberId(member.getId());
         for (OnboardingAddress address : onboardingRequest.getAddresses()) {
             notificationRegionRepository.save(NotificationRegion.of(
