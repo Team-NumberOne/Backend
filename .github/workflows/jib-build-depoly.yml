@@ -1,0 +1,115 @@
+# github repository Actions 페이지에 나타낼 이름
+name: NumberOne-Backend-JIB-BUILD-DEPLOY
+
+# event trigger
+on:
+  push:
+    branches: [ "main", "dev", "dev-check" ]
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      ## jdk setting
+      - uses: actions/checkout@v3
+      - name: 🧱 Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      ## gradle caching
+      - name: 🐧 Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 🐧 Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: 🔑 Login to Docker Hub
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build with jib
+        run: |
+          ./gradlew jib \
+          -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
+          -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
+          -Djib.to.image="${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${GITHUB_REF##*/}"
+
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH-mm-ss
+          utcOffset: "+09:00"
+
+      - name: Show Current Time
+        run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
+        shell: bash
+
+
+      - name:  🐙 docker-compose.yml to EC2 server
+        uses: appleboy/scp-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          envs: GITHUB_SHA
+          source: "./docker-compose.yml"
+          target: "/home/ubuntu/"
+          overwrite: true
+          timeout: 1m
+
+      - name: 🐧 create application.yml
+        run: |
+          mkdir ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.PROPERTIES_PROD }}" | base64 --decode > ./application.yml
+          ls -la
+        shell: bash
+
+      - name: 🐧 create service-account.json
+        run: |
+          cd ./src/main/resources
+          touch ./service-account.json
+          echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
+          ls -la
+        shell: bash
+
+      ## deploy to production
+      - name: 🌿 Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${GITHUB_REF##*/}
+            docker-compose up -d
+            docker image prune -f
+
+      ## notify at Slack
+      - name: 🔔 Send Slack Message
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
