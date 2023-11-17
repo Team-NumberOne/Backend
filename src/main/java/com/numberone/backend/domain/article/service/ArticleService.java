@@ -19,6 +19,8 @@ import com.numberone.backend.domain.like.repository.ArticleLikeRepository;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
+import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
+import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
@@ -53,6 +55,7 @@ public class ArticleService {
     private final ArticleImageRepository articleImageRepository;
     private final CommentRepository commentRepository;
     private final ArticleLikeRepository articleLikeRepository;
+    private final NotificationRegionRepository notificationRegionRepository;
     private final S3Provider s3Provider;
     private final LocationProvider locationProvider;
     private final FcmMessageProvider fcmMessageProvider;

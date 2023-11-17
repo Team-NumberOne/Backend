@@ -1,19 +1,20 @@
 package com.numberone.backend.domain.member.service;
 
-import com.numberone.backend.domain.member.dto.response.UploadProfileImageResponse;
 import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
 import com.numberone.backend.domain.member.dto.request.OnboardingAddress;
 import com.numberone.backend.domain.member.dto.request.OnboardingDisasterType;
 import com.numberone.backend.domain.member.dto.request.OnboardingRequest;
-import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
+import com.numberone.backend.domain.member.dto.response.GetNotificationRegionResponse;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
+import com.numberone.backend.domain.member.dto.response.UploadProfileImageResponse;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationdisaster.repository.NotificationDisasterRepository;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
+import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.support.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -80,7 +83,7 @@ public class MemberService {
     }
 
     @Transactional
-    public UploadProfileImageResponse uploadProfileImage(MultipartFile image){
+    public UploadProfileImageResponse uploadProfileImage(MultipartFile image) {
         String email = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
@@ -91,6 +94,13 @@ public class MemberService {
         member.updateProfileImageUrl(imageUrl);
 
         return UploadProfileImageResponse.of(imageUrl);
+    }
+
+    public GetNotificationRegionResponse getNotificationRegionLv2() {
+        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
+        Member member = memberRepository.findByEmail(principal)
+                .orElseThrow(NotFoundMemberException::new);
+        return GetNotificationRegionResponse.of(member.getNotificationRegions());
     }
 
 }

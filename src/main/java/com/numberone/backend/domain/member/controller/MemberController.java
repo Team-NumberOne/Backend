@@ -2,6 +2,7 @@ package com.numberone.backend.domain.member.controller;
 
 import com.numberone.backend.domain.member.dto.request.OnboardingRequest;
 import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
+import com.numberone.backend.domain.member.dto.response.GetNotificationRegionResponse;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
 import com.numberone.backend.domain.member.dto.response.UploadProfileImageResponse;
 import com.numberone.backend.domain.member.service.MemberService;
@@ -36,7 +37,7 @@ public class MemberController {
     @Operation(summary = "회원 프로필 사진 업로드 API",
             description = """
                     1.  반드시 access token 을 헤더에 포함하여 호출해주세요. (유저를 식별하기 위함입니다.)
-                    
+                                        
                     2.  프로필 사진은 MultipartFile 으로 반드시 image 라는 이름으로 보내주세요
                     """)
     @PostMapping("/profile-image")
@@ -67,7 +68,15 @@ public class MemberController {
             온보딩에서 선택한 닉네임, 재난유형, 알림지역 데이터를 body에 담아 전달해주세요.
             """)
     @PostMapping("/onboarding")
-    public void initMemberData(Authentication authentication, @Valid @RequestBody OnboardingRequest onboardingRequest){
+    public void initMemberData(Authentication authentication, @Valid @RequestBody OnboardingRequest onboardingRequest) {
         memberService.initMemberData(authentication.getName(), onboardingRequest);
+    }
+
+    @Operation(summary = "사용자가 온보딩 시 추가한 지역 리스트 가져오기", description = """
+            게시글 커뮤니티 지역 구분으로 사용할 수 있습니다.
+            """)
+    @GetMapping("/regions")
+    public ResponseEntity<GetNotificationRegionResponse> getNotificationRegions() {
+        return ResponseEntity.ok(memberService.getNotificationRegionLv2());
     }
 }
