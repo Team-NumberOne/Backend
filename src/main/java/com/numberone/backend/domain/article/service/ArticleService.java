@@ -110,15 +110,18 @@ public class ArticleService {
         // 4. 작성자 주소 설정
         Double latitude = request.getLatitude();
         Double longitude = request.getLongitude();
-        if (latitude != null && longitude != null) {
+        if (latitude != null && longitude != null && request.isRegionAgreementCheck()) {
             // 주소가 null 이 아닌 경우에만 api 요청하여 update
             String address = locationProvider.pos2address(request.getLatitude(), request.getLongitude());
             article.updateAddress(address);
+            if(!address.isEmpty()){
+                String[] regionInfo = address.split(" ");
+                article.updateAddressDetail(regionInfo);
+            }
         }
 
         return UploadArticleResponse.of(article, imageUrls, thumbNailImageUrl);
     }
-
 
     @Transactional
     public DeleteArticleResponse deleteArticle(Long articleId) {

@@ -23,8 +23,6 @@ public class UploadArticleRequest {
 
     @NotNull(message = """
             게시글의 태그를 하나 선택해주세요.
-            
-            LIFE(일상), FRAUD(사기), SAFETY(안전), REPORT(제보)
             """)
     private ArticleTag articleTag; // 게시글 태그
 
@@ -33,5 +31,8 @@ public class UploadArticleRequest {
 
     private Double longitude;
     private Double latitude;
+
+    @NotNull(message = "동 위치 정보 제공 동의는 null 일 수 없습니다.")
+    private boolean regionAgreementCheck; // 동 정보 제공 동의
 
 }
