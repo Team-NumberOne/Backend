@@ -32,6 +32,7 @@ public class GetArticleDetailResponse {
     private String ownerName;
     private String ownerNickName;
     private String address;
+    private String regionLv2;
     private Long ownerMemberId;
     private String ownerProfileImageUrl;
 
@@ -67,6 +68,8 @@ public class GetArticleDetailResponse {
                 .isLiked(memberLikedArticleList.contains(article.getId()))
                 .articleTag(article.getArticleTag())
                 .commentCount(commentCount)
+                .regionLv2(Optional.ofNullable(article.getLv2())
+                        .orElse(""))
                 .build();
     }
 
