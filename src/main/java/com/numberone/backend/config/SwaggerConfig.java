@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
         info = @Info(
                 title = "🚀 대피로 백엔드 API 명세서 Jib 배포 23. 11. 18. v1",
                 description = """
+                        jdk base image = openjdk:17-alpine
                         spring docs 를 이용한 API 명세서 입니다.😊
                         """,
                 version = "1.0",
