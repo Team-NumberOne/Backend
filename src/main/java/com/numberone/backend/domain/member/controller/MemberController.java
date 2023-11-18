@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -78,5 +79,17 @@ public class MemberController {
     @GetMapping("/regions")
     public ResponseEntity<GetNotificationRegionResponse> getNotificationRegions() {
         return ResponseEntity.ok(memberService.getNotificationRegionLv2());
+    }
+
+    @Operation(summary = "온라인 전환 API")
+    @GetMapping("/online")
+    public void online(Authentication authentication){
+        memberService.online(authentication.getName());
+    }
+
+    @Operation(summary = "오프라인 전환 API")
+    @GetMapping("/offline")
+    public void offline(Authentication authentication){
+        memberService.offline(authentication.getName());
     }
 }

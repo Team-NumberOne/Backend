@@ -103,4 +103,15 @@ public class MemberService {
         return GetNotificationRegionResponse.of(member.getNotificationRegions());
     }
 
+    @Transactional
+    public void online(String email) {
+        Member member  = findByEmail(email);
+        member.updateSession(true);
+    }
+
+    @Transactional
+    public void offline(String email) {
+        Member member  = findByEmail(email);
+        member.updateSession(true);
+    }
 }

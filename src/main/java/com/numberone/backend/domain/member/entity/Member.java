@@ -65,7 +65,7 @@ public class Member extends BaseTimeEntity {
 
     private Boolean session;
 
-    public void update(Boolean session) {
+    public void updateSession(Boolean session) {
         this.session = session;
     }
 
@@ -76,7 +76,7 @@ public class Member extends BaseTimeEntity {
         this.realName = realName;
         this.heartCnt = heartCnt;
         this.fcmToken = fcmToken;
-        this.session = false;
+        this.session = true;
     }
 
     public static Member of(String email, String realName) {
