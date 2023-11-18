@@ -112,6 +112,6 @@ public class MemberService {
     @Transactional
     public void offline(String email) {
         Member member  = findByEmail(email);
-        member.updateSession(true);
+        member.updateSession(false);
     }
 }
