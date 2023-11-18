@@ -23,12 +23,13 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class FcmMessageProvider {
     private final NotificationRepository notificationRepository;
-    public void sendFcm(Member member, NotificationMessage notificationMessage, NotificationTag tag){
+
+    public void sendFcm(Member member, NotificationMessage notificationMessage, NotificationTag tag) {
         String token = member.getFcmToken();
-        if (Objects.isNull(token)){
+        if (Objects.isNull(token)) {
             log.error("해당 회원의 fcm 토큰이 존재하지 않아, 푸시알람을 전송할 수 없습니다.");
             // todo : 예외 핸들링
-           return;
+            return;
         }
 
         String title = notificationMessage.getTitle();
@@ -45,11 +46,12 @@ public class FcmMessageProvider {
                 .setToken(token)
                 .build();
         try {
-            String response = FirebaseMessaging.getInstance().send(message);
+            //String response = FirebaseMessaging.getInstance().send(message);
+            FirebaseMessaging.getInstance().sendAsync(message);
             notificationRepository.save(new NotificationEntity(member, tag, title, body, true));
             log.info("Fcm 푸시 알람을 성공적으로 전송하였습니다.");
-            log.info(title + " " + body);
-        } catch (Exception e){
+            log.info("[FCM Message] {} : {}", title, body);
+        } catch (Exception e) {
             notificationRepository.save(new NotificationEntity(member, tag, title, body, false));
             log.error("Fcm 푸시 알람을 전송하는 도중에 에러가 발생했습니다. {}", e.getMessage());
         }
