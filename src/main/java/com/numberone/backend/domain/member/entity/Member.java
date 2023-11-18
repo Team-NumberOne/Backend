@@ -63,13 +63,20 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<ConversationLike> conversationLikes = new ArrayList<>();
 
+    private Boolean session;
+
+    public void update(Boolean session) {
+        this.session = session;
+    }
+
     @Builder
-    public Member(String email, String nickName, String realName, Integer heartCnt, String fcmToken) {
+    public Member(String email, String nickName, String realName, Integer heartCnt, String fcmToken, Boolean session) {
         this.email = email;
         this.nickName = nickName;
         this.realName = realName;
         this.heartCnt = heartCnt;
         this.fcmToken = fcmToken;
+        this.session = false;
     }
 
     public static Member of(String email, String realName) {
