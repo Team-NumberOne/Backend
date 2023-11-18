@@ -48,6 +48,7 @@ public class FcmMessageProvider {
             String response = FirebaseMessaging.getInstance().send(message);
             notificationRepository.save(new NotificationEntity(member, tag, title, body, true));
             log.info("Fcm 푸시 알람을 성공적으로 전송하였습니다.");
+            log.info(title + " " + body);
         } catch (Exception e){
             notificationRepository.save(new NotificationEntity(member, tag, title, body, false));
             log.error("Fcm 푸시 알람을 전송하는 도중에 에러가 발생했습니다. {}", e.getMessage());

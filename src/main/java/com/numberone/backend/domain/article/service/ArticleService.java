@@ -213,10 +213,12 @@ public class ArticleService {
         CommentEntity savedComment = commentRepository.save(
                 new CommentEntity(request.getContent(), article, member)
         );
+        Member articleOwner = memberRepository.findById(article.getArticleOwnerId())
+                .orElseThrow(NotFoundMemberException::new);
 
         articleParticipantRepository.save(new ArticleParticipant(article, member));
         // 게시글 작성자에게 알림을 보낸다.
-        fcmMessageProvider.sendFcm(member, ARTICLE_COMMENT_FCM_ALARM, NotificationTag.COMMUNITY);
+        fcmMessageProvider.sendFcm(articleOwner, ARTICLE_COMMENT_FCM_ALARM, NotificationTag.COMMUNITY);
         return CreateCommentResponse.of(savedComment);
     }
 
