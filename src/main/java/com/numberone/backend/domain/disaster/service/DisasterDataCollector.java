@@ -60,7 +60,7 @@ public class DisasterDataCollector {
 
     @Scheduled(fixedDelay = 60 * 1000)
     public void collectData() {
-        //log.info("collectData()");
+        log.info("[ Disaster data Collector is running! ] ");
         URI uri = UriComponentsBuilder
                 .fromUriString(disasterProperties.getApiUrl())
                 .queryParam("ServiceKey", disasterProperties.getSecretKey())
@@ -80,7 +80,7 @@ public class DisasterDataCollector {
         Long topDisasterNum = Long.parseLong(disasters.get(0).getMsgId());
         if (topDisasterNum > latestDisasterNum) {
             log.info("new disaster");
-            crawlingDisasterType();
+            crawlingDisasterTypeV2();
             if (disasterTypeMap.size() != disasters.size())
                 throw new NotFoundCrawlingException();
             for (DisasterDataResponse.RowItem disaster : disasters) {
@@ -102,26 +102,49 @@ public class DisasterDataCollector {
         }
     }
 
-    private void crawlingDisasterType() {
+//    private void crawlingDisasterType() {
+//        disasterTypeMap.clear();
+//        WebClient webClient = new WebClient();
+//        webClient.getOptions().setJavaScriptEnabled(true);
+//        webClient.getOptions().setCssEnabled(false);
+//        HtmlPage htmlPage = null;
+//        try {
+//            htmlPage = webClient.getPage(disasterProperties.getCrawlingUrl());
+//        } catch (IOException e) {
+//            throw new NotFoundCrawlingException();
+//        }
+//        webClient.waitForBackgroundJavaScript(5000);
+//        Document doc = Jsoup.parse(htmlPage.asXml());
+//        Elements nums = doc.select("[id^=disasterSms_tr_][id$=_MD101_SN]");
+//        Elements types = doc.select("[id^=disasterSms_tr_][id$=_DSSTR_SE_NM]");
+//        for (int i = 0; i < nums.size(); i++) {
+//            disasterTypeMap.put(
+//                    Long.parseLong(nums.get(i).text()),
+//                    DisasterType.kor2code(types.get(i).text())
+//            );
+//        }
+//    }
+
+
+    private void crawlingDisasterTypeV2() {
         disasterTypeMap.clear();
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setJavaScriptEnabled(true);
-        webClient.getOptions().setCssEnabled(false);
-        HtmlPage htmlPage = null;
-        try {
-            htmlPage = webClient.getPage(disasterProperties.getCrawlingUrl());
-        } catch (IOException e) {
+        try (WebClient webClient = new WebClient()){
+            webClient.getOptions().setJavaScriptEnabled(true);
+            webClient.getOptions().setCssEnabled(false);
+            HtmlPage htmlPage = webClient.getPage(disasterProperties.getCrawlingUrl());
+            webClient.waitForBackgroundJavaScript(5000);
+            Document doc = Jsoup.parse(htmlPage.asXml());
+            Elements nums = doc.select("[id^=disasterSms_tr_][id$=_MD101_SN]");
+            Elements types = doc.select("[id^=disasterSms_tr_][id$=_DSSTR_SE_NM]");
+            for (int i = 0; i < nums.size(); i++) {
+                disasterTypeMap.put(
+                        Long.parseLong(nums.get(i).text()),
+                        DisasterType.kor2code(types.get(i).text())
+                );
+            }
+        } catch (IOException e){
             throw new NotFoundCrawlingException();
         }
-        webClient.waitForBackgroundJavaScript(5000);
-        Document doc = Jsoup.parse(htmlPage.asXml());
-        Elements nums = doc.select("[id^=disasterSms_tr_][id$=_MD101_SN]");
-        Elements types = doc.select("[id^=disasterSms_tr_][id$=_DSSTR_SE_NM]");
-        for (int i = 0; i < nums.size(); i++) {
-            disasterTypeMap.put(
-                    Long.parseLong(nums.get(i).text()),
-                    DisasterType.kor2code(types.get(i).text())
-            );
-        }
     }
+
 }
