@@ -61,7 +61,7 @@ public class SponsorService {
         return SponsorHomeResponse.of(
                 supportRepository.getSupportCnt(),
                 messages,
-                email,
+                member.getNickName(),
                 sponsorResponses
         );
     }
@@ -92,7 +92,7 @@ public class SponsorService {
         return SponsorHomeResponse.of(
                 supportRepository.getSupportCnt(),
                 messages,
-                email,
+                member.getNickName(),
                 sponsorResponses
         );
     }
