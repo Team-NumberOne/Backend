@@ -84,6 +84,8 @@ public class Member extends BaseTimeEntity {
         this.heartCnt = heartCnt;
         this.fcmToken = fcmToken;
         this.session = true;
+        this.latitude = 0D;
+        this.longitude = 0D;
     }
 
     public static Member of(String email, String realName) {
@@ -112,7 +114,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public void updateGps(double latitude, double longitude) {
-        this.latitude=latitude;
-        this.longitude=longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
