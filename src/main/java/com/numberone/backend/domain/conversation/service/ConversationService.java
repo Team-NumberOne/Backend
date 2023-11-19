@@ -78,7 +78,7 @@ public class ConversationService {
                 .orElseThrow(NotFoundConversationException::new);
         Member member = memberService.findByEmail(email);
         List<GetConversationResponse> childs = new ArrayList<>();
-        List<Conversation> childConversations = conversationRepository.findAllByParentOrderByLikeCntDesc(conversation);
+        List<Conversation> childConversations = conversationRepository.findAllByParentOrderByCreatedAt(conversation);
         for (Conversation child : childConversations) {
             childs.add(GetConversationResponse.of(
                     child,

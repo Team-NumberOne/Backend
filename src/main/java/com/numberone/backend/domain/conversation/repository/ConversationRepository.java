@@ -20,5 +20,5 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
 
     List<Conversation> findAllByDisasterOrderByCreatedAtDesc(Disaster disaster);
 
-    List<Conversation> findAllByParentOrderByLikeCntDesc(Conversation parent);
+    List<Conversation> findAllByParentOrderByCreatedAt(Conversation parent);
 }
