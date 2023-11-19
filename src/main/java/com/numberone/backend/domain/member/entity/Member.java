@@ -63,7 +63,14 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<ConversationLike> conversationLikes = new ArrayList<>();
 
+    @Comment("온/오프라인 유무")
     private Boolean session;
+
+    @Comment("위도")
+    private Double latitude;
+
+    @Comment("경도")
+    private Double longitude;
 
     public void updateSession(Boolean session) {
         this.session = session;
@@ -102,5 +109,10 @@ public class Member extends BaseTimeEntity {
 
     public void minusHeart(int heart) {
         heartCnt -= heart;
+    }
+
+    public void updateGps(double latitude, double longitude) {
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
 }

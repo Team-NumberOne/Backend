@@ -2,6 +2,7 @@ package com.numberone.backend.domain.member.controller;
 
 import com.numberone.backend.domain.member.dto.request.OnboardingRequest;
 import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
+import com.numberone.backend.domain.member.dto.request.UpdateGpsRequest;
 import com.numberone.backend.domain.member.dto.response.GetNotificationRegionResponse;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
 import com.numberone.backend.domain.member.dto.response.UploadProfileImageResponse;
@@ -81,15 +82,29 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getNotificationRegionLv2());
     }
 
-    @Operation(summary = "온라인 전환 API")
+    @Operation(summary = "온라인 전환 API", description = """
+            사용자가 어플을 시작할 때 이 API를 호출해 온라인 상태가 되었음을 서버에 알려주세요.
+            """)
     @GetMapping("/online")
     public void online(Authentication authentication){
         memberService.online(authentication.getName());
     }
 
-    @Operation(summary = "오프라인 전환 API")
+    @Operation(summary = "오프라인 전환 API", description = """
+            사용자가 어플을 종료할 때 이 API를 호출해 온라인 상태가 되었음을 서버에 알려주세요.
+            """)
     @GetMapping("/offline")
     public void offline(Authentication authentication){
         memberService.offline(authentication.getName());
+    }
+
+    @Operation(summary = "사용자 GPS 위치 변경", description = """
+            사용자의 GPS 위치(위도, 경도) 정보를 갱신할 때 사용해주세요.
+            
+            위도, 경도를 body에 담아 전달해주세요.
+            """)
+    @PostMapping("/gps")
+    public void updateGps(Authentication authentication, @Valid @RequestBody UpdateGpsRequest updateGpsRequest){
+        memberService.updateGps(authentication.getName(), updateGpsRequest);
     }
 }
