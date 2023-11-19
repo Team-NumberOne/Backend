@@ -5,6 +5,7 @@ import com.numberone.backend.domain.member.dto.request.BuyHeartRequest;
 import com.numberone.backend.domain.member.dto.request.UpdateGpsRequest;
 import com.numberone.backend.domain.member.dto.response.GetNotificationRegionResponse;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
+import com.numberone.backend.domain.member.dto.response.MemberIdResponse;
 import com.numberone.backend.domain.member.dto.response.UploadProfileImageResponse;
 import com.numberone.backend.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,10 +85,12 @@ public class MemberController {
 
     @Operation(summary = "온라인 전환 API", description = """
             사용자가 어플을 시작할 때 이 API를 호출해 온라인 상태가 되었음을 서버에 알려주세요.
+            
+            또한 가족 초대를 위해 필요한 사용자의 id값을 이때 응답으로 반환해줍니다.
             """)
     @GetMapping("/online")
-    public void online(Authentication authentication){
-        memberService.online(authentication.getName());
+    public ResponseEntity<MemberIdResponse> online(Authentication authentication){
+        return ResponseEntity.ok(memberService.online(authentication.getName()));
     }
 
     @Operation(summary = "오프라인 전환 API", description = """
