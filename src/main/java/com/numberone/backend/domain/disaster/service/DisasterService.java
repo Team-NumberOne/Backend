@@ -11,6 +11,7 @@ import com.numberone.backend.domain.disaster.dto.response.SituationDetailRespons
 import com.numberone.backend.domain.disaster.dto.response.SituationHomeResponse;
 import com.numberone.backend.domain.disaster.dto.response.SituationResponse;
 import com.numberone.backend.domain.disaster.entity.Disaster;
+import com.numberone.backend.domain.disaster.event.DisasterEvent;
 import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.disaster.util.DisasterType;
 import com.numberone.backend.domain.member.entity.Member;
@@ -22,6 +23,7 @@ import com.numberone.backend.exception.notfound.NotFoundDisasterException;
 import com.numberone.backend.util.LocationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,7 @@ public class DisasterService {
     private final MemberService memberService;
     private final ConversationService conversationService;
     private final ConversationRepository conversationRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public LatestDisasterResponse getLatestDisaster(String email, LatestDisasterRequest latestDisasterRequest) {
         String address = locationProvider.pos2address(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude());
@@ -53,7 +56,7 @@ public class DisasterService {
         }
         disasters.removeIf(disaster -> !isValidDisasterType(disaster.getDisasterType(), member.getNotificationDisasters()));
 
-        if(disasters.isEmpty())
+        if (disasters.isEmpty())
             return LatestDisasterResponse.notExist();
 
         return LatestDisasterResponse.of(disasters.stream()
@@ -66,14 +69,17 @@ public class DisasterService {
     public void save(SaveDisasterRequest saveDisasterRequest) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(saveDisasterRequest.getCreatedAt(), formatter);
-        Disaster disaster = Disaster.of(
-                saveDisasterRequest.getDisasterType(),
-                saveDisasterRequest.getLocation(),
-                saveDisasterRequest.getMsg(),
-                saveDisasterRequest.getDisasterNum(),
-                dateTime
-        );
-        disasterRepository.save(disaster);
+        Disaster savedDisaster =
+                disasterRepository.save(
+                        Disaster.of(
+                                saveDisasterRequest.getDisasterType(),
+                                saveDisasterRequest.getLocation(),
+                                saveDisasterRequest.getMsg(),
+                                saveDisasterRequest.getDisasterNum(),
+                                dateTime
+                        )
+                );
+        eventPublisher.publishEvent(DisasterEvent.of(savedDisaster)); // 신규 재난 발생 이벤트
     }
 
     private boolean isValidDisasterType(DisasterType disasterType, List<NotificationDisaster> notificationDisasters) {
@@ -96,13 +102,13 @@ public class DisasterService {
 
         List<SituationResponse> situationResponses = new ArrayList<>();
         for (Disaster disaster : disasters) {
-            Long conversationCnt=0L;
+            Long conversationCnt = 0L;
             List<GetConversationResponse> conversationResponses = new ArrayList<>();
-            conversationCnt+=conversationRepository.countByDisaster(disaster);
-            List<Conversation> conversations = conversationRepository.findAllByDisasterOrderByLikeCntDesc(disaster, PageRequest.of(0,3));
+            conversationCnt += conversationRepository.countByDisaster(disaster);
+            List<Conversation> conversations = conversationRepository.findAllByDisasterOrderByLikeCntDesc(disaster, PageRequest.of(0, 3));
             for (Conversation conversation : conversations) {
                 conversationResponses.add(conversationService.getExceptChild(email, conversation.getId()));
-                conversationCnt+=conversationRepository.countByParent(conversation);
+                conversationCnt += conversationRepository.countByParent(conversation);
             }
             situationResponses.add(SituationResponse.of(disaster, conversationResponses, conversationCnt));
         }
@@ -115,9 +121,9 @@ public class DisasterService {
                 .orElseThrow(NotFoundDisasterException::new);
         List<GetConversationResponse> conversationResponses = new ArrayList<>();
         List<Conversation> conversations;
-        if(sort.equals("popularity"))
+        if (sort.equals("popularity"))
             conversations = conversationRepository.findAllByDisasterOrderByLikeCntDesc(disaster);
-        else if(sort.equals("time"))
+        else if (sort.equals("time"))
             conversations = conversationRepository.findAllByDisasterOrderByCreatedAtDesc(disaster);
         else
             throw new BadRequestConversationSortException();

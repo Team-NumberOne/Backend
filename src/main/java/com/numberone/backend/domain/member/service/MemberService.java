@@ -105,14 +105,14 @@ public class MemberService {
 
     @Transactional
     public MemberIdResponse online(String email) {
-        Member member  = findByEmail(email);
+        Member member = findByEmail(email);
         member.updateSession(true);
         return MemberIdResponse.of(member);
     }
 
     @Transactional
     public void offline(String email) {
-        Member member  = findByEmail(email);
+        Member member = findByEmail(email);
         member.updateSession(false);
     }
 
@@ -123,10 +123,29 @@ public class MemberService {
         Double longitude = updateGpsRequest.getLongitude();
         String location = locationProvider.pos2address(latitude, longitude);
         member.updateGps(latitude, longitude, location);
+
+        String[] locationTokens = location.split(" ");
+        switch (locationTokens.length) {
+            case 1 -> {
+                // 서울특별시
+                member.updateLv1(locationTokens[0]);
+            }
+            case 2 -> {
+                // 서울특별시 광진구
+                member.updateLv1(locationTokens[0]);
+                member.updateLv2(locationTokens[1]);
+            }
+            case 3 -> {
+                // 서울특별시 광진구 자양동
+                member.updateLv1(locationTokens[0]);
+                member.updateLv2(locationTokens[1]);
+                member.updateLv3(locationTokens[2]);
+            }
+        }
     }
 
     @Transactional
-    public void updateSafety(UpdateSafetyRequest request){
+    public void updateSafety(UpdateSafetyRequest request) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);

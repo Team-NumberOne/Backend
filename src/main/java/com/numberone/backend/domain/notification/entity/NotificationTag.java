@@ -7,6 +7,8 @@ public enum NotificationTag {
     COMMUNITY, // 커뮤니티
     SUPPORT, // 후원
     FAMILY, // 가족
+
+    DISASTER, // 재난
     ;
     private String value;
 }

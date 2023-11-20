@@ -86,6 +86,15 @@ public class Member extends BaseTimeEntity {
     @Comment("최근 주소 업데이트 시각")
     private LocalDateTime lastlyUpdatedLocationAt;
 
+    @Comment("시/도")
+    private String lv1;
+
+    @Comment("구/군")
+    private String lv2;
+
+    @Comment("동/읍/면")
+    private String lv3;
+
     public void updateSession(Boolean session) {
         this.session = session;
     }
@@ -136,5 +145,17 @@ public class Member extends BaseTimeEntity {
 
     public void updateSafety(Boolean isSafety) {
         this.isSafety = isSafety;
+    }
+
+    public void updateLv1(String lv1) {
+        this.lv1 = lv1;
+    }
+
+    public void updateLv2(String lv2) {
+        this.lv2 = lv2;
+    }
+
+    public void updateLv3(String lv3) {
+        this.lv3 = lv3;
     }
 }

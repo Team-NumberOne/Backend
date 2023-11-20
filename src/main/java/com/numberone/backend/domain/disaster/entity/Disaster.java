@@ -1,5 +1,6 @@
 package com.numberone.backend.domain.disaster.entity;
 
+import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.conversation.entity.Conversation;
 import com.numberone.backend.domain.disaster.util.DisasterType;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Comment("재난 정보")
-public class Disaster {
+public class Disaster extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
