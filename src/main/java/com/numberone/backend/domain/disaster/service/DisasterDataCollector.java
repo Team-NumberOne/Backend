@@ -89,7 +89,8 @@ public class DisasterDataCollector {
                     break;
                 String[] locations = disaster.getLocationName().split(",");
                 for (String loc : locations) {
-                    if (disasterTypeMap.get(disasterNum).equals(DisasterType.OTHERS) && disaster.getMsg().contains("실종"))
+                    if (disasterTypeMap.get(disasterNum).equals(DisasterType.OTHERS) &&
+                            (disaster.getMsg().contains("실종") || disaster.getMsg().contains("목격") || disaster.getMsg().contains("배회")))
                         disasterTypeMap.put(disasterNum, DisasterType.MISSING);
                     disasterService.save(SaveDisasterRequest.of(
                             disasterTypeMap.get(disasterNum),
