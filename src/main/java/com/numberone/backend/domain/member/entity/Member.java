@@ -102,10 +102,9 @@ public class Member extends BaseTimeEntity {
         this.longitude = 0D;
     }
 
-    public static Member of(String email, String realName) {
+    public static Member of(String email) {
         return Member.builder()
                 .email(email)
-                .realName(realName)
                 .heartCnt(0)
                 .build();
     }
@@ -114,7 +113,8 @@ public class Member extends BaseTimeEntity {
         this.profileImageUrl = imageUrl;
     }
 
-    public void setOnboardingData(String nickName, String fcmToken) {
+    public void setOnboardingData(String realName, String nickName, String fcmToken) {
+        this.realName = realName;
         this.nickName = nickName;
         this.fcmToken = fcmToken;
     }
@@ -134,7 +134,7 @@ public class Member extends BaseTimeEntity {
         this.lastlyUpdatedLocationAt = LocalDateTime.now();
     }
 
-    public void updateSafety(Boolean isSafety){
+    public void updateSafety(Boolean isSafety) {
         this.isSafety = isSafety;
     }
 }

@@ -41,8 +41,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void create(String email, String realName) {
-        memberRepository.save(Member.of(email, realName));
+    public void create(String email) {
+        memberRepository.save(Member.of(email));
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
         notificationDisasterRepository.deleteAllByMemberId(member.getId());
-        member.setOnboardingData(onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
+        member.setOnboardingData(onboardingRequest.getRealname(),onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
         notificationRegionRepository.deleteAllByMemberId(member.getId());
         for (OnboardingAddress address : onboardingRequest.getAddresses()) {
             notificationRegionRepository.save(NotificationRegion.of(

@@ -11,6 +11,10 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OnboardingRequest {
+    @Schema(defaultValue = "노영진")
+    @NotNull(message = "실명 정보는 null일 수 없습니다.")
+    private String realname;
+
     @Schema(defaultValue = "초롱이")
     @NotNull(message = "nickname은 null일 수 없습니다.")
     private String nickname;
