@@ -6,8 +6,10 @@ import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,7 +44,7 @@ public class GetConversationResponse {
         else if (duration.toMinutes() < 60)
             info += duration.toMinutes() + "분전";
         else
-            info += duration.toHours() + "시간전";
+            info += createdAt.format(DateTimeFormatter.ofPattern("HH:mm", Locale.KOREAN));
         return info;
     }
 
