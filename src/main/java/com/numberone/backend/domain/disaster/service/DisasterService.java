@@ -29,10 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,14 +43,23 @@ public class DisasterService {
     private final ConversationService conversationService;
     private final ConversationRepository conversationRepository;
 
-    public LatestDisasterResponse getLatestDisaster(LatestDisasterRequest latestDisasterRequest) {
+    public LatestDisasterResponse getLatestDisaster(String email, LatestDisasterRequest latestDisasterRequest) {
         String address = locationProvider.pos2address(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude());
         LocalDateTime time = LocalDateTime.now().minusDays(1);
-        List<Disaster> disasters = disasterRepository.findDisastersInAddressAfterTime(address, time);
-        if (!disasters.isEmpty())
-            return LatestDisasterResponse.of(disasters.get(0));
-        else
+        Set<Disaster> disasters = new HashSet<>(disasterRepository.findDisastersInAddressAfterTime(address, time));
+        Member member = memberService.findByEmail(email);
+        for (NotificationRegion notificationRegion : member.getNotificationRegions()) {
+            disasters.addAll(disasterRepository.findDisastersInAddressAfterTime(notificationRegion.getLocation(), time));
+        }
+        disasters.removeIf(disaster -> !isValidDisasterType(disaster.getDisasterType(), member.getNotificationDisasters()));
+
+        if(disasters.isEmpty())
             return LatestDisasterResponse.notExist();
+
+        return LatestDisasterResponse.of(disasters.stream()
+                .sorted(Comparator.comparing(Disaster::getGeneratedAt).reversed())
+                .toList()
+                .get(0));
     }
 
     @Transactional
