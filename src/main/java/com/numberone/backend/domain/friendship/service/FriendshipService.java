@@ -2,6 +2,7 @@ package com.numberone.backend.domain.friendship.service;
 
 import com.numberone.backend.domain.friendship.dto.response.FriendResponse;
 import com.numberone.backend.domain.friendship.dto.response.InviteFriendResponse;
+import com.numberone.backend.domain.friendship.dto.response.SendFcmFriendResponse;
 import com.numberone.backend.domain.friendship.entity.Friendship;
 import com.numberone.backend.domain.friendship.repository.FriendshipRepository;
 import com.numberone.backend.domain.member.entity.Member;
@@ -64,7 +65,7 @@ public class FriendshipService {
     }
 
     @Transactional
-    public void sendFcmToFriend(Long friendId) {
+    public SendFcmFriendResponse sendFcmToFriend(Long friendId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member member = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -78,6 +79,11 @@ public class FriendshipService {
         String body = String.format(" %s님께 현재 상태를 보내볼까요? ", memberName);
 
         fcmMessageProvider.sendFcm(friend, title, body, NotificationTag.FAMILY);
+
+        return SendFcmFriendResponse.builder()
+                .title(title)
+                .body(body)
+                .build();
     }
 
 }

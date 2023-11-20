@@ -2,6 +2,7 @@ package com.numberone.backend.domain.friendship.controller;
 
 import com.numberone.backend.domain.friendship.dto.response.FriendResponse;
 import com.numberone.backend.domain.friendship.dto.response.InviteFriendResponse;
+import com.numberone.backend.domain.friendship.dto.response.SendFcmFriendResponse;
 import com.numberone.backend.domain.friendship.service.FriendshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,8 @@ public class FriendshipController {
             jwt 토큰을 반드시 넣어주세요.
             """)
     @GetMapping("{friend-id}")
-    public ResponseEntity<Void> sendFcmToFriend(@PathVariable("friend-id") Long friendId){
-        friendshipService.sendFcmToFriend(friendId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<SendFcmFriendResponse> sendFcmToFriend(@PathVariable("friend-id") Long friendId){
+        return ResponseEntity.ok(friendshipService.sendFcmToFriend(friendId));
     }
 
 }
