@@ -86,17 +86,20 @@ public class TokenService {
     }
 
     private GetTokenResponse getTokenResponse(String email) {
-        if (!memberRepository.existsByEmail(email))
+        Boolean isNewMember = false;
+        if (!memberRepository.existsByEmail(email)) {
             memberService.create(email);
+            isNewMember = true;
+        }
         if (tokenRepository.existsById(email)) {
             Token token = tokenRepository.findById(email)
                     .orElseThrow(WrongAccessTokenException::new);
-            return GetTokenResponse.of(token.getAccessToken(), token.getRefreshToken());
+            return GetTokenResponse.of(token.getAccessToken(), token.getRefreshToken(), isNewMember);
         } else {
             String refreshToken = jwtUtil.createToken(email, refreshPeroid);
             String accessToken = jwtUtil.createToken(email, accessPeroid);
             Token token = tokenRepository.save(Token.of(email, accessToken, refreshToken));
-            return GetTokenResponse.of(token.getAccessToken(), token.getRefreshToken());
+            return GetTokenResponse.of(token.getAccessToken(), token.getRefreshToken(), isNewMember);
         }
     }
 }

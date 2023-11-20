@@ -10,17 +10,20 @@ import lombok.NoArgsConstructor;
 public class GetTokenResponse {
     private String accessToken;
     private String refreshToken;
+    private Boolean isNewMember;
 
     @Builder
-    public GetTokenResponse(String accessToken, String refreshToken) {
+    public GetTokenResponse(String accessToken, String refreshToken, Boolean isNewMember) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.isNewMember = isNewMember;
     }
 
-    public static GetTokenResponse of(String accessToken, String refreshToken) {
+    public static GetTokenResponse of(String accessToken, String refreshToken, Boolean isNewMember) {
         return GetTokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .isNewMember(isNewMember)
                 .build();
     }
 }
