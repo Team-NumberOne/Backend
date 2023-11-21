@@ -29,6 +29,7 @@ public class NotificationTabResponse {
             case FAMILY -> "가족";
             case SUPPORT -> "후원";
             case COMMUNITY -> "커뮤니티";
+            case DISASTER -> "재난";
         };
         this.createdAt = notification.getCreatedAt();
         this.title = notification.getTitle();
