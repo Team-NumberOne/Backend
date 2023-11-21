@@ -26,7 +26,7 @@ public class FriendshipController {
             두 사람은 친구(가족)이 됩니다!
             """)
     @PutMapping("{inviting-member-id}")
-    public ResponseEntity<InviteFriendResponse> inviteFriendship(@PathVariable("inviting-member-id") Long memberId){
+    public ResponseEntity<InviteFriendResponse> inviteFriendship(@PathVariable("inviting-member-id") Long memberId) {
         InviteFriendResponse response = friendshipService.inviteFriend(memberId);
         return ResponseEntity.created(URI.create(String.format("/api/friendships/%s", memberId)))
                 .body(response);
@@ -37,7 +37,7 @@ public class FriendshipController {
             jwt 토큰을 반드시 넣어서 요청해주세요.
             """)
     @GetMapping
-    public ResponseEntity<List<FriendResponse>> getFriends(){
+    public ResponseEntity<List<FriendResponse>> getFriends() {
         return ResponseEntity.ok(friendshipService.getFriends());
     }
 
@@ -46,8 +46,17 @@ public class FriendshipController {
             jwt 토큰을 반드시 넣어주세요.
             """)
     @GetMapping("{friend-id}")
-    public ResponseEntity<SendFcmFriendResponse> sendFcmToFriend(@PathVariable("friend-id") Long friendId){
+    public ResponseEntity<SendFcmFriendResponse> sendFcmToFriend(@PathVariable("friend-id") Long friendId) {
         return ResponseEntity.ok(friendshipService.sendFcmToFriend(friendId));
     }
 
+    @Operation(summary = "친구(가족) 삭제하기", description = """
+            친구(가족)을 삭제합니다. 친구(가족)의 아이디를 path variable 으로 넣어주세요.
+                        
+            jwt 토큰을 반드시 넣어주세요.
+            """)
+    @DeleteMapping("{friend-id}")
+    public void deleteFriend(@PathVariable("friend-id") Long friendId) {
+        friendshipService.deleteFriend(friendId);
+    }
 }

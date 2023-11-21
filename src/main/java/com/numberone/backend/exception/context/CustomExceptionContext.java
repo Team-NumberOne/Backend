@@ -58,8 +58,8 @@ public enum CustomExceptionContext implements ExceptionContext {
     BAD_REQUEST_CONVERSATION_SORT("정렬 기준 값을 올바르게 전달해주세요. (popularity 또는 time)", 12001),
 
     //friendship 관련 예외
-    INVALID_INVITE_TYPE("본인을 가족으로 등록할 수 없습니다. 또는 이미 가족/친구로 등록된 멤버를 재등록할 수 없습니다. ", 13001)
-    ;
+    INVALID_INVITE_TYPE("본인을 가족으로 등록할 수 없습니다. 또는 이미 가족/친구로 등록된 멤버를 재등록할 수 없습니다. ", 13001),
+    NOT_FOUND_FRIENDSHIP("해당 사용자들끼리의 친구 관계는 존재하지 않습니다.", 13002);
 
     private final String message;
     private final int code;

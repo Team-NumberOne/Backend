@@ -10,6 +10,7 @@ import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.badrequest.InvalidInviteTypeException;
+import com.numberone.backend.exception.notfound.NotFoundFriendshipException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.support.fcm.service.FcmMessageProvider;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,21 @@ public class FriendshipService {
                     Member friend = friendship.getFriend();
                     return FriendResponse.of(friend);
                 }).distinct().collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteFriend(Long memberId) {
+        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
+        Member me = memberRepository.findByEmail(principal)
+                .orElseThrow(NotFoundMemberException::new);
+        Member friend = memberRepository.findById(memberId)
+                .orElseThrow(NotFoundMemberException::new);
+        Friendship friendship1 = friendshipRepository.findByMemberAndFriend(me, friend)
+                .orElseThrow(NotFoundFriendshipException::new);
+        Friendship friendship2 = friendshipRepository.findByMemberAndFriend(friend, me)
+                .orElseThrow(NotFoundFriendshipException::new);
+        friendshipRepository.delete(friendship1);
+        friendshipRepository.delete(friendship2);
     }
 
     @Transactional
