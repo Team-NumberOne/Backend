@@ -48,7 +48,7 @@ public class FcmMessageProvider {
                 .build();
         try {
             //String response = FirebaseMessaging.getInstance().send(message);
-            FirebaseMessaging.getInstance().sendAsync(message);
+            FirebaseMessaging.getInstance().send(message);
             notificationRepository.save(new NotificationEntity(member, tag, title, body, true));
             log.info("Fcm 푸시 알람을 성공적으로 전송하였습니다.");
             log.info("[FCM Message] {} : {}", title, body);
@@ -78,7 +78,7 @@ public class FcmMessageProvider {
                 .build();
         try {
             //String response = FirebaseMessaging.getInstance().send(message);
-            FirebaseMessaging.getInstance().sendAsync(message);
+            FirebaseMessaging.getInstance().send(message);
             notificationRepository.save(new NotificationEntity(member, tag, title, body, true));
             log.info("Fcm 푸시 알람을 성공적으로 전송하였습니다.");
             log.info("[FCM Message] {} : {}", title, body);
