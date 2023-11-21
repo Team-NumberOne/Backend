@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -54,7 +55,7 @@ public class DisasterEventHandler {
             log.info(title);
             log.info(message);
             return member.getFcmToken();
-        }).toList();
+        }).filter(Objects::nonNull).toList();
 
         // fcm 메세지 일괄 전송
         fcmMessageProvider.sendFcmToMembers(targetMemberFcmTokens, title, message, NotificationTag.DISASTER);
@@ -70,14 +71,16 @@ public class DisasterEventHandler {
 
             List<Member> friendList = member.getFriendships().stream()
                     .distinct().map(Friendship::getFriend).toList();
-            List<String> friendFcmTokens = friendList.stream().map(Member::getFcmToken).toList();
+            List<String> friendFcmTokens = friendList.stream().map(Member::getFcmToken).filter(Objects::nonNull).toList();
 
             String memberName = member.getRealName() != null ? member.getRealName() : member.getNickName();
             fcmMessageProvider.sendFcmToMembers(
                     friendFcmTokens,
                     String.format("긴급!"),
-                    String.format("%s님이 안부를 궁금해하고 있어요.", memberName) +
-                            String.format("걱정하고 있을 %s님을 위해 빨리 연락해주세요!", memberName),
+                    String.format("""
+                            %s님이 안부를 궁금해하고 있어요.                            
+                            걱정하고 있을 %s님을 위해 빨리 연락해주세요!
+                            """, memberName, memberName),
                     NotificationTag.FAMILY
             );
 
@@ -108,7 +111,7 @@ public class DisasterEventHandler {
                             new NotificationEntity(member, disasterEvent.getType(), disasterEvent.getMessage(), true)
                     );
                     return isMatched ? Stream.of(member.getFcmToken()) : Stream.empty();
-                }).toList();
+                }).filter(Objects::nonNull).toList();
         fcmMessageProvider.sendFcmToMembers(targetFcmListByOnboardingRegions, title, message, NotificationTag.DISASTER);
 
     }
