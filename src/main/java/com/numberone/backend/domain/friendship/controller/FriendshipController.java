@@ -54,9 +54,11 @@ public class FriendshipController {
             친구(가족)을 삭제합니다. 친구(가족)의 아이디를 path variable 으로 넣어주세요.
                         
             jwt 토큰을 반드시 넣어주세요.
+            
+            응답값으로는 삭제된 친구(가족)의 사용자 정보를 반환합니다.
             """)
     @DeleteMapping("{friend-id}")
-    public void deleteFriend(@PathVariable("friend-id") Long friendId) {
-        friendshipService.deleteFriend(friendId);
+    public ResponseEntity<FriendResponse> deleteFriend(@PathVariable("friend-id") Long friendId) {
+        return ResponseEntity.ok(friendshipService.deleteFriend(friendId));
     }
 }

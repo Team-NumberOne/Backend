@@ -66,7 +66,7 @@ public class FriendshipService {
     }
 
     @Transactional
-    public void deleteFriend(Long memberId) {
+    public FriendResponse deleteFriend(Long memberId) {
         String principal = SecurityContextProvider.getAuthenticatedUserEmail();
         Member me = memberRepository.findByEmail(principal)
                 .orElseThrow(NotFoundMemberException::new);
@@ -78,6 +78,7 @@ public class FriendshipService {
                 .orElseThrow(NotFoundFriendshipException::new);
         friendshipRepository.delete(friendship1);
         friendshipRepository.delete(friendship2);
+        return FriendResponse.of(friend);
     }
 
     @Transactional
