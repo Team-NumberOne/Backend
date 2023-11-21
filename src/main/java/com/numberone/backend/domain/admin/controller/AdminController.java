@@ -61,7 +61,49 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllAddressInfo());
     }
 
-    @Operation(summary = "(테스트용) 재난 발생시키기")
+    @Operation(summary = "(테스트용) 재난 발생시키기", description = """
+            지원되는 재난 유형:
+            
+            
+                DROUGHT("가뭄"),
+                STRONG_WIND("강풍"),
+                DRYNESS("건조"),
+                HEAVY_SNOWFALL("대설"),
+                TIDAL_WAVE("대조기"),
+                FINE_DUST("미세먼지"),
+                WILDFIRE("산불"),
+                LANDSLIDE("산사태"),
+                FOG("안개"),
+                EARTHQUAKE("지진"),
+                TYPHOON("태풍"),
+                HEATWAVE("폭염"),
+                ROUGH_SEA("풍랑"),
+                COLD_WAVE("한파"),
+                HEAVY_RAIN("호우"),
+                FLOOD("홍수"),
+                        
+                GAS("가스"),
+                TRAFFIC("교통"),
+                FINANCE("금융"),
+                COLLAPSE("붕괴"),
+                WATER_SUPPLY("수도"),
+                ENERGY("에너지"),
+                MEDICAL("의료"),
+                INFECTIOUS_DISEASE("전염병"),
+                POWER_OUTAGE("정전"),
+                COMMUNICATION("통신"),
+                EXPLOSION("폭발"),
+                FIRE("화재"),
+                ENVIRONMENTAL_POLLUTION("환경오염사고"),
+                AI("AI"),
+                        
+                EMERGENCY("비상사태"),
+                TERROR("테러"),
+                CHEMICAL("화생방사고"),
+                        
+                MISSING("실종"),
+                OTHERS("기타"),
+            """)
     @PostMapping("/disaster")
     public ResponseEntity<SaveDisasterRequest> createDisaster(@RequestBody SaveDisasterRequest request){
         disasterService.save(request);
