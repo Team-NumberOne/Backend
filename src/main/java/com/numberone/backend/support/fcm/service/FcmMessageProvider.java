@@ -124,6 +124,7 @@ public class FcmMessageProvider {
     }
 
     public void sendFcmToMembers(List<String> tokens, String title, String body, NotificationTag tag) {
+        log.info("{} 건의 푸시알람을 전송합니다.", tokens.size());
         List<Message> messages = tokens.stream().map(
                 token -> Message.builder()
                         .putData("time", LocalDateTime.now().toString())

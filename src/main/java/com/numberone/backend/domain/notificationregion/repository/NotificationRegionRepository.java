@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface NotificationRegionRepository extends JpaRepository<NotificationRegion, Long> {
     void deleteAllByMemberId(Long memberId);
+    List<NotificationRegion> findByMemberId(Long memberId);
 }
