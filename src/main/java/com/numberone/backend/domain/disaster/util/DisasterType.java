@@ -81,4 +81,114 @@ public enum DisasterType {
         }
         throw new InvalidDisasterTypeException();
     }
+
+    public String code2kor() {
+        switch (this) {
+            case DROUGHT -> {
+                return "가뭄";
+            }
+            case STRONG_WIND -> {
+                return "강풍";
+            }
+            case DRYNESS -> {
+                return "건조";
+            }
+            case HEAVY_SNOWFALL -> {
+                return "대설";
+            }
+            case TIDAL_WAVE -> {
+                return "대조기";
+            }
+            case FINE_DUST -> {
+                return "미세먼지";
+            }
+            case WILDFIRE -> {
+                return "산불";
+            }
+            case LANDSLIDE -> {
+                return "산사태";
+            }
+            case FOG -> {
+                return "안개";
+            }
+            case EARTHQUAKE -> {
+                return "지진";
+            }
+            case TYPHOON -> {
+                return "태풍";
+            }
+            case HEATWAVE -> {
+                return " 폭염";
+            }
+            case ROUGH_SEA -> {
+                return "풍랑";
+            }
+            case COLD_WAVE -> {
+                return "한파";
+            }
+            case HEAVY_RAIN -> {
+                return "호우";
+            }
+            case FLOOD -> {
+                return "홍수";
+            }
+            case GAS -> {
+                return "가스";
+            }
+            case TRAFFIC -> {
+                return "교통";
+            }
+            case FINANCE -> {
+                return "금융";
+            }
+            case COLLAPSE -> {
+                return "붕괴";
+            }
+            case WATER_SUPPLY -> {
+                return "수도";
+            }
+            case ENERGY -> {
+                return "에너지";
+            }
+            case MEDICAL -> {
+                return "의료";
+            }
+            case INFECTIOUS_DISEASE -> {
+                return "전염병";
+            }
+            case POWER_OUTAGE -> {
+                return "정전";
+            }
+            case COMMUNICATION -> {
+                return "통신";
+            }
+            case EXPLOSION -> {
+                return "폭발";
+            }
+            case FIRE -> {
+                return "화재";
+            }
+            case ENVIRONMENTAL_POLLUTION -> {
+                return "환경오염사고";
+            }
+            case AI -> {
+                return "AI";
+            }
+            case EMERGENCY -> {
+                return "비상사태";
+            }
+            case TERROR -> {
+                return "테러";
+            }
+            case CHEMICAL -> {
+                return "화생방사고";
+            }
+            case MISSING -> {
+                return "실종";
+            }
+            default -> {
+                return "기타";
+            }
+        }
+    }
 }

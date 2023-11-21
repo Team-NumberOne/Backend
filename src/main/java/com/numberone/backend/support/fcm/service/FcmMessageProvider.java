@@ -10,6 +10,7 @@ import com.numberone.backend.support.fcm.dto.FcmNotificationDto;
 import com.numberone.backend.support.notification.NotificationMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -125,6 +126,7 @@ public class FcmMessageProvider {
 
     public void sendFcmToMembers(List<String> tokens, String title, String body, NotificationTag tag) {
         log.info("{} 건의 푸시알람을 전송합니다.", tokens.size());
+        if(tokens.isEmpty()) return;
         List<Message> messages = tokens.stream().map(
                 token -> Message.builder()
                         .putData("time", LocalDateTime.now().toString())
@@ -155,7 +157,7 @@ public class FcmMessageProvider {
             log.info("Fcm 푸시 알람을 전송하였습니다.");
         } catch (Exception e) {
             log.error("Fcm 푸시 알람을 전송하는 도중에 에러가 발생했습니다. {}", e.getMessage());
-            throw new FirebaseMessageSendException();
+            //throw new FirebaseMessageSendException();
         }
     }
 

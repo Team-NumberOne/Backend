@@ -10,6 +10,7 @@ import com.numberone.backend.domain.notification.repository.NotificationReposito
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.support.fcm.service.FcmMessageProvider;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,13 @@ public class DisasterEventHandler {
     private final NotificationRepository notificationRepository;
     private final NotificationRegionRepository notificationRegionRepository;
 
+    @Transactional(jakarta.transaction.Transactional.TxType.REQUIRES_NEW)
     @TransactionalEventListener
     public void sendFcmMessagesByPresentLocation(DisasterEvent disasterEvent) {
         log.info("[신규 재난 발생! Disaster event handler 가 동작합니다.]");
         log.info("[sendFcmMessagesByPresentLocation]");
 
-        String type = disasterEvent.getType().toString();
+        String type = disasterEvent.getType().code2kor();
         String location = disasterEvent.getLocation();
         Long disasterNum = disasterEvent.getDisasterNum();
         String title = String.format("[긴급] %s %s 발생", location, type);
@@ -45,10 +47,10 @@ public class DisasterEventHandler {
         List<String> targetMemberFcmTokens = memberIdListByPresentLocation.stream().map(memberId -> {
             Member member = memberRepository.findById(memberId)
                     .orElseThrow(NotFoundMemberException::new);
-            notificationRepository.save(
+            NotificationEntity savedNotificationEntity = notificationRepository.save(
                     new NotificationEntity(member, disasterEvent.getType(), disasterEvent.getMessage(), true)
             );
-            log.info("received member id: {}", member.getId());
+            log.info("received member id: {}  Notification id: {} ", member.getId(), savedNotificationEntity.getId());
             log.info(title);
             log.info(message);
             return member.getFcmToken();
@@ -56,6 +58,7 @@ public class DisasterEventHandler {
 
         // fcm 메세지 일괄 전송
         fcmMessageProvider.sendFcmToMembers(targetMemberFcmTokens, title, message, NotificationTag.DISASTER);
+
 
         log.info("위험 지역에 위치한 회원의 가족에게 알림을 보냅니다.");
         // 해당 회원의 가족에게 알림을 보낸다.
