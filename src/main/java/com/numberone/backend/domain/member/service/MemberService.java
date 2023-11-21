@@ -107,7 +107,7 @@ public class MemberService {
     public MemberIdResponse online(String email) {
         Member member  = findByEmail(email);
         member.updateSession(true);
-        return MemberIdResponse.of(member.getId());
+        return MemberIdResponse.of(member);
     }
 
     @Transactional
