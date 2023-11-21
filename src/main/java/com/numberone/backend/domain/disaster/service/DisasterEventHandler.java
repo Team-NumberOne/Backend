@@ -51,6 +51,7 @@ public class DisasterEventHandler {
             NotificationEntity savedNotificationEntity = notificationRepository.save(
                     new NotificationEntity(member, disasterEvent.getType(), disasterEvent.getMessage(), true)
             );
+            member.updateSafety(false);
             log.info("received member id: {}  Notification id: {} ", member.getId(), savedNotificationEntity.getId());
             log.info(title);
             log.info(message);
@@ -59,7 +60,6 @@ public class DisasterEventHandler {
 
         // fcm 메세지 일괄 전송
         fcmMessageProvider.sendFcmToMembers(targetMemberFcmTokens, title, message, NotificationTag.DISASTER);
-
 
         log.info("위험 지역에 위치한 회원의 가족에게 알림을 보냅니다.");
         // 해당 회원의 가족에게 알림을 보낸다.
@@ -70,16 +70,18 @@ public class DisasterEventHandler {
                     .orElseThrow(NotFoundMemberException::new);
 
             List<Member> friendList = member.getFriendships().stream()
-                    .distinct().map(Friendship::getFriend).toList();
+                    .map(Friendship::getFriend).distinct().toList();
+
             List<String> friendFcmTokens = friendList.stream().map(Member::getFcmToken).filter(Objects::nonNull).toList();
+
 
             String memberName = member.getRealName() != null ? member.getRealName() : member.getNickName();
             fcmMessageProvider.sendFcmToMembers(
                     friendFcmTokens,
-                    String.format("긴급!"),
+                    String.format("가족 위험상태 변경 알림"),
                     String.format("""
-                            %s님이 안부를 궁금해하고 있어요.                            
-                            걱정하고 있을 %s님을 위해 빨리 연락해주세요!
+                            %s님이 위험 지역에 있어요.                     
+                            지금 바로 %s님에게 안부를 물어보세요!
                             """, memberName, memberName),
                     NotificationTag.FAMILY
             );
