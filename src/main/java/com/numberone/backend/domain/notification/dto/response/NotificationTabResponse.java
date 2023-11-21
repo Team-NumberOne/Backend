@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class NotificationTabResponse {
     private Long id;
     private String tag;
+    private String disasterTagDetail;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     private String title;
@@ -34,6 +35,7 @@ public class NotificationTabResponse {
         this.createdAt = notification.getCreatedAt();
         this.title = notification.getTitle();
         this.body = notification.getBody();
+        this.disasterTagDetail = notification.getTagDetail();
     }
 
 }

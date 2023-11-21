@@ -9,4 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class NotificationSearchParameter {
     Long lastNotificationId;
+    Boolean isDisaster;
 }

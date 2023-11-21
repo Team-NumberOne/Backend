@@ -3,7 +3,9 @@ package com.numberone.backend.domain.notification.repository.custom;
 import com.numberone.backend.domain.notification.dto.request.NotificationSearchParameter;
 import com.numberone.backend.domain.notification.dto.response.NotificationTabResponse;
 import com.numberone.backend.domain.notification.dto.response.QNotificationTabResponse;
+import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -31,12 +33,20 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                 .on(notificationEntity.receivedMemberId.eq(member.id))
                 .where(
                         ltNotificationEntityId(param.getLastNotificationId()),
-                        member.id.eq(memberId)
+                        member.id.eq(memberId),
+                        checkDisasterFlag(param.getIsDisaster())
                 )
                 .orderBy(notificationEntity.id.desc())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
         return checkLastPage(pageable, result);
+    }
+
+    private BooleanExpression checkDisasterFlag(boolean isDisaster){
+        if (!isDisaster){
+            return notificationEntity.notificationTag.ne(NotificationTag.DISASTER);
+        }
+        return notificationEntity.notificationTag.eq(NotificationTag.DISASTER);
     }
 
     private BooleanExpression ltNotificationEntityId(Long notificationId) {
