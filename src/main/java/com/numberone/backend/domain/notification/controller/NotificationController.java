@@ -33,7 +33,7 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<Slice<NotificationTabResponse>> getNotificationPage(
             Pageable pageable,
-            @RequestBody NotificationSearchParameter param){
+            @ModelAttribute NotificationSearchParameter param){
         return ResponseEntity.ok(notificationService.getNotificationTabPagesByMember(param, pageable));
     }
 
