@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<Slice<NotificationTabResponse>> getNotificationPage(
             Pageable pageable,
-            @ModelAttribute NotificationSearchParameter param){
+            @RequestBody NotificationSearchParameter param){
         return ResponseEntity.ok(notificationService.getNotificationTabPagesByMember(param, pageable));
     }
 
