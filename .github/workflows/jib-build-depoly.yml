@@ -41,7 +41,7 @@ jobs:
 
       - name: 🐧 create application.yml
         run: |
-          mkdir ./src/main/resources
+          mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROPERTIES_PROD }}" | base64 --decode > ./application.yml
