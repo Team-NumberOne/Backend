@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id "java-library"
+    id "java-test-fixtures"
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // fcm
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
+}
+
+tasks.bootJar {
+    enabled = false
+}
+

@@ -41,8 +41,8 @@ jobs:
 
       - name: 🐧 create application.yml
         run: |
-          mkdir -p ./src/main/resources
-          cd ./src/main/resources
+          mkdir -p ./daepiro-api/src/main/resources
+          cd ./daepiro-api/src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROPERTIES_PROD }}" | base64 --decode > ./application.yml
           ls -la
@@ -50,14 +50,15 @@ jobs:
 
       - name: 🐧 create service-account.json
         run: |
-          cd ./src/main/resources
-          touch ./service-account.json
+          cd ./daepiro-api/src/main/resources
+          touch ./daepiro-api/service-account.json
           echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
           ls -la
         shell: bash
 
       - name: Build with jib
         run: |
+          ./gradlew clean
           ./gradlew jib -x test \
           -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
           -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
