@@ -51,7 +51,7 @@ jobs:
       - name: 🐧 create service-account.json
         run: |
           cd ./daepiro-api/src/main/resources
-          touch ./daepiro-api/service-account.json
+          touch ./service-account.json
           echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
           ls -la
         shell: bash
