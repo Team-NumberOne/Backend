@@ -3,7 +3,7 @@ name: NumberOne-Backend-JIB-BUILD-DEPLOY
 # event trigger
 on:
   push:
-    branches: [ "main", "dev", "dev-check" ]
+    branches: [ "main", "dev", "dev-check", "feat/multi-module" ]
 
 permissions: write-all
 
