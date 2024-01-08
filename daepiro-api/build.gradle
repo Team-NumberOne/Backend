@@ -57,18 +57,19 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-
 jib {
 	from {
-		image = "openjdk:17-alpine"
+		image = "amazoncorretto:17"
 	}
 	to {
 		image = "versatile0010/numberone"
-		credHelper = 'ecr-login'
 		tags = ["latest"]
 	}
 	container {
+		mainClass = 'com.numberone.backend.BackendApplication'
+		creationTime = "USE_CURRENT_TIMESTAMP"
 		jvmFlags = ["-Duser.timezone=Asia/Seoul", "-Xms128m", "-Xmx128m"]
+		ports = ['8080']
 	}
 }
 
