@@ -6,7 +6,7 @@ import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
 import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
-import com.numberone.backend.support.redis.like.service.RedisLockLikeFacade;
+import com.numberone.backend.domain.like.service.RedisLockLikeFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

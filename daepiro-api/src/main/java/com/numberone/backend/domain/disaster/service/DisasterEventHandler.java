@@ -12,7 +12,7 @@ import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisa
 import com.numberone.backend.domain.notificationdisaster.repository.NotificationDisasterRepository;
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.support.fcm.service.FcmMessageProvider;
+import com.numberone.backend.provider.fcm.service.FcmMessageProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +78,7 @@ public class DisasterEventHandler {
 
         // fcm 메세지 일괄 전송
         log.info("현재 재난 위치에 있는, {} 재난 유형을 허용한 회원들에게 알림을 전송합니다.", type);
-        fcmMessageProvider.sendFcmToMembers(fcmTokensByPresentLocationAndOnboardingDisasterType, title, message, NotificationTag.DISASTER);
+        fcmMessageProvider.sendFcmToMembers(fcmTokensByPresentLocationAndOnboardingDisasterType, title, message);
 
         // 온보딩때 선택한 지역에 대한 알림을 받고자 하는 회원 리스트를 필터링합니다.
         // 이때 중복 알림 발송을 방지하기 위한 필터링 작업을 먼저 수행합니다.
@@ -110,7 +110,7 @@ public class DisasterEventHandler {
                     }
                     return (isRegionMatched && isDisasterTypeMatched) ? Stream.of(member.getFcmToken()) : null;
                 }).filter(Objects::nonNull).toList();
-        fcmMessageProvider.sendFcmToMembers(targetFcmsByOnboardingRegionsAndDisasterTypes, title, message, NotificationTag.DISASTER);
+        fcmMessageProvider.sendFcmToMembers(targetFcmsByOnboardingRegionsAndDisasterTypes, title, message);
     }
 
     @Transactional(jakarta.transaction.Transactional.TxType.REQUIRES_NEW)
@@ -141,7 +141,7 @@ public class DisasterEventHandler {
                             %s님이 위험 지역에 있어요.                     
                             지금 바로 %s님에게 안부를 물어보세요!
                             """, memberName, memberName);
-            fcmMessageProvider.sendFcmToMembers(friendFcmTokens, title, body, NotificationTag.FAMILY);
+            fcmMessageProvider.sendFcmToMembers(friendFcmTokens, title, body);
 
             friendList.forEach(friend ->
                     notificationRepository.save(

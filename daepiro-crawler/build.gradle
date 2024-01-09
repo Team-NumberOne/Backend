@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id "java-library"
+    id "java-test-fixtures"
+}
+
+dependencies {
+    implementation project(':daepiro-common')
+    implementation project(':daepiro-core')
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //crawling
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'org.jsoup:jsoup:1.14.2'
+    implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
+}
+
+tasks.bootJar {
+    enabled = false
+}
+

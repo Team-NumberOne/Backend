@@ -19,7 +19,7 @@ import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
 import com.numberone.backend.exception.notfound.NotFoundApiException;
 import com.numberone.backend.exception.notfound.NotFoundCommentException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.support.fcm.service.FcmMessageProvider;
+import com.numberone.backend.provider.fcm.service.FcmMessageProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,7 @@ public class LikeService {
         String title = String.format("""
                 나의 게시글에 %s님이 좋아요를 눌렀어요.""", memberName);
         String body = "대피로에 접속하여 확인하세요!";
-        fcmMessageProvider.sendFcm(owner, title, body, NotificationTag.COMMUNITY);
+        fcmMessageProvider.sendFcm(owner.getFcmToken(), title, body);
         notificationRepository.save(
                 new NotificationEntity(owner, NotificationTag.COMMUNITY, title, body, true)
         );
@@ -117,7 +117,7 @@ public class LikeService {
         String title = String.format("""
                 나의 댓글에 %s님이 좋아요를 눌렀어요.""", memberName);
         String body = "대피로에 접속하여 확인하세요!";
-        fcmMessageProvider.sendFcm(owner, title, body, NotificationTag.COMMUNITY);
+        fcmMessageProvider.sendFcm(owner.getFcmToken(), title, body);
         notificationRepository.save(
                 new NotificationEntity(owner, NotificationTag.COMMUNITY, title, body, true)
         );

@@ -1,18 +1,13 @@
-package com.numberone.backend.support.fcm.service;
+package com.numberone.backend.provider.fcm.service;
 
 import com.google.firebase.messaging.*;
-import com.numberone.backend.domain.member.entity.Member;
-import com.numberone.backend.domain.notification.entity.NotificationTag;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -20,13 +15,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class FcmMessageProvider {
 
-    public void sendFcm(Member member, String title, String body, NotificationTag tag) {
-        String token = member.getFcmToken();
-        if (Objects.isNull(token)) {
-            log.error("해당 회원의 fcm 토큰이 존재하지 않아, 푸시알람을 전송할 수 없습니다.");
-            // todo : 예외 핸들링
-            return;
-        }
+    public void sendFcm(String token, String title, String body) {
 
         Message message = Message.builder()
                 .putData("time", LocalDateTime.now().toString())
@@ -48,7 +37,7 @@ public class FcmMessageProvider {
         }
     }
 
-    public void sendFcmToMembers(List<String> tokens, String title, String body, NotificationTag tag) {
+    public void sendFcmToMembers(List<String> tokens, String title, String body) {
         log.info("{} 건의 푸시알람을 전송합니다.", tokens.size());
         if (tokens.isEmpty()) return;
         List<Message> messages = tokens.stream().map(

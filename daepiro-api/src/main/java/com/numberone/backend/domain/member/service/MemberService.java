@@ -14,7 +14,7 @@ import com.numberone.backend.domain.notificationregion.entity.NotificationRegion
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
 import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.support.s3.S3Provider;
+import com.numberone.backend.provider.s3.S3Provider;
 import com.numberone.backend.util.LocationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

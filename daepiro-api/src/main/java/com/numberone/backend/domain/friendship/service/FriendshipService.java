@@ -14,7 +14,7 @@ import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.badrequest.InvalidInviteTypeException;
 import com.numberone.backend.exception.notfound.NotFoundFriendshipException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.support.fcm.service.FcmMessageProvider;
+import com.numberone.backend.provider.fcm.service.FcmMessageProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -96,7 +96,7 @@ public class FriendshipService {
         String body = String.format("""
                 %s님이 안부를 궁금해하고 있어요.
                 걱정하고 있을 %s님을 위해 빨리 연락해주세요!""", memberName, memberName);
-        fcmMessageProvider.sendFcm(friend, title, body, NotificationTag.FAMILY);
+        fcmMessageProvider.sendFcm(friend.getFcmToken(), title, body);
         notificationRepository.save(
                 new NotificationEntity(friend, NotificationTag.FAMILY, title, body, true)
         );

@@ -6,17 +6,19 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.numberone.backend.domain.disaster.dto.request.SaveDisasterRequest;
 import com.numberone.backend.domain.disaster.dto.response.DisasterDataResponse;
+import com.numberone.backend.domain.disaster.entity.Disaster;
+import com.numberone.backend.domain.disaster.event.DisasterEvent;
 import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.disaster.util.DisasterType;
 import com.numberone.backend.exception.notfound.NotFoundApiException;
 import com.numberone.backend.exception.notfound.NotFoundCrawlingException;
 import com.numberone.backend.properties.DisasterProperties;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +26,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,19 +41,10 @@ public class DisasterDataCollector {
     private final DisasterProperties disasterProperties;
     private final ObjectMapper objectMapper;
     private final DisasterRepository disasterRepository;
-    private final DisasterService disasterService;
+    private final ApplicationEventPublisher eventPublisher;
     private Long latestDisasterNum = 0L;
     private Map<Long, DisasterType> disasterTypeMap = new HashMap<>();
 
-    @PostConstruct
-    public void init() {
-        disasterRepository.findTopByOrderByDisasterNumDesc().ifPresent(
-                disaster -> {
-                    latestDisasterNum = disaster.getDisasterNum();
-                }
-        );
-        log.info("init latestDisasterNum = " + latestDisasterNum);
-    }
 
     @Scheduled(fixedDelay = 60 * 1000)
     public void collectData() {
@@ -84,7 +82,7 @@ public class DisasterDataCollector {
                     if (disasterTypeMap.get(disasterNum).equals(DisasterType.OTHERS) &&
                             (disaster.getMsg().contains("실종") || disaster.getMsg().contains("목격") || disaster.getMsg().contains("배회")))
                         disasterTypeMap.put(disasterNum, DisasterType.MISSING);
-                    disasterService.save(SaveDisasterRequest.of(
+                    convertAndSave(SaveDisasterRequest.of(
                             disasterTypeMap.get(disasterNum),
                             loc.replace(" 전체", ""),//이 부분은 메시지 내부 파싱하여 더 정확한 주소를 저장하도록 수정해야함
                             disaster.getMsg(),
@@ -95,6 +93,23 @@ public class DisasterDataCollector {
             }
             latestDisasterNum = topDisasterNum;
         }
+    }
+
+    private void convertAndSave(SaveDisasterRequest saveDisasterRequest) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(saveDisasterRequest.getCreatedAt(), formatter);
+        Disaster savedDisaster =
+                disasterRepository.save(
+                        Disaster.of(
+                                saveDisasterRequest.getDisasterType(),
+                                saveDisasterRequest.getLocation(),
+                                saveDisasterRequest.getMsg(),
+                                saveDisasterRequest.getDisasterNum(),
+                                dateTime
+                        )
+                );
+        log.info("재난 발생 이벤트 발행");
+        eventPublisher.publishEvent(DisasterEvent.of(savedDisaster)); // 신규 재난 발생 이벤트
     }
 
 //    private void crawlingDisasterType() {

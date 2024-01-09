@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
 import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
 import com.numberone.backend.domain.shelter.repository.ShelterRepository;
-import com.numberone.backend.support.s3.S3Provider;
+import com.numberone.backend.provider.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

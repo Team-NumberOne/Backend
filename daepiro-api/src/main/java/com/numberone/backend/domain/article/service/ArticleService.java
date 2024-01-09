@@ -27,8 +27,8 @@ import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.conflict.UnauthorizedLocationException;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.support.fcm.service.FcmMessageProvider;
-import com.numberone.backend.support.s3.S3Provider;
+import com.numberone.backend.provider.fcm.service.FcmMessageProvider;
+import com.numberone.backend.provider.s3.S3Provider;
 import com.numberone.backend.util.LocationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -225,7 +225,7 @@ public class ArticleService {
                 나의 게시글에 %s님이 댓글을 달았어요.""", memberName);
         String body = "대피로에 접속하여 확인하세요!";
 
-        fcmMessageProvider.sendFcm(articleOwner, title, body, NotificationTag.COMMUNITY);
+        fcmMessageProvider.sendFcm(articleOwner.getFcmToken(), title, body);
         notificationRepository.save(
                 new NotificationEntity(articleOwner, NotificationTag.COMMUNITY, title, body, true)
         );

@@ -5,6 +5,7 @@ plugins {
 dependencies {
 	implementation project(':daepiro-core')
 	implementation project(':daepiro-common')
+	implementation project(':daepiro-redis')
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -22,7 +23,6 @@ dependencies {
 
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
-
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -42,15 +42,15 @@ dependencies {
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
-	//crawling
+	//geocoding
+	implementation 'com.google.code.geocoder-java:geocoder-java:0.16'
+
+	// fcm
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
+
 	implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 	implementation 'org.jsoup:jsoup:1.14.2'
 	implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
-
-	//geocoding
-	implementation 'com.google.code.geocoder-java:geocoder-java:0.16'
-	// fcm
-	implementation 'com.google.firebase:firebase-admin:9.1.1'
 }
 
 tasks.named('test') {

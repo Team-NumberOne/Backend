@@ -2,7 +2,7 @@ package com.numberone.backend.domain.like.controller;
 
 import com.numberone.backend.domain.like.dto.response.response.ArticleLikeResponse;
 import com.numberone.backend.domain.like.dto.response.response.CommentLikeResponse;
-import com.numberone.backend.support.redis.like.service.RedisLockLikeFacade;
+import com.numberone.backend.domain.like.service.RedisLockLikeFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

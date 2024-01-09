@@ -1,7 +1,8 @@
-package com.numberone.backend.auth;
+package com.numberone.backend.auth.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberone.backend.domain.member.entity.Member;
+import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.token.util.JwtUtil;
 import com.numberone.backend.exception.context.ExceptionContext;
@@ -29,7 +30,7 @@ import static com.numberone.backend.exception.context.CustomExceptionContext.*;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -58,7 +59,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String email = jwtUtil.getEmail(token);
         try {
-            Member member = memberService.findByEmail(email);
+            Member member = memberRepository.findByEmail(email)
+                    .orElseThrow(NotFoundMemberException::new);;
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     member.getEmail(), null, Collections.emptyList());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -1,4 +1,4 @@
-package com.numberone.backend.support.s3;
+package com.numberone.backend.provider.s3;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;

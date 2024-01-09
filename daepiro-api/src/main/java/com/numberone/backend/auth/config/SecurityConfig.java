@@ -1,5 +1,6 @@
-package com.numberone.backend.auth;
+package com.numberone.backend.auth.config;
 
+import com.numberone.backend.auth.global.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

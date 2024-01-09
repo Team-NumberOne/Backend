@@ -1,4 +1,4 @@
-package com.numberone.backend.support.fcm.dto;
+package com.numberone.backend.provider.fcm.dto;
 
 import lombok.*;
 

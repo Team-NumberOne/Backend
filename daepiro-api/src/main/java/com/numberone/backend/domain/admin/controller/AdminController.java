@@ -1,14 +1,11 @@
 package com.numberone.backend.domain.admin.controller;
 
-import com.numberone.backend.domain.admin.dto.request.CreateDisasterEventDto;
 import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
 import com.numberone.backend.domain.admin.service.AdminService;
 import com.numberone.backend.domain.disaster.dto.request.SaveDisasterRequest;
-import com.numberone.backend.domain.disaster.event.DisasterEvent;
 import com.numberone.backend.domain.disaster.service.DisasterService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

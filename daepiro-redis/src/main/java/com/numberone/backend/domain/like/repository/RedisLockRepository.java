@@ -1,4 +1,4 @@
-package com.numberone.backend.support.redis.like.repository;
+package com.numberone.backend.domain.like.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
