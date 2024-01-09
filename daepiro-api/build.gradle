@@ -42,9 +42,6 @@ dependencies {
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
-	//geocoding
-	implementation 'com.google.code.geocoder-java:geocoder-java:0.16'
-
 	// fcm
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
 

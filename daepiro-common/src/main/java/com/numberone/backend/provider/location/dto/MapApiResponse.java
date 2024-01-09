@@ -1,4 +1,4 @@
-package com.numberone.backend.util.dto;
+package com.numberone.backend.provider.location.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

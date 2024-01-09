@@ -19,6 +19,9 @@ dependencies {
 
     // fcm
     implementation 'com.google.firebase:firebase-admin:9.1.1'
+
+    //geocoding
+    implementation 'com.google.code.geocoder-java:geocoder-java:0.16'
 }
 
 tasks.bootJar {

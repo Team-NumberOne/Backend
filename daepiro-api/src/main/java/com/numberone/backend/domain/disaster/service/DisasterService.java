@@ -20,7 +20,7 @@ import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisa
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.exception.badrequest.BadRequestConversationSortException;
 import com.numberone.backend.exception.notfound.NotFoundDisasterException;
-import com.numberone.backend.util.LocationProvider;
+import com.numberone.backend.provider.location.LocationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

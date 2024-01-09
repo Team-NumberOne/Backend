@@ -1,7 +1,7 @@
-package com.numberone.backend.util;
+package com.numberone.backend.provider.location;
 
 import com.numberone.backend.properties.KakaoProperties;
-import com.numberone.backend.util.dto.MapApiResponse;
+import com.numberone.backend.provider.location.dto.MapApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
