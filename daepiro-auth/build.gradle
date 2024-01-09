@@ -1,0 +1,28 @@
+dependencies {
+    implementation project(':daepiro-core')
+    implementation project(':daepiro-redis')
+    implementation project(':daepiro-common')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.10.0'
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'joda-time:joda-time:2.10.10'
+}
+
+tasks.bootJar {
+    enabled = false
+}
