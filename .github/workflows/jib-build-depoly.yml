@@ -58,7 +58,6 @@ jobs:
 
       - name: Build with jib
         run: |
-          ./gradlew clean
           ./gradlew :daepiro-api:jibDockerBuild -x test \
           -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
           -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
