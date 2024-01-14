@@ -62,6 +62,9 @@ jobs:
           -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
           -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
           -Djib.to.image="${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest"
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+          JMX_PORT: ${{ secrets.JMX_PORT }}
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
