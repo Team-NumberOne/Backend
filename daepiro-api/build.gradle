@@ -55,18 +55,11 @@ tasks.named('test') {
 }
 
 def serverIP = System.getenv("EC2_PUBLIC_IP")
-if(serverIP == null) {
-	throw new GradleException("SERVER_IP 환경 변수가 주입되지 않았습니다.")
-}
-
 def jmxPort = System.getenv("JMX_PORT")
-if(jmxPort == null) {
-	throw new GradleException("JMX_PORT 환경 변수가 주입되지 않았습니다.")
-}
 
 jib {
 	from {
-		image = "amazoncorretto:17"
+		image = "openjdk:17"
 	}
 	to {
 		image = "versatile0010/numberone"
