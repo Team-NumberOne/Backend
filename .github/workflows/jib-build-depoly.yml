@@ -45,9 +45,8 @@ jobs:
             {
               "attachments": [
                 {
-                  "title": "Slack Noti",
-                  "text": "Slack text",
-                  "pretext": "대피로 백엔드 배포 시작 👻",
+                  "title": "대피로 백엔드 배포를 시작합니다. 👻",
+                  "pretext": "Daepiro backend is deploying...",
                   "fields":  [
                      {
                        "title": "Author 💻",
