@@ -45,10 +45,12 @@ jobs:
             {
               "attachments": [
                 {
+                  "title": "Slack Noti",
+                  "text": "Slack text",
                   "pretext": "대피로 백엔드 배포 시작 👻",
                   "fields":  [
                      {
-                       "title": "Author 🧑‍💻",
+                       "title": "Author 💻",
                        "value": "${{ github.actor }}",
                        "short": true
                      },
