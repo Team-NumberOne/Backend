@@ -96,24 +96,8 @@ jobs:
       - name: 🔔 Send Slack Message
         uses: 8398a7/action-slack@v3
         with:
-          status: custom
-          custom_payload: |
-            {
-              "attachments": [{
-               "color": "${{ job.status == 'success' ? '#36a64f' : '#ff4d4d' }}",
-               "pretext": "Workflow ${{{ job.status == 'success' ? 'Succeeded' : 'Failed' }}} :tada:",
-               "fields": [{
-                   "title": "Repository",
-                   "value": "${{ github.repository }}",
-                   "short": true
-              }, {
-                   "title": "Actor",
-                   "value": "${{ github.actor }}",
-                   "short": true
-                }]
-              }]
-            }
-          fields: repo, message, author
+          status: ${{ job.status }}
+          fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
