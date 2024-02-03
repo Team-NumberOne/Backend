@@ -33,6 +33,10 @@ jobs:
       - name: 🐧 Grant execute permission for gradlew
         run: chmod +x gradlew
 
+
+      - name: get Current Time
+        run: echo "CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
       - name: 🔔 Send Slack Message when deploy started
         uses: 8398a7/action-slack@v3
         with:
@@ -41,14 +45,17 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "#36a64f",
-                  "pretext": "대피로 백엔드 배포 시작!",
+                  "pretext": "대피로 백엔드 배포 시작 👻",
                   "fields":  [
                      {
-                       "title": "Author",
+                       "title": "Author 🧑‍💻",
                        "value": "${{ github.actor }}",
                        "short": true
                      },
+                     {
+                       "title": "Deploy time 🕚",
+                       "value": "${{ env.CURRENT_TIME }}",
+                       "short": true
                     ]
                    }
                 ]
