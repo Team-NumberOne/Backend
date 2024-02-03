@@ -92,12 +92,47 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
+
+      - name: Set deployment status
+        if: always()
+        run: |
+          if [ "${{ steps.deploy.outcome }}" == "success" ]; then
+            echo "DEPLOY_MESSAGE=Deployment Succeeded :tada:" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_MESSAGE=Deployment Failed :x:" >> $GITHUB_ENV
+          fi
+
       ## notify at Slack
       - name: 🔔 Send Slack Message
         uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
-          fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
+          status: custom
+          custom_payload: |
+            {
+              "attachments": [
+                {
+                  "color": "#36a64f",
+                  "pretext": "{{ env.DEPLOY_MESSAGE }}",
+                  "fields":  [
+                     { 
+                        "title": "Repository",
+                        "value": "${{ github.repository }}",
+                        "short": true
+                     },
+                     {
+                       "title": "Commit",
+                       "value": "${{ github.sha }}",
+                       "short": true,
+                     },
+                     {
+                       "title": "Author",
+                       "value": "${{ github.actor }}",
+                       "short": true
+                     },
+                    ]
+                   }
+                ]
+              }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
