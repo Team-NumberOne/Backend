@@ -112,7 +112,7 @@ jobs:
               "attachments": [
                 {
                   "color": "#36a64f",
-                  "pretext": "{{ env.DEPLOY_MESSAGE }}",
+                  "pretext": "${{ env.DEPLOY_MESSAGE }}",
                   "fields":  [
                      { 
                         "title": "Repository",
