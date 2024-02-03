@@ -33,6 +33,30 @@ jobs:
       - name: 🐧 Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: 🔔 Send Slack Message when deploy started
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "attachments": [
+                {
+                  "color": "#36a64f",
+                  "pretext": "대피로 백엔드 배포 시작!",
+                  "fields":  [
+                     {
+                       "title": "Author",
+                       "value": "${{ github.actor }}",
+                       "short": true
+                     },
+                    ]
+                   }
+                ]
+              }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+
       - name: 🔑 Login to Docker Hub
         uses: docker/login-action@v2.1.0
         with:
@@ -97,7 +121,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
+          fields: repo, message, commit, author, workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
