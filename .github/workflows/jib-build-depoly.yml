@@ -35,7 +35,7 @@ jobs:
 
 
       - name: get Current Time
-        run: echo "CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+        run: echo "CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S' -d '+9 hours')" >> $GITHUB_ENV
 
       - name: 🔔 Send Slack Message when deploy started
         uses: 8398a7/action-slack@v3
@@ -54,7 +54,7 @@ jobs:
                        "short": true
                      },
                      {
-                       "title": "Deploy time 🕚",
+                       "title": "Deploy time (KST) 🕚",
                        "value": "${{ env.CURRENT_TIME }}",
                        "short": true
                      }
