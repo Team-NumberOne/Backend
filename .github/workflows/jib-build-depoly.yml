@@ -3,7 +3,7 @@ name: NumberOne-Backend-JIB-BUILD-DEPLOY
 # event trigger
 on:
   push:
-    branches: [ "main", "dev", "dev-check" ]
+    branches: [ "dev", "dev-check", "feat/multi-module" ]
 
 permissions: write-all
 
@@ -33,6 +33,39 @@ jobs:
       - name: 🐧 Grant execute permission for gradlew
         run: chmod +x gradlew
 
+
+      - name: get Current Time
+        run: echo "CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S' -d '+9 hours')" >> $GITHUB_ENV
+
+      - name: 🔔 Send Slack Message when deploy started
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "attachments": [
+                {
+                  "title": "대피로 백엔드 배포를 시작합니다. 👻",
+                  "pretext": "Daepiro backend is deploying...",
+                  "fields":  [
+                     {
+                       "title": "Author 💻",
+                       "value": "${{ github.actor }}",
+                       "short": true
+                     },
+                     {
+                       "title": "Deploy time (KST) 🕚",
+                       "value": "${{ env.CURRENT_TIME }}",
+                       "short": true
+                     }
+                    ]
+                   }
+                ]
+              }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+
       - name: 🔑 Login to Docker Hub
         uses: docker/login-action@v2.1.0
         with:
@@ -41,8 +74,8 @@ jobs:
 
       - name: 🐧 create application.yml
         run: |
-          mkdir -p ./src/main/resources
-          cd ./src/main/resources
+          mkdir -p ./daepiro-app/src/main/resources
+          cd ./daepiro-app/src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROPERTIES_PROD }}" | base64 --decode > ./application.yml
           ls -la
@@ -50,7 +83,7 @@ jobs:
 
       - name: 🐧 create service-account.json
         run: |
-          cd ./src/main/resources
+          cd ./daepiro-api/src/main/resources
           touch ./service-account.json
           echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
           ls -la
@@ -58,10 +91,13 @@ jobs:
 
       - name: Build with jib
         run: |
-          ./gradlew jib -x test \
+          ./gradlew :daepiro-app:jib -x test \
           -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
           -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
           -Djib.to.image="${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest"
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+          JMX_PORT: ${{ secrets.JMX_PORT }}
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
@@ -94,7 +130,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo, message, commit, author, action, eventName, ref, workflow, pullRequest
+          fields: repo, message, commit, author, workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()

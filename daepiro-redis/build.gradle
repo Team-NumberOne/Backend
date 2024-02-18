@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id "java-library"
+    id "java-test-fixtures"
+}
+
+dependencies {
+    implementation project(':daepiro-common')
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // test
+    testFixturesRuntimeOnly group: 'it.ozimov', name: 'embedded-redis', version: '0.7.1'
+}
+
+tasks.bootJar {
+    enabled = false
+}
