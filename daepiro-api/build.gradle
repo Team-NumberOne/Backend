@@ -3,6 +3,7 @@ dependencies {
 	implementation project(':daepiro-common')
 	implementation project(':daepiro-redis')
 
+	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -13,37 +14,18 @@ dependencies {
 	// jpa
 	api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+	// lombok
 	annotationProcessor 'org.projectlombok:lombok'
-
 	compileOnly 'org.projectlombok:lombok'
 
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-	implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
-	implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
-	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-
-	// cloud
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 	// fcm
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
-
-	implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-	implementation 'org.jsoup:jsoup:1.14.2'
-	implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
 }
 
 tasks.named('test') {

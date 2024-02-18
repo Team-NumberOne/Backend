@@ -2,11 +2,13 @@ dependencies {
     implementation project(':daepiro-core')
     implementation project(':daepiro-redis')
     implementation project(':daepiro-common')
-    implementation project(':daepiro-api')
+    implementation project(':daepiro-api') // todo: remove it
 
+    // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // lombok
     compileOnly 'org.projectlombok:lombok'
 
     // swagger
