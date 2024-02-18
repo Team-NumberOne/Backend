@@ -1,7 +1,7 @@
 package com.numberone.backend.domain.notification.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

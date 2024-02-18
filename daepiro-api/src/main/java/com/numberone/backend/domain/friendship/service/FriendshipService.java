@@ -10,7 +10,7 @@ import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notification.entity.NotificationEntity;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.notification.repository.NotificationRepository;
-import com.numberone.backend.domain.token.util.SecurityContextProvider;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import com.numberone.backend.exception.badrequest.InvalidInviteTypeException;
 import com.numberone.backend.exception.notfound.NotFoundFriendshipException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;

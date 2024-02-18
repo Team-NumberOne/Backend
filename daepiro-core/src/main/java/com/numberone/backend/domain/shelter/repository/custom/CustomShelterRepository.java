@@ -1,7 +1,7 @@
 package com.numberone.backend.domain.shelter.repository.custom;
 
 import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
-import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
+import com.numberone.backend.domain.shelter.dto.GetAllSheltersResponse;
 
 import java.util.List;
 

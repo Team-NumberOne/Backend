@@ -1,0 +1,74 @@
+plugins {
+    id 'com.google.cloud.tools.jib' version '3.4.0'
+}
+
+dependencies {
+    implementation project(':daepiro-core')
+    implementation project(':daepiro-common')
+    implementation project(':daepiro-redis')
+    implementation project(':daepiro-api')
+    implementation project(':daepiro-crawler')
+    implementation project(':daepiro-auth')
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    // jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    annotationProcessor 'org.projectlombok:lombok'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // fcm
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'org.jsoup:jsoup:1.14.2'
+    implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def serverIP = System.getenv("EC2_PUBLIC_IP")
+def jmxPort = System.getenv("JMX_PORT")
+
+jib {
+    from {
+        image = "openjdk:17"
+    }
+    to {
+        image = "versatile0010/numberone"
+        tags = ["latest"]
+    }
+    container {
+        mainClass = 'com.numberone.backend.BackendApplication'
+        creationTime = "USE_CURRENT_TIMESTAMP"
+        jvmFlags = ["-Duser.timezone=Asia/Seoul", "-Xms128m", "-Xmx128m", "-Dcom.sun.management.jmxremote=true", "-Dcom.sun.management.jmxremote.local.only=false", "-Dcom.sun.management.jmxremote.port="+jmxPort.toString(), "-Dcom.sun.management.jmxremote.ssl=false", "-Dcom.sun.management.jmxremote.authenticate=false", "-Djava.rmi.server.hostname=" + serverIP.toString(), "-Dcom.sun.management.jmxremote.rmi.port="+jmxPort.toString(), "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/heap-dumps/heapdump.hprof"]
+        ports = ['8080']
+    }
+}
+
+tasks.bootJar {
+    enabled = true
+}

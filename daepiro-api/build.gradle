@@ -1,7 +1,3 @@
-plugins {
-	id 'com.google.cloud.tools.jib' version '3.4.0'
-}
-
 dependencies {
 	implementation project(':daepiro-core')
 	implementation project(':daepiro-common')
@@ -15,7 +11,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	// jpa
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	annotationProcessor 'org.projectlombok:lombok'
 
@@ -52,27 +48,4 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-def serverIP = System.getenv("EC2_PUBLIC_IP")
-def jmxPort = System.getenv("JMX_PORT")
-
-jib {
-	from {
-		image = "openjdk:17"
-	}
-	to {
-		image = "versatile0010/numberone"
-		tags = ["latest"]
-	}
-	container {
-		mainClass = 'com.numberone.backend.BackendApplication'
-		creationTime = "USE_CURRENT_TIMESTAMP"
-		jvmFlags = ["-Duser.timezone=Asia/Seoul", "-Xms128m", "-Xmx128m", "-Dcom.sun.management.jmxremote=true", "-Dcom.sun.management.jmxremote.local.only=false", "-Dcom.sun.management.jmxremote.port="+jmxPort.toString(), "-Dcom.sun.management.jmxremote.ssl=false", "-Dcom.sun.management.jmxremote.authenticate=false", "-Djava.rmi.server.hostname=" + serverIP.toString(), "-Dcom.sun.management.jmxremote.rmi.port="+jmxPort.toString(), "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/heap-dumps/heapdump.hprof"]
-		ports = ['8080']
-	}
-}
-
-tasks.bootJar {
-	enabled = true
 }

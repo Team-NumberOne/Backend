@@ -2,7 +2,7 @@ package com.numberone.backend.domain.admin.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
-import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
+import com.numberone.backend.domain.shelter.dto.GetAllSheltersResponse;
 import com.numberone.backend.domain.shelter.repository.ShelterRepository;
 import com.numberone.backend.provider.s3.S3Provider;
 import lombok.RequiredArgsConstructor;

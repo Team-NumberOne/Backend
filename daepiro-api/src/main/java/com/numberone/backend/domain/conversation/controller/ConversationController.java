@@ -2,13 +2,11 @@ package com.numberone.backend.domain.conversation.controller;
 
 import com.numberone.backend.domain.conversation.dto.request.CreateChildConversationRequest;
 import com.numberone.backend.domain.conversation.dto.request.CreateConversationRequest;
-import com.numberone.backend.domain.conversation.dto.response.GetConversationResponse;
 import com.numberone.backend.domain.conversation.service.ConversationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 

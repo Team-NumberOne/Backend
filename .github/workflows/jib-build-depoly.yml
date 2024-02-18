@@ -3,7 +3,7 @@ name: NumberOne-Backend-JIB-BUILD-DEPLOY
 # event trigger
 on:
   push:
-    branches: [ "dev", "dev-check" ]
+    branches: [ "dev", "dev-check", "feat/multi-module" ]
 
 permissions: write-all
 
@@ -74,8 +74,8 @@ jobs:
 
       - name: 🐧 create application.yml
         run: |
-          mkdir -p ./daepiro-api/src/main/resources
-          cd ./daepiro-api/src/main/resources
+          mkdir -p ./daepiro-app/src/main/resources
+          cd ./daepiro-app/src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROPERTIES_PROD }}" | base64 --decode > ./application.yml
           ls -la
@@ -91,7 +91,7 @@ jobs:
 
       - name: Build with jib
         run: |
-          ./gradlew :daepiro-api:jib -x test \
+          ./gradlew :daepiro-app:jib -x test \
           -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
           -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
           -Djib.to.image="${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest"

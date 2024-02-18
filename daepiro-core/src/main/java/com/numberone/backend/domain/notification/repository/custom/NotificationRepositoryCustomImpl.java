@@ -1,6 +1,6 @@
 package com.numberone.backend.domain.notification.repository.custom;
 
-import com.numberone.backend.domain.notification.dto.request.NotificationSearchParameter;
+import com.numberone.backend.domain.notification.dto.parameter.NotificationSearchParameter;
 import com.numberone.backend.domain.notification.dto.response.NotificationTabResponse;
 import com.numberone.backend.domain.notification.dto.response.QNotificationTabResponse;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
@@ -41,8 +41,8 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
         return checkLastPage(pageable, result);
     }
 
-    private BooleanExpression checkDisasterFlag(boolean isDisaster){
-        if (!isDisaster){
+    private BooleanExpression checkDisasterFlag(boolean isDisaster) {
+        if (!isDisaster) {
             return notificationEntity.notificationTag.ne(NotificationTag.DISASTER);
         }
         return notificationEntity.notificationTag.eq(NotificationTag.DISASTER);

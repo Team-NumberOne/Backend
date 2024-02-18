@@ -1,6 +1,6 @@
 package com.numberone.backend.domain.member.service;
 
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.member.dto.request.*;
 import com.numberone.backend.domain.member.dto.response.GetNotificationRegionResponse;
 import com.numberone.backend.domain.member.dto.response.HeartCntResponse;
@@ -12,10 +12,10 @@ import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisa
 import com.numberone.backend.domain.notificationdisaster.repository.NotificationDisasterRepository;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
-import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.provider.s3.S3Provider;
 import com.numberone.backend.provider.location.LocationProvider;
+import com.numberone.backend.provider.s3.S3Provider;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
         notificationDisasterRepository.deleteAllByMemberId(member.getId());
-        member.setOnboardingData(onboardingRequest.getRealname(),onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
+        member.setOnboardingData(onboardingRequest.getRealname(), onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
         notificationRegionRepository.deleteAllByMemberId(member.getId());
         for (OnboardingAddress address : onboardingRequest.getAddresses()) {
             notificationRegionRepository.save(NotificationRegion.of(

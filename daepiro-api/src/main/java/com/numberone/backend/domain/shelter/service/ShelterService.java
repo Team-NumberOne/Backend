@@ -1,9 +1,10 @@
 package com.numberone.backend.domain.shelter.service;
 
+import com.numberone.backend.domain.shelter.dto.ShelterMapper;
 import com.numberone.backend.domain.shelter.dto.request.NearbyShelterRequest;
 import com.numberone.backend.domain.shelter.dto.response.*;
 import com.numberone.backend.domain.shelter.repository.ShelterRepository;
-import com.numberone.backend.domain.shelter.util.ShelterType;
+import com.numberone.backend.domain.shelter.ShelterType;
 import com.numberone.backend.exception.notfound.NotFoundShelterException;
 import com.numberone.backend.provider.s3.S3Provider;
 import lombok.RequiredArgsConstructor;

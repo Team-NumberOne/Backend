@@ -1,12 +1,12 @@
 package com.numberone.backend.domain.article.controller;
 
+import com.numberone.backend.domain.article.dto.parameter.ArticleSearchParameterDto;
 import com.numberone.backend.domain.article.dto.request.ModifyArticleRequest;
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
 import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
 import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
-import com.numberone.backend.domain.like.service.RedisLockLikeFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,6 @@ import java.net.URI;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final RedisLockLikeFacade redisLockLikeFacade;
 
     @Operation(summary = "게시글 작성 API", description = """
                         
@@ -87,37 +86,37 @@ public class ArticleController {
     @GetMapping
     public ResponseEntity<Slice<GetArticleListResponse>> getArticlePages(
             Pageable pageable,
-            @ModelAttribute ArticleSearchParameter param) {
-        return ResponseEntity.ok(articleService.getArticleListPaging(param, pageable));
+            @ModelAttribute ArticleSearchParameterDto paramDto) {
+        return ResponseEntity.ok(articleService.getArticleListPaging(paramDto.toParameter(), pageable));
     }
 
     @Operation(summary = "게시글에 댓글 작성하기", description = """
             게시글에 댓글을 작성하는 API 입니다.
-            
+                        
             게시글 아이디는 Path variable 으로 넘겨주세요 (article-id)
-            
+                        
             """)
     @PostMapping("comments/{article-id}")
     public ResponseEntity<CreateCommentResponse> createComment(
             @PathVariable("article-id") Long articleId,
             @RequestBody @Valid CreateCommentRequest request) {
         return ResponseEntity.created(
-                URI.create(String.format("/api/articles/comment/%s", articleId)))
+                        URI.create(String.format("/api/articles/comment/%s", articleId)))
                 .body(articleService.createComment(articleId, request));
 
     }
 
     @Operation(summary = "게시글 수정하기", description = """
             게시글 내용을 수정하는 API 입니다.
-           
+                       
             반드시 access token 을 헤더에 포함해서 요청해주세요.
-            
+                        
             article-id 는 path variable 으로 넘겨주세요.
             """)
     @PutMapping("{article-id}/modify")
     public ResponseEntity<ModifyArticleResponse> modifyArticle(
             @PathVariable("article-id") Long articleId,
-            @RequestBody @Valid ModifyArticleRequest request ){
+            @RequestBody @Valid ModifyArticleRequest request) {
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
     }
 

@@ -1,9 +1,9 @@
 package com.numberone.backend.domain.shelter.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
-import com.numberone.backend.domain.shelter.util.Address;
-import com.numberone.backend.domain.shelter.util.ShelterStatus;
-import com.numberone.backend.domain.shelter.util.ShelterType;
+import com.numberone.backend.domain.shelter.Address;
+import com.numberone.backend.domain.shelter.ShelterStatus;
+import com.numberone.backend.domain.shelter.ShelterType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

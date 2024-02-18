@@ -1,6 +1,6 @@
 package com.numberone.backend.provider.location;
 
-import com.numberone.backend.properties.KakaoProperties;
+import com.numberone.backend.properties.KakaoMapProperties;
 import com.numberone.backend.provider.location.dto.MapApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @Slf4j
 public class LocationProvider {
-    private final KakaoProperties kakaoProperties;
+    private final KakaoMapProperties kakaoProperties;
     private final RestTemplate restTemplate;
 
     public String pos2address(double latitude, double longitude) {

@@ -1,11 +1,11 @@
 package com.numberone.backend.domain.disaster.service;
 
+import com.numberone.backend.domain.admin.dto.SaveAdminDisasterRequest;
 import com.numberone.backend.domain.conversation.dto.response.GetConversationResponse;
 import com.numberone.backend.domain.conversation.entity.Conversation;
 import com.numberone.backend.domain.conversation.repository.ConversationRepository;
 import com.numberone.backend.domain.conversation.service.ConversationService;
 import com.numberone.backend.domain.disaster.dto.request.LatestDisasterRequest;
-import com.numberone.backend.domain.disaster.dto.request.SaveDisasterRequest;
 import com.numberone.backend.domain.disaster.dto.response.LatestDisasterResponse;
 import com.numberone.backend.domain.disaster.dto.response.SituationDetailResponse;
 import com.numberone.backend.domain.disaster.dto.response.SituationHomeResponse;
@@ -13,7 +13,7 @@ import com.numberone.backend.domain.disaster.dto.response.SituationResponse;
 import com.numberone.backend.domain.disaster.entity.Disaster;
 import com.numberone.backend.domain.disaster.event.DisasterEvent;
 import com.numberone.backend.domain.disaster.repository.DisasterRepository;
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
@@ -84,7 +84,7 @@ public class DisasterService {
     }
 
     @Transactional
-    public void save(SaveDisasterRequest saveDisasterRequest) {
+    public void save(SaveAdminDisasterRequest saveDisasterRequest) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(saveDisasterRequest.getCreatedAt(), formatter);
         Disaster savedDisaster =

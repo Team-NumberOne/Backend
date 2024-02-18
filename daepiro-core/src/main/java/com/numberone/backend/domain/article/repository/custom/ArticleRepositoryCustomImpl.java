@@ -1,6 +1,6 @@
 package com.numberone.backend.domain.article.repository.custom;
 
-import com.numberone.backend.domain.article.dto.response.ArticleSearchParameter;
+import com.numberone.backend.domain.article.dto.parameter.ArticleSearchParameter;
 import com.numberone.backend.domain.article.dto.response.GetArticleListResponse;
 import com.numberone.backend.domain.article.dto.response.QGetArticleListResponse;
 import com.numberone.backend.domain.article.entity.ArticleStatus;

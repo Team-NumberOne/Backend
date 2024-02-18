@@ -1,6 +1,6 @@
 package com.numberone.backend.domain.admin.dto.response;
 
-import com.numberone.backend.domain.shelter.util.ShelterType;
+import com.numberone.backend.domain.shelter.ShelterType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 

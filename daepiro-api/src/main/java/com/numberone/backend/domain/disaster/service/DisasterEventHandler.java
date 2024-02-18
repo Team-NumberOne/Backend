@@ -1,7 +1,7 @@
 package com.numberone.backend.domain.disaster.service;
 
 import com.numberone.backend.domain.disaster.event.DisasterEvent;
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.friendship.entity.Friendship;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;

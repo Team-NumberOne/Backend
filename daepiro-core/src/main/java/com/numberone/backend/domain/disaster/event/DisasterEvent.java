@@ -1,7 +1,7 @@
 package com.numberone.backend.domain.disaster.event;
 
 import com.numberone.backend.domain.disaster.entity.Disaster;
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

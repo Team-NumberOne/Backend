@@ -1,4 +1,5 @@
 rootProject.name = 'Backend'
+include 'daepiro-app'
 include 'daepiro-api'
 include 'daepiro-core'
 include 'daepiro-common'

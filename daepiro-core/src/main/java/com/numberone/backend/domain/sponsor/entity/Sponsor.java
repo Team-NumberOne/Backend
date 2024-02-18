@@ -1,6 +1,6 @@
 package com.numberone.backend.domain.sponsor.entity;
 
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.support.entity.Support;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,5 +1,6 @@
 package com.numberone.backend.domain.article.service;
 
+import com.numberone.backend.domain.article.dto.parameter.ArticleSearchParameter;
 import com.numberone.backend.domain.article.dto.request.ModifyArticleRequest;
 import com.numberone.backend.domain.article.dto.request.UploadArticleRequest;
 import com.numberone.backend.domain.article.dto.response.*;
@@ -23,13 +24,13 @@ import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.notification.repository.NotificationRepository;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
-import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.conflict.UnauthorizedLocationException;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.provider.fcm.service.FcmMessageProvider;
-import com.numberone.backend.provider.s3.S3Provider;
 import com.numberone.backend.provider.location.LocationProvider;
+import com.numberone.backend.provider.s3.S3Provider;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

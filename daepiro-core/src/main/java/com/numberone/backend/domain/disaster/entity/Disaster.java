@@ -2,7 +2,7 @@ package com.numberone.backend.domain.disaster.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.conversation.entity.Conversation;
-import com.numberone.backend.domain.disaster.util.DisasterType;
+import com.numberone.backend.domain.disaster.DisasterType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

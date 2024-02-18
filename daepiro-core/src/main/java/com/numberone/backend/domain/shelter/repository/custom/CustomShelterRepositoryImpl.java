@@ -2,11 +2,11 @@ package com.numberone.backend.domain.shelter.repository.custom;
 
 import com.numberone.backend.domain.admin.dto.response.GetAddressResponse;
 import com.numberone.backend.domain.admin.dto.response.QGetAddressResponse;
-import com.numberone.backend.domain.shelter.dto.response.GetAllSheltersResponse;
-import com.numberone.backend.domain.shelter.dto.response.QGetAllSheltersResponse_AddressDetail;
-import com.numberone.backend.domain.shelter.dto.response.QGetAllSheltersResponse_ShelterDetail;
-import com.numberone.backend.domain.shelter.util.ShelterStatus;
-import com.numberone.backend.domain.shelter.util.ShelterType;
+import com.numberone.backend.domain.shelter.ShelterStatus;
+import com.numberone.backend.domain.shelter.ShelterType;
+import com.numberone.backend.domain.shelter.dto.GetAllSheltersResponse;
+import com.numberone.backend.domain.shelter.dto.QGetAllSheltersResponse_AddressDetail;
+import com.numberone.backend.domain.shelter.dto.QGetAllSheltersResponse_ShelterDetail;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 

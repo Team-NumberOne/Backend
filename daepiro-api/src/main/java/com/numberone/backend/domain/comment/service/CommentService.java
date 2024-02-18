@@ -7,7 +7,7 @@ import com.numberone.backend.domain.articleparticipant.repository.ArticlePartici
 import com.numberone.backend.domain.comment.dto.request.CreateChildCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateChildCommentResponse;
 import com.numberone.backend.domain.comment.dto.response.DeleteCommentResponse;
-import com.numberone.backend.domain.comment.dto.response.GetCommentDto;
+import com.numberone.backend.domain.comment.dto.GetCommentDto;
 import com.numberone.backend.domain.comment.entity.CommentEntity;
 import com.numberone.backend.domain.comment.repository.CommentRepository;
 import com.numberone.backend.domain.like.entity.CommentLike;
@@ -17,7 +17,7 @@ import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notification.entity.NotificationEntity;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.notification.repository.NotificationRepository;
-import com.numberone.backend.domain.token.util.SecurityContextProvider;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
 import com.numberone.backend.exception.notfound.NotFoundCommentException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;

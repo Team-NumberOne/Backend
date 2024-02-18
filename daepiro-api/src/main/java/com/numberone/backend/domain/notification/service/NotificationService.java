@@ -2,11 +2,11 @@ package com.numberone.backend.domain.notification.service;
 
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import com.numberone.backend.domain.notification.dto.request.NotificationSearchParameter;
+import com.numberone.backend.domain.notification.dto.parameter.NotificationSearchParameter;
 import com.numberone.backend.domain.notification.dto.response.NotificationTabResponse;
 import com.numberone.backend.domain.notification.repository.NotificationRepository;
-import com.numberone.backend.domain.token.util.SecurityContextProvider;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

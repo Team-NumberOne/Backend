@@ -1,8 +1,7 @@
 package com.numberone.backend.domain.like.service;
 
-import com.numberone.backend.domain.like.dto.response.response.ArticleLikeResponse;
-import com.numberone.backend.domain.like.dto.response.response.CommentLikeResponse;
-import com.numberone.backend.domain.like.service.LikeService;
+import com.numberone.backend.domain.like.dto.response.ArticleLikeResponse;
+import com.numberone.backend.domain.like.dto.response.CommentLikeResponse;
 import com.numberone.backend.domain.like.repository.RedisLockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

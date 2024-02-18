@@ -3,13 +3,12 @@ package com.numberone.backend.domain.comment.controller;
 import com.numberone.backend.domain.comment.dto.request.CreateChildCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateChildCommentResponse;
 import com.numberone.backend.domain.comment.dto.response.DeleteCommentResponse;
-import com.numberone.backend.domain.comment.dto.response.GetCommentDto;
+import com.numberone.backend.domain.comment.dto.GetCommentDto;
 import com.numberone.backend.domain.comment.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.sql.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
