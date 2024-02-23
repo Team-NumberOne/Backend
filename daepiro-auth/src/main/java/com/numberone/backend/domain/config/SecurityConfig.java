@@ -53,7 +53,8 @@ public class SecurityConfig {
                         "/swagger-resources/**",
                         "/v3/api-docs/**",
                         "/token/**",
-                        "/notification/send-fcm");
+                        "/notification/send-fcm",
+                        "/hello");
         //.requestMatchers("/**"); // 인증 처리 하지 않을 케이스
     }
 }
