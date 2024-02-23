@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class HelloController {
-    @GetMapping("")
+    @GetMapping("/hello")
     public String hello() {
-        return "Hello, NumberOne";
+        return "Hello, NumberOne. I'm alive!";
     }
 }

@@ -3,7 +3,7 @@ name: NumberOne-Backend-JIB-BUILD-DEPLOY
 # event trigger
 on:
   push:
-    branches: [ "dev", "dev-check", "feat/multi-module" ]
+    branches: [ "dev", "dev-check" ]
 
 permissions: write-all
 
@@ -120,9 +120,9 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
-            docker-compose up -d
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
+            sudo chmod 777 ./deploy.sh
+            ./deploy.sh
             docker image prune -f
 
       ## notify at Slack
