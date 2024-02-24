@@ -1,7 +1,7 @@
 package com.numberone.backend.domain.service;
 
+import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.properties.KakaoProperties;
 import com.numberone.backend.domain.properties.NaverProperties;
 import com.numberone.backend.domain.properties.TokenPeriodProperties;
@@ -28,14 +28,18 @@ import org.springframework.web.client.RestTemplate;
 @Transactional(readOnly = true)
 @Slf4j
 public class TokenService {
+
     private final JwtProvider jwtProvider;
+
     private final RestTemplate restTemplate;
+
     private final KakaoProperties kakaoProperties;
     private final NaverProperties naverProperties;
-    private final MemberService memberService;
+    private final TokenPeriodProperties tokenPeriodProperties;
+
+    private final MemberRepository repository;
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
-    private final TokenPeriodProperties tokenPeriodProperties;
 
     @Transactional
     public GetTokenResponse loginKakao(GetTokenRequest tokenRequest) {
@@ -90,7 +94,7 @@ public class TokenService {
     private GetTokenResponse getTokenResponse(String email) {
         Boolean isNewMember = false;
         if (!memberRepository.existsByEmail(email)) {
-            memberService.create(email);
+            memberRepository.save(Member.of(email));
             isNewMember = true;
         }
         if (tokenRepository.existsById(email)) {

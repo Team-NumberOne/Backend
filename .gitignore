@@ -28,6 +28,7 @@ out/
 
 **/src/main/resources/service-account.json
 
+*.yml
 application.yml
 application.properties
 

@@ -39,11 +39,6 @@ public class MemberService {
     }
 
     @Transactional
-    public void create(String email) {
-        memberRepository.save(Member.of(email));
-    }
-
-    @Transactional
     public void initMemberData(String email, OnboardingRequest onboardingRequest) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);

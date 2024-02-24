@@ -9,43 +9,45 @@ dependencies {
     implementation project(':daepiro-api')
     implementation project(':daepiro-crawler')
     implementation project(':daepiro-auth')
-
-    // spring
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    // swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-
-    // lombok
-    annotationProcessor 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
-
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
+// system environment variables
 def serverIP = System.getenv("EC2_PUBLIC_IP")
 def jmxPort = System.getenv("JMX_PORT")
+def dockerUserName = System.getenv("DOCKER_USERNAME")
+def dockerImageName = System.getenv("DOCKER_IMAGE")
 
+// jib
 jib {
     from {
         image = "openjdk:17"
     }
     to {
-        image = "versatile0010/numberone"
+        image = String.format("%s/%s", dockerUserName, dockerImageName)
         tags = ["latest"]
     }
     container {
         mainClass = 'com.numberone.backend.BackendApplication'
         creationTime = "USE_CURRENT_TIMESTAMP"
-        jvmFlags = ["-Duser.timezone=Asia/Seoul", "-Xms128m", "-Xmx128m", "-Dcom.sun.management.jmxremote=true", "-Dcom.sun.management.jmxremote.local.only=false", "-Dcom.sun.management.jmxremote.port="+jmxPort.toString(), "-Dcom.sun.management.jmxremote.ssl=false", "-Dcom.sun.management.jmxremote.authenticate=false", "-Djava.rmi.server.hostname=" + serverIP.toString(), "-Dcom.sun.management.jmxremote.rmi.port="+jmxPort.toString(), "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/heap-dumps/heapdump.hprof"]
+        jvmFlags = [
+                "-Duser.timezone=Asia/Seoul",
+                "-Xms128m", "-Xmx128m",
+                "-Dcom.sun.management.jmxremote=true",
+                "-Dcom.sun.management.jmxremote.local.only=false",
+                "-Dcom.sun.management.jmxremote.port=" + jmxPort.toString(),
+                "-Dcom.sun.management.jmxremote.ssl=false",
+                "-Dcom.sun.management.jmxremote.authenticate=false",
+                "-Djava.rmi.server.hostname=" + serverIP.toString(),
+                "-Dcom.sun.management.jmxremote.rmi.port=" + jmxPort.toString(),
+                "-XX:+HeapDumpOnOutOfMemoryError",
+                "-XX:HeapDumpPath=/heap-dumps/heapdump.hprof"]
         ports = ['8080']
     }
 }
 
-tasks.bootJar {
+bootJar {
+    enabled = true // entry module
+}
+jar {
     enabled = true
 }
