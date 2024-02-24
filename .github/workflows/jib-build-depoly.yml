@@ -83,6 +83,7 @@ jobs:
 
       - name: 🐧 create service-account.json
         run: |
+          mkdir -p ./daepiro-api/src/main/resources
           cd ./daepiro-api/src/main/resources
           touch ./service-account.json
           echo "${{ secrets.FCM }}" | base64 --decode > ./service-account.json
