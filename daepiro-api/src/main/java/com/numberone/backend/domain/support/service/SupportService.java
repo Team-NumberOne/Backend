@@ -12,6 +12,7 @@ import com.numberone.backend.domain.support.repository.SupportRepository;
 import com.numberone.backend.exception.badrequest.BadRequestHeartException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.exception.notfound.NotFoundSupportException;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,8 @@ public class SupportService {
     public CreateSupportResponse create(CreateSupportRequest createSupportRequest, String email) {
         Sponsor sponsor = sponsorRepository.findById(createSupportRequest.getSponsorId())
                 .orElseThrow(NotFoundSupportException::new);
-        Member member = memberRepository.findByEmail(email)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         if (member.getHeartCnt() < createSupportRequest.getHeartCnt())
             throw new BadRequestHeartException();

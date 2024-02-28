@@ -39,8 +39,8 @@ public class SponsorController {
                     후원 목록 가져오기 API에서 반환된 응답에서 얻은 후원 id중 가져오고 싶은 후원의 id를 같이 전달해주세요.
                     """)
     @GetMapping("/latest")
-    public ResponseEntity<SponsorHomeResponse> getSponsorHomeLatest(Authentication authentication){
-        return ResponseEntity.ok(sponsorService.getSponsorHomeLatest(authentication.getName()));
+    public ResponseEntity<SponsorHomeResponse> getSponsorHomeLatest(){
+        return ResponseEntity.ok(sponsorService.getSponsorHomeLatest());
     }
 
     @Operation(summary = "후원 목록 인기순 가져오기", description =
@@ -52,7 +52,7 @@ public class SponsorController {
                     후원 목록 가져오기 API에서 반환된 응답에서 얻은 후원 id중 가져오고 싶은 후원의 id를 같이 전달해주세요.
                     """)
     @GetMapping("/popular")
-    public ResponseEntity<SponsorHomeResponse> getSponsorHomePopular(Authentication authentication){
-        return ResponseEntity.ok(sponsorService.getSponsorHomePopular(authentication.getName()));
+    public ResponseEntity<SponsorHomeResponse> getSponsorHomePopular(){
+        return ResponseEntity.ok(sponsorService.getSponsorHomePopular());
     }
 }

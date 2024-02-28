@@ -31,8 +31,8 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Comment("이메일")
-    private String email;
+    @Comment("소셜 id")
+    private Long socialId;
 
     @Comment("닉네임")
     private String nickName;
@@ -97,13 +97,16 @@ public class Member extends BaseTimeEntity {
     @Comment("동/읍/면")
     private String lv3;
 
+    @Comment("온보딩 완료 유무")
+    private Boolean isOnboarding;
+
     public void updateSession(Boolean session) {
         this.session = session;
     }
 
     @Builder
-    public Member(String email, String nickName, String realName, Integer heartCnt, String fcmToken, Boolean session) {
-        this.email = email;
+    public Member(Long socialId, String nickName, String realName, Integer heartCnt, String fcmToken, Boolean session) {
+        this.socialId = socialId;
         this.nickName = nickName;
         this.realName = realName;
         this.heartCnt = heartCnt;
@@ -111,11 +114,12 @@ public class Member extends BaseTimeEntity {
         this.session = true;
         this.latitude = 0D;
         this.longitude = 0D;
+        isOnboarding = false;
     }
 
-    public static Member of(String email) {
+    public static Member of(Long socialId) {
         return Member.builder()
-                .email(email)
+                .socialId(socialId)
                 .heartCnt(0)
                 .build();
     }
@@ -128,6 +132,7 @@ public class Member extends BaseTimeEntity {
         this.realName = realName;
         this.nickName = nickName;
         this.fcmToken = fcmToken;
+        isOnboarding = true;
     }
 
     public void plusHeart(int heart) {

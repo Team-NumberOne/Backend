@@ -23,8 +23,8 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     public Slice<NotificationTabResponse> getNotificationTabPagesByMember(NotificationSearchParameter param, Pageable pageable) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         return notificationRepository.getNotificationTabPagesNoOffSetByMember(param, member.getId(), pageable);
     }

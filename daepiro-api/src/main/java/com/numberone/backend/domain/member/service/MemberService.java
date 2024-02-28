@@ -33,19 +33,33 @@ public class MemberService {
     private final NotificationRegionRepository notificationRegionRepository;
     private final LocationProvider locationProvider;
 
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email)
+    public Member findById(long id) {
+        return memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
     }
 
     @Transactional
-    public void create(String email) {
-        memberRepository.save(Member.of(email));
+    public Member create(long socialId) {
+        return memberRepository.save(Member.of(socialId));
+    }
+
+    public Member findBySocialId(long socialId) {
+        return memberRepository.findBySocialId(socialId)
+                .orElse(null);
+    }
+
+    public boolean existsBySocialId(long socialId) {
+        return memberRepository.existsBySocialId(socialId);
+    }
+
+    public boolean existsById(long id){
+        return memberRepository.existsById(id);
     }
 
     @Transactional
-    public void initMemberData(String email, OnboardingRequest onboardingRequest) {
-        Member member = memberRepository.findByEmail(email)
+    public void initMemberData(OnboardingRequest onboardingRequest) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         notificationDisasterRepository.deleteAllByMemberId(member.getId());
         member.setOnboardingData(onboardingRequest.getRealname(), onboardingRequest.getNickname(), onboardingRequest.getFcmToken());
@@ -67,23 +81,25 @@ public class MemberService {
     }
 
     @Transactional
-    public HeartCntResponse buyHeart(BuyHeartRequest buyHeartRequest, String email) {
-        Member member = memberRepository.findByEmail(email)
+    public HeartCntResponse buyHeart(BuyHeartRequest buyHeartRequest) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         member.plusHeart(buyHeartRequest.getHeartCnt());
         return HeartCntResponse.of(member);
     }
 
-    public HeartCntResponse getHeart(String email) {
-        Member member = memberRepository.findByEmail(email)
+    public HeartCntResponse getHeart() {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         return HeartCntResponse.of(member);
     }
 
     @Transactional
     public UploadProfileImageResponse uploadProfileImage(MultipartFile image) {
-        String email = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(email)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         String imageUrl = s3Provider.uploadImage(image);
 
@@ -95,28 +111,31 @@ public class MemberService {
     }
 
     public GetNotificationRegionResponse getNotificationRegionLv2() {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         return GetNotificationRegionResponse.of(member.getNotificationRegions());
     }
 
     @Transactional
-    public MemberIdResponse online(String email) {
-        Member member = findByEmail(email);
+    public MemberIdResponse online() {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = findById(id);
         member.updateSession(true);
         return MemberIdResponse.of(member);
     }
 
     @Transactional
-    public void offline(String email) {
-        Member member = findByEmail(email);
+    public void offline() {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = findById(id);
         member.updateSession(false);
     }
 
     @Transactional
-    public void updateGps(String email, UpdateGpsRequest updateGpsRequest) {
-        Member member = findByEmail(email);
+    public void updateGps(UpdateGpsRequest updateGpsRequest) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = findById(id);
         Double latitude = updateGpsRequest.getLatitude();
         Double longitude = updateGpsRequest.getLongitude();
         String location = locationProvider.pos2address(latitude, longitude);
@@ -144,8 +163,8 @@ public class MemberService {
 
     @Transactional
     public void updateSafety(UpdateSafetyRequest request) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         member.updateSafety(request.getIsSafety());
     }

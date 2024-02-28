@@ -10,6 +10,7 @@ import com.numberone.backend.domain.support.entity.Support;
 import com.numberone.backend.domain.support.repository.SupportRepository;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.exception.notfound.NotFoundSponsorException;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +35,10 @@ public class SponsorService {
         );
     }
 
-    public SponsorHomeResponse getSponsorHomeLatest(String email) {
+    public SponsorHomeResponse getSponsorHomeLatest() {
         List<SponsorResponse> sponsorResponses = new ArrayList<>();
-        Member member = memberRepository.findByEmail(email)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         List<Sponsor> sponsors = sponsorRepository.findAllByOrderByStartDateDesc();
         for (Sponsor sponsor : sponsors) {
@@ -65,9 +67,10 @@ public class SponsorService {
         );
     }
 
-    public SponsorHomeResponse getSponsorHomePopular(String email) {
+    public SponsorHomeResponse getSponsorHomePopular() {
         List<SponsorResponse> sponsorResponses = new ArrayList<>();
-        Member member = memberRepository.findByEmail(email)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         List<Sponsor> sponsors = sponsorRepository.findAllByOrderByCurrentHeartDesc();
         for (Sponsor sponsor : sponsors) {
