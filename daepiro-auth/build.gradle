@@ -2,17 +2,6 @@ dependencies {
     implementation project(':daepiro-core')
     implementation project(':daepiro-redis')
     implementation project(':daepiro-common')
-    implementation project(':daepiro-api') // todo: remove it
-
-    // spring
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // lombok
-    compileOnly 'org.projectlombok:lombok'
-
-    // swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     // oauth
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -28,6 +17,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.12.3'
 }
 
-tasks.bootJar {
+bootJar {
     enabled = false
+}
+jar {
+    enabled = true
 }
