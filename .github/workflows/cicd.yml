@@ -1,5 +1,4 @@
-# github repository Actions 페이지에 나타낼 이름
-name: NumberOne-Backend-CICD
+name: NumberOne-Backend-CICD (fade-out)
 
 # event trigger
 on:
