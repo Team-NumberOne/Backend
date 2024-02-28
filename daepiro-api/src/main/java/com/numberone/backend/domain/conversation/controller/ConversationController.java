@@ -59,14 +59,14 @@ public class ConversationController {
             """)
     @PostMapping("/like/{conversationId}")
     public void increaseLike(Authentication authentication, @PathVariable Long conversationId) {
-        conversationService.increaseLike(authentication.getName(), conversationId);
+        conversationService.increaseLike(conversationId);
     }
 
     @Operation(summary = "대화 좋아요 취소하기", description = """
             사용자가 대화의 좋아요를 취소할 때 대화 id를 파라미터로 전달해주세요.
             """)
     @DeleteMapping("/like/{conversationId}")
-    public void decreaseLike(Authentication authentication, @PathVariable Long conversationId) {
-        conversationService.decreaseLike(authentication.getName(), conversationId);
+    public void decreaseLike(@PathVariable Long conversationId) {
+        conversationService.decreaseLike(conversationId);
     }
 }

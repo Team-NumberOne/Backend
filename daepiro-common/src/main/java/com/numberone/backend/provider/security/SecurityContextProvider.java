@@ -7,13 +7,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Objects;
 
 public class SecurityContextProvider {
-
-    public static String getAuthenticatedUserEmail(){
+    public static Long getAuthenticatedUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        if (Objects.isNull(principal)){
+        if (Objects.isNull(principal)) {
             throw new BadUserAuthenticationException();
         }
-        return (String) principal;
+        return (Long) principal;
     }
 }

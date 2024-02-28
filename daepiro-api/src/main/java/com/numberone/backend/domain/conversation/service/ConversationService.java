@@ -15,6 +15,7 @@ import com.numberone.backend.exception.conflict.AlreadyLikedException;
 import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
 import com.numberone.backend.exception.notfound.NotFoundConversationException;
 import com.numberone.backend.exception.notfound.NotFoundDisasterException;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,8 @@ public class ConversationService {
 
     @Transactional
     public void createConversation(String email, CreateConversationRequest createConversationRequest) {
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberService.findById(id);
         Disaster disaster = disasterRepository.findById(createConversationRequest.getDisasterId())
                 .orElseThrow(NotFoundDisasterException::new);
         Conversation conversation = Conversation.of(
@@ -46,7 +48,8 @@ public class ConversationService {
 
     @Transactional
     public void createChildConversation(String email, CreateChildConversationRequest createConversationRequest, Long conversationId) {
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberService.findById(id);
         Conversation parent = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
         Conversation conversation = Conversation.childOf(
@@ -73,10 +76,11 @@ public class ConversationService {
         return false;
     }
 
-    public GetConversationResponse get(String email, Long conversationId) {
+    public GetConversationResponse get(Long conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberService.findById(id);
         List<GetConversationResponse> childs = new ArrayList<>();
         List<Conversation> childConversations = conversationRepository.findAllByParentOrderByCreatedAt(conversation);
         for (Conversation child : childConversations) {
@@ -94,10 +98,11 @@ public class ConversationService {
                 childs);
     }
 
-    public GetConversationResponse getExceptChild(String email, Long conversationId) {
+    public GetConversationResponse getExceptChild(Long conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberService.findById(id);
         return GetConversationResponse.of(
                 conversation,
                 checkLike(member, conversation),
@@ -106,8 +111,9 @@ public class ConversationService {
     }
 
     @Transactional
-    public void increaseLike(String email, Long conversationId) {
-        Member member = memberService.findByEmail(email);
+    public void increaseLike(Long conversationId) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberService.findById(id);
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
         conversationLikeRepository.findByMemberAndConversation(member, conversation)
@@ -120,8 +126,9 @@ public class ConversationService {
     }
 
     @Transactional
-    public void decreaseLike(String email, Long conversationId) {
-        Member member = memberService.findByEmail(email);
+    public void decreaseLike(Long conversationId) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberService.findById(id);
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
         ConversationLike conversationLike = conversationLikeRepository.findByMemberAndConversation(member, conversation)

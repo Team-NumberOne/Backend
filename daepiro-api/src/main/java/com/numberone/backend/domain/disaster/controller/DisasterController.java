@@ -29,16 +29,16 @@ public class DisasterController {
                     유저가 등록한 지역은 유저가 인증을 위해 같이 보내야하는 jwt 토큰으로부터 알아서 추출해서 처리할 것입니다. 
                     """)
     @PostMapping("/latest")
-    public ResponseEntity<LatestDisasterResponse> getLatestDisaster(Authentication authentication, @Valid @RequestBody LatestDisasterRequest latestDisasterRequest) {
-        return ResponseEntity.ok(disasterService.getLatestDisaster(authentication.getName(), latestDisasterRequest));
+    public ResponseEntity<LatestDisasterResponse> getLatestDisaster(@Valid @RequestBody LatestDisasterRequest latestDisasterRequest) {
+        return ResponseEntity.ok(disasterService.getLatestDisaster(latestDisasterRequest));
     }
 
     @Operation(summary = "재난상황 커뮤니티 데이터 가져오기", description = """
             재난상황 페이지에서 필요한 재난목록과 그와 관련된 대화(댓글)들을 가져옵니다.
             """)
     @GetMapping("/situation")
-    public ResponseEntity<SituationHomeResponse> getSituationHome(Authentication authentication) {
-        return ResponseEntity.ok(disasterService.getSituationHome(authentication.getName()));
+    public ResponseEntity<SituationHomeResponse> getSituationHome() {
+        return ResponseEntity.ok(disasterService.getSituationHome());
     }
 
     @Operation(summary = "해당 재난과 관련된 모든 커뮤니티 대화 가져오기", description = """
@@ -47,7 +47,7 @@ public class DisasterController {
             커뮤니티-재난상황-댓글더보기 페이지에서 사용하는 API입니다.
             """)
     @GetMapping("/{sort}/{disasterId}")
-    public ResponseEntity<SituationDetailResponse> getSituationDetail(Authentication authentication, @PathVariable Long disasterId, @PathVariable String sort) {
-        return ResponseEntity.ok(disasterService.getSituationDetail(authentication.getName(), disasterId, sort));
+    public ResponseEntity<SituationDetailResponse> getSituationDetail(@PathVariable Long disasterId, @PathVariable String sort) {
+        return ResponseEntity.ok(disasterService.getSituationDetail(disasterId, sort));
     }
 }

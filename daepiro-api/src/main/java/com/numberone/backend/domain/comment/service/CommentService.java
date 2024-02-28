@@ -49,8 +49,8 @@ public class CommentService {
             Long parentCommentId,
             CreateChildCommentRequest request) {
 
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -78,8 +78,8 @@ public class CommentService {
     }
 
     public List<GetCommentDto> getCommentsByArticle(Long articleId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);

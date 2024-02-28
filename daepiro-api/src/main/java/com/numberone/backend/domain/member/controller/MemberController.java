@@ -53,24 +53,24 @@ public class MemberController {
                         
             response 에는 구입한 후에 사용자의 현재 마음 갯수가 저장되어 있습니다.
             """)
-    public ResponseEntity<HeartCntResponse> buyHeart(@RequestBody @Valid BuyHeartRequest buyHeartRequest, Authentication authentication) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.buyHeart(buyHeartRequest, authentication.getName()));
+    public ResponseEntity<HeartCntResponse> buyHeart(@RequestBody @Valid BuyHeartRequest buyHeartRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.buyHeart(buyHeartRequest));
     }
 
     @GetMapping("/heart")
     @Operation(summary = "사용자의 현재 마음 갯수 가져오기", description = """
             사용자의 현재 마음 갯수가 response로 전달됩니다.
             """)
-    public ResponseEntity<HeartCntResponse> getHeart(Authentication authentication) {
-        return ResponseEntity.ok(memberService.getHeart(authentication.getName()));
+    public ResponseEntity<HeartCntResponse> getHeart() {
+        return ResponseEntity.ok(memberService.getHeart());
     }
 
     @Operation(summary = "온보딩시 사용자 초기 데이터 설정하기", description = """
             온보딩에서 선택한 닉네임, 재난유형, 알림지역 데이터를 body에 담아 전달해주세요.
             """)
     @PostMapping("/onboarding")
-    public void initMemberData(Authentication authentication, @Valid @RequestBody OnboardingRequest onboardingRequest) {
-        memberService.initMemberData(authentication.getName(), onboardingRequest);
+    public void initMemberData(@Valid @RequestBody OnboardingRequest onboardingRequest) {
+        memberService.initMemberData(onboardingRequest);
     }
 
     @Operation(summary = "사용자가 온보딩 시 추가한 지역 리스트 가져오기", description = """
@@ -83,37 +83,37 @@ public class MemberController {
 
     @Operation(summary = "온라인 전환 API", description = """
             사용자가 어플을 시작할 때 이 API를 호출해 온라인 상태가 되었음을 서버에 알려주세요.
-            
+                        
             또한 가족 초대를 위해 필요한 사용자의 id값을 이때 응답으로 반환해줍니다.
             """)
     @GetMapping("/online")
-    public ResponseEntity<MemberIdResponse> online(Authentication authentication){
-        return ResponseEntity.ok(memberService.online(authentication.getName()));
+    public ResponseEntity<MemberIdResponse> online() {
+        return ResponseEntity.ok(memberService.online());
     }
 
     @Operation(summary = "오프라인 전환 API", description = """
             사용자가 어플을 종료할 때 이 API를 호출해 온라인 상태가 되었음을 서버에 알려주세요.
             """)
     @GetMapping("/offline")
-    public void offline(Authentication authentication){
-        memberService.offline(authentication.getName());
+    public void offline() {
+        memberService.offline();
     }
 
     @Operation(summary = "사용자 GPS 위치 변경", description = """
             사용자의 GPS 위치(위도, 경도) 정보를 갱신할 때 사용해주세요.
-            
+                        
             위도, 경도를 body에 담아 전달해주세요.
             """)
     @PostMapping("/gps")
-    public void updateGps(Authentication authentication, @Valid @RequestBody UpdateGpsRequest updateGpsRequest){
-        memberService.updateGps(authentication.getName(), updateGpsRequest);
+    public void updateGps(@Valid @RequestBody UpdateGpsRequest updateGpsRequest) {
+        memberService.updateGps(updateGpsRequest);
     }
 
     @Operation(summary = "사용자 안전상태 업데이트", description = """
             사용자의 안전상태를 업데이트 하는 API 입니다.
             """)
     @PutMapping("/safety")
-    public ResponseEntity<Void> updateSafety(@Valid @RequestBody UpdateSafetyRequest request){
+    public ResponseEntity<Void> updateSafety(@Valid @RequestBody UpdateSafetyRequest request) {
         memberService.updateSafety(request);
         return ResponseEntity.ok().build();
     }
