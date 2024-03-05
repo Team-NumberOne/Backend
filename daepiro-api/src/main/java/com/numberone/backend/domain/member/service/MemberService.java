@@ -33,11 +33,6 @@ public class MemberService {
     private final NotificationRegionRepository notificationRegionRepository;
     private final LocationProvider locationProvider;
 
-    public Member findById(long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(NotFoundMemberException::new);
-    }
-
     @Transactional
     public void initMemberData(OnboardingRequest onboardingRequest) {
         long id = SecurityContextProvider.getAuthenticatedUserId();
@@ -102,7 +97,8 @@ public class MemberService {
     @Transactional
     public MemberIdResponse online() {
         long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = findById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         member.updateSession(true);
         return MemberIdResponse.of(member);
     }
@@ -110,14 +106,16 @@ public class MemberService {
     @Transactional
     public void offline() {
         long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = findById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         member.updateSession(false);
     }
 
     @Transactional
     public void updateGps(UpdateGpsRequest updateGpsRequest) {
         long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = findById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         Double latitude = updateGpsRequest.getLatitude();
         Double longitude = updateGpsRequest.getLongitude();
         String location = locationProvider.pos2address(latitude, longitude);
