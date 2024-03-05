@@ -9,9 +9,6 @@ dependencies {
     implementation project(':daepiro-api')
     implementation project(':daepiro-crawler')
     implementation project(':daepiro-auth')
-
-    // feign client
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 // system environment variables
