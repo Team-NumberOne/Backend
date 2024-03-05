@@ -1,6 +1,5 @@
 package com.numberone.backend.handler;
 
-import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.provider.HttpResponseProvider;
 import com.numberone.backend.provider.JwtProvider;
 import jakarta.servlet.ServletException;

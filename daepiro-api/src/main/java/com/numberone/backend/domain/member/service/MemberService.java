@@ -39,24 +39,6 @@ public class MemberService {
     }
 
     @Transactional
-    public Member create(long socialId) {
-        return memberRepository.save(Member.of(socialId));
-    }
-
-    public Member findBySocialId(long socialId) {
-        return memberRepository.findBySocialId(socialId)
-                .orElse(null);
-    }
-
-    public boolean existsBySocialId(long socialId) {
-        return memberRepository.existsBySocialId(socialId);
-    }
-
-    public boolean existsById(long id){
-        return memberRepository.existsById(id);
-    }
-
-    @Transactional
     public void initMemberData(OnboardingRequest onboardingRequest) {
         long id = SecurityContextProvider.getAuthenticatedUserId();
         Member member = memberRepository.findById(id)

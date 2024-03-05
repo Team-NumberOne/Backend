@@ -2,7 +2,6 @@ dependencies {
     implementation project(':daepiro-core')
     implementation project(':daepiro-redis')
     implementation project(':daepiro-common')
-    implementation project(':daepiro-api')
 
     // oauth
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'

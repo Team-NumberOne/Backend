@@ -1,8 +1,9 @@
 package com.numberone.backend.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.numberone.backend.domain.member.service.MemberService;
+import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.exception.context.CustomExceptionContext;
+import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class HttpResponseProvider {
     private final ObjectMapper objectMapper;
     private final JwtProvider jwtProvider;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     public void setJwtResponse(HttpServletResponse response, long id) throws IOException {
         String accessToken = jwtProvider.createAccessToken(id);
@@ -32,7 +33,9 @@ public class HttpResponseProvider {
     public void setLoginResponse(HttpServletResponse response, long id) throws IOException {
         String accessToken = jwtProvider.createAccessToken(id);
         String refreshToken = jwtProvider.createRefreshToken(id);
-        boolean isOnboarding = memberService.findById(id).getIsOnboarding();
+        boolean isOnboarding = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new)
+                .getIsOnboarding();
         Map<String, Object> responseBody = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");

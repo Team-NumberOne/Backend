@@ -2,7 +2,6 @@ package com.numberone.backend.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.token.service.RefreshTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -23,8 +22,8 @@ import java.util.Map;
 public class JwtProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
-    private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
+    private final MemberRepository memberRepository;
 
     public String createAccessToken(long id) {
         long accessTokenPeroid = 1000L * 60 * 30;
@@ -63,7 +62,7 @@ public class JwtProvider {
                 .getPayload();
         long id = ((Number) claims.get("id")).longValue();
         String type = (String) claims.get("type");
-        if (!memberService.existsById(id) || !type.equals(tokenType))
+        if (!memberRepository.existsById(id) || !type.equals(tokenType))
             throw new JwtException("유효하지 않은 토큰입니다.");
         return id;
     }
