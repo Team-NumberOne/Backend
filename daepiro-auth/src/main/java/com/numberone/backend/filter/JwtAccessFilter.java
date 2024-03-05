@@ -34,6 +34,6 @@ public class JwtAccessFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().equals("/token/refresh");
+        return "/token/refresh".equals(request.getServletPath());
     }
 }
