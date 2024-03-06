@@ -1,5 +1,6 @@
 package com.numberone.backend.filter;
 
+import com.numberone.backend.TokenType;
 import com.numberone.backend.provider.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +26,7 @@ public class JwtAccessFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (jwt != null) {
-            Long id = jwtProvider.checkToken(jwt, "access", request);
+            Long id = jwtProvider.checkToken(jwt, TokenType.ACCESS, request);
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(id, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

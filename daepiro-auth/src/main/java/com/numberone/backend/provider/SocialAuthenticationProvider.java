@@ -1,10 +1,10 @@
 package com.numberone.backend.provider;
 
+import com.numberone.backend.config.AspectConfig;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
-import com.numberone.backend.feign.KakaoFeign;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import feign.FeignException;
+import com.numberone.backend.feign.KakaoFeign;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,7 +25,7 @@ public class SocialAuthenticationProvider implements AuthenticationProvider {
         String token = (String) authentication.getPrincipal();
         Long socialId;
         try {
-            socialId = kakaoFeign.getUserData("Bearer " + token).getId();
+            socialId = kakaoFeign.getUserData(JwtProvider.PREFIX_BEARER + token).getId();
         } catch (Exception e) {
             throw new BadCredentialsException("유효하지 않은 OAuth 토큰입니다.");
         }

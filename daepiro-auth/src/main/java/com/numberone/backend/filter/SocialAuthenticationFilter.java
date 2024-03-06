@@ -17,18 +17,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
+import java.net.http.HttpHeaders;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
 public class SocialAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
+    private static final String JSON_PARAM = "token";
+    private static final String REQUEST_URL = "/token/kakao";
+    private static final String REQUEST_METHOD = "POST";
+
 
     public SocialAuthenticationFilter(SocialAuthenticationProvider socialAuthenticationProvider,
                                       SocialAuthenticationSuccessHandler socialAuthenticationSuccessHandler,
                                       SocialAuthenticationFailureHandler socialAuthenticationFailureHandler,
                                       ObjectMapper objectMapper) {
-        super(new AntPathRequestMatcher("/token/kakao", "POST"));
+        super(new AntPathRequestMatcher(REQUEST_URL, REQUEST_METHOD));
         setAuthenticationManager(new ProviderManager(socialAuthenticationProvider));
         setAuthenticationSuccessHandler(socialAuthenticationSuccessHandler);
         setAuthenticationFailureHandler(socialAuthenticationFailureHandler);
@@ -39,7 +44,7 @@ public class SocialAuthenticationFilter extends AbstractAuthenticationProcessing
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         String requestBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
         Map<String, String> requestBodyMap = objectMapper.readValue(requestBody, Map.class);
-        String token = requestBodyMap.get("token");
+        String token = requestBodyMap.get(JSON_PARAM);
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(token, null);
         return getAuthenticationManager().authenticate(authentication);
     }
