@@ -62,7 +62,7 @@ public class JwtProvider {
                 .build()
                 .parseSignedClaims(jwt)
                 .getPayload();
-        Long id = (Long) claims.get(CLAIM_ID);
+        long id = (long) claims.get(CLAIM_ID);
         String type = (String) claims.get(CLAIM_TYPE);
         if (!memberRepository.existsById(id) || !type.equals(tokenType.getDescription()))
             throw new JwtException("유효하지 않은 토큰입니다.");
