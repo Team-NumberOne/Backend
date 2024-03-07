@@ -1,6 +1,6 @@
 package com.numberone.backend.config;
 
-import com.numberone.backend.properties.RedisProperties;
+import com.numberone.backend.RedisProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,0 +1,29 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  kakao:
+    map:
+      client-id: <TEST>
+      map-api-url: <TEST>
+
+cloud:
+  aws:
+    credentials:
+      access-key: <TEST>
+      secret-access-key: <TEST>
+    s3:
+      bucket: <TEST>
+      presigned-url-expired: <TEST>
+      path: <TEST>
+    region:
+      static: <TEST>
+    stack:
+      auto: false
+
+fcm:
+  key:
+    path: <TEST>
+    scope: <TEST>
+    url: <TEST>
