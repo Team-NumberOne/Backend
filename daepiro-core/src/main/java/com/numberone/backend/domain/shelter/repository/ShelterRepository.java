@@ -1,5 +1,6 @@
 package com.numberone.backend.domain.shelter.repository;
 
+import com.numberone.backend.domain.shelter.ShelterType;
 import com.numberone.backend.domain.shelter.dto.ShelterMapper;
 import com.numberone.backend.domain.shelter.entity.Shelter;
 import com.numberone.backend.domain.shelter.repository.custom.CustomShelterRepository;

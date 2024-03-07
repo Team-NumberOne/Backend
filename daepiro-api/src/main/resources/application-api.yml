@@ -1,0 +1,45 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    redirect-uri: ${KAKAO_REDIRECT_URL}
+    token-api-url: ${KAKAO_TOKEN_API_URL}
+    user-api-url: ${KAKAO_USER_API_URL}
+    map-api-url: ${KAKAO_MAP_API_URL}
+
+  naver:
+    client-id: ${NAVER_CLIENT_ID}
+    client-secret: ${NAVER_CLIENT_SECRET}
+    state: ${NAVER_STATE}
+    token-api-url: ${NAVER_TOKEN_API_URL}
+    user-api-url: ${NAVER_USER_API_URL}
+
+storage-path:
+  shelter-database-init-path: ${SHELTER_DATABASE_INIT_PATH}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    redirect-uri: ${KAKAO_REDIRECT_URL}
+    token-api-url: ${KAKAO_TOKEN_API_URL}
+    user-api-url: ${KAKAO_USER_API_URL}
+    map-api-url: ${KAKAO_MAP_API_URL}
+
+  naver:
+    client-id: ${NAVER_CLIENT_ID}
+    client-secret: ${NAVER_CLIENT_SECRET}
+    state: ${NAVER_STATE}
+    token-api-url: ${NAVER_TOKEN_API_URL}
+    user-api-url: ${NAVER_USER_API_URL}
+
+storage-path:
+  shelter-database-init-path: ${SHELTER_DATABASE_INIT_PATH}

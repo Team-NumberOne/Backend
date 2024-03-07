@@ -72,15 +72,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: 🐧 create application.yml
-        run: |
-          mkdir -p ./daepiro-app/src/main/resources
-          cd ./daepiro-app/src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.PROPERTIES_PROD }}" | base64 --decode > ./application.yml
-          ls -la
-        shell: bash
-
       - name: 🐧 create service-account.json
         run: |
           mkdir -p ./daepiro-api/src/main/resources

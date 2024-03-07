@@ -1,11 +1,15 @@
 package com.numberone.backend.domain.shelter;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
 public class Address {

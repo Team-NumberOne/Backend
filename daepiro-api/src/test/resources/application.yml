@@ -1,0 +1,24 @@
+storage-path:
+  shelter-database-init-path: <TEST>
+
+spring:
+  profiles:
+    active: test
+    group:
+      test: core-test,redis-test,auth-test,crawler-test,common-test,api-test
+  output:
+    ansi:
+      enabled: always
+  kakao:
+    client-id: <TEST>
+    redirect-uri: <TEST>
+    token-api-url: <TEST>
+    user-api-url: <TEST>
+    map-api-url: <TEST>
+
+  naver:
+    client-id: <TEST>
+    client-secret: <TEST>
+    state: <TEST>
+    token-api-url: <TEST>
+    user-api-url: <TEST>
