@@ -15,7 +15,7 @@ import org.springframework.http.HttpHeaders;
 @OpenAPIDefinition(
         servers = @Server(url = "/", description = "${host.url}"),
         info = @Info(
-                title = "🚀 대피로 백엔드 API 명세서 (updated at: 2024. 02. 18.)",
+                title = "🚀 대피로 백엔드 API 명세서 (updated at: 2024. 03. 07.)",
                 description = """
                         spring docs 를 이용한 API 명세서 입니다.😊
                         """,
