@@ -17,8 +17,4 @@ public class RefreshTokenService {
             refreshTokenRepository.deleteById(userId);
         refreshTokenRepository.save(RefreshToken.of(userId, token));
     }
-
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByToken(token);
-    }
 }

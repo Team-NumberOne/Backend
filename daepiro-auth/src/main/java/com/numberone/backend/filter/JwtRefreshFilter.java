@@ -3,6 +3,7 @@ package com.numberone.backend.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberone.backend.TokenType;
 import com.numberone.backend.domain.token.entity.RefreshToken;
+import com.numberone.backend.domain.token.repository.RefreshTokenRepository;
 import com.numberone.backend.domain.token.service.RefreshTokenService;
 import com.numberone.backend.provider.HttpResponseProvider;
 import com.numberone.backend.provider.JwtProvider;
@@ -26,7 +27,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
     private final HttpResponseProvider httpResponseProvider;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private static final String JSON_PARAM = "token";
 
@@ -36,7 +37,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
         Map<String, String> requestBodyMap = objectMapper.readValue(requestBody, Map.class);
         String jwt = requestBodyMap.get(JSON_PARAM);
         if (jwt != null) {
-            RefreshToken refreshToken = refreshTokenService.findByToken(jwt)
+            RefreshToken refreshToken = refreshTokenRepository.findByToken(jwt)
                     .orElseThrow(() -> new JwtException("유효하지 않은 토큰입니다."));
             long id = jwtProvider.checkToken(refreshToken.getToken(), TokenType.REFRESH, request);
             httpResponseProvider.setJwtResponse(response, id);

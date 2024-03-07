@@ -30,7 +30,7 @@ public class SocialAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("유효하지 않은 OAuth 토큰입니다.");
         }
         Member member = memberRepository.findBySocialId(socialId)
-                .orElseThrow(NotFoundMemberException::new);
+                .orElse(null);
         if (member == null)
             member = memberRepository.save(Member.of(socialId));
         return UsernamePasswordAuthenticationToken.authenticated(member.getId(), null, null);
