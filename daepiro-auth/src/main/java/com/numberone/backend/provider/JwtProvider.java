@@ -32,7 +32,7 @@ public class JwtProvider {
     public String createAccessToken(long id) {
         return Jwts.builder()
                 .claim(CLAIM_ID, id)
-                .claim(CLAIM_TYPE, TokenType.ACCESS)
+                .claim(CLAIM_TYPE, TokenType.ACCESS.getDescription())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + accessTokenPeriod))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
@@ -42,7 +42,7 @@ public class JwtProvider {
     public String createRefreshToken(long id) {
         String token = Jwts.builder()
                 .claim(CLAIM_ID, id)
-                .claim(CLAIM_TYPE, TokenType.REFRESH)
+                .claim(CLAIM_TYPE, TokenType.REFRESH.getDescription())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + refreshTokenPeriod))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
