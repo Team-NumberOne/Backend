@@ -4,8 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "kakaoFeign", url = "https://kapi.kakao.com")
+@FeignClient(name = "kakaoFeign", url = "${spring.kakao.api-url}")
 public interface KakaoFeign {
-    @GetMapping(value = "/v1/user/access_token_info")
+    @GetMapping(value = "${spring.kakao.token-info-url}")
     KakaoIdDto getUserData(@RequestHeader(name = "Authorization") String token);
 }

@@ -15,11 +15,13 @@ import com.numberone.backend.domain.disaster.event.DisasterEvent;
 import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.member.entity.Member;
+import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.exception.badrequest.BadRequestConversationSortException;
 import com.numberone.backend.exception.notfound.NotFoundDisasterException;
+import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.provider.location.LocationProvider;
 import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,7 @@ import java.util.*;
 public class DisasterService {
     private final DisasterRepository disasterRepository;
     private final LocationProvider locationProvider;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final ConversationService conversationService;
     private final ConversationRepository conversationRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -51,7 +53,8 @@ public class DisasterService {
         LocalDateTime time = LocalDateTime.now().minusDays(1);
         Set<Disaster> disasters = new HashSet<>(disasterRepository.findDisastersInAddressAfterTime(address, time));
         long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberService.findById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         member.updateGps(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude(), address);
         String[] locationTokens = member.getLocation().split(" ");
         switch (locationTokens.length) {
@@ -114,7 +117,8 @@ public class DisasterService {
     public SituationHomeResponse getSituationHome() {
         Set<Disaster> disasters = new HashSet<>();
         long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberService.findById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         LocalDateTime time = LocalDateTime.now().minusDays(1);
         for (NotificationRegion notificationRegion : member.getNotificationRegions()) {
             disasters.addAll(disasterRepository.findDisastersInAddressAfterTime(notificationRegion.getLocation(), time));

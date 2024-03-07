@@ -31,6 +31,9 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private LoginType loginType;
+
     @Comment("소셜 id")
     private Long socialId;
 
@@ -39,6 +42,9 @@ public class Member extends BaseTimeEntity {
 
     @Comment("본명")
     private String realName;
+
+    @Comment("이메일")
+    private String email;
 
     @Comment("마음 갯수")
     private Integer heartCnt;
