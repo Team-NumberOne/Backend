@@ -281,17 +281,12 @@ https://github.com/Kusitms-NumberOne/Android/tree/develop/apk
 
 ## **💻 Technology**
 
-### System Architecture
-![대피로 서비스 아키텍쳐](https://github.com/nohy6630/readme_test/assets/129354455/e66ce90b-f032-483e-80c4-28e391038ab0)
+### Infra Architecture
 
-### Deploy Flow
-![AWS 네트워크 다이어그램](https://github.com/nohy6630/readme_test/assets/129354455/4d97d478-536a-4df4-838a-ec1975a832ca)
+<img width="2518" alt="image" src="https://github.com/Team-NumberOne/Backend/assets/96612168/fa9b352c-85a8-4f70-a29b-69a837e7f56c">
 
 ### 재난문자 발생 로직
 ![image](https://github.com/nohy6630/readme_test/assets/129354455/c9fa3c8e-9999-4141-a076-045cf334df56)
-
-### ERD
-![KakaoTalk_Image_2023-11-23-22-44-02](https://github.com/Kusitms-NumberOne/.github/assets/129354455/220b6a39-da3d-44f6-a362-6d5e9d134b20)
 
 
 
