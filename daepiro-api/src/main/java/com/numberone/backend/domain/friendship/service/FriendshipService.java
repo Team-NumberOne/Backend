@@ -35,8 +35,8 @@ public class FriendshipService {
 
     @Transactional
     public InviteFriendResponse inviteFriend(Long memberId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member invitedMember = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member invitedMember = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
@@ -55,8 +55,8 @@ public class FriendshipService {
     }
 
     public List<FriendResponse> getFriends() {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         return member.getFriendships()
                 .stream().map(friendship -> {
@@ -67,8 +67,8 @@ public class FriendshipService {
 
     @Transactional
     public FriendResponse deleteFriend(Long memberId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member me = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member me = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         Member friend = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
@@ -83,8 +83,8 @@ public class FriendshipService {
 
     @Transactional
     public SendFcmFriendResponse sendFcmToFriend(Long friendId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         Member friend = memberRepository.findById(friendId)
                 .orElseThrow(NotFoundMemberException::new);

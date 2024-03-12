@@ -15,12 +15,15 @@ import com.numberone.backend.domain.disaster.event.DisasterEvent;
 import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.member.entity.Member;
+import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.exception.badrequest.BadRequestConversationSortException;
 import com.numberone.backend.exception.notfound.NotFoundDisasterException;
+import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.provider.location.LocationProvider;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -39,17 +42,19 @@ import java.util.*;
 public class DisasterService {
     private final DisasterRepository disasterRepository;
     private final LocationProvider locationProvider;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final ConversationService conversationService;
     private final ConversationRepository conversationRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public LatestDisasterResponse getLatestDisaster(String email, LatestDisasterRequest latestDisasterRequest) {
+    public LatestDisasterResponse getLatestDisaster(LatestDisasterRequest latestDisasterRequest) {
         String address = locationProvider.pos2address(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude());
         LocalDateTime time = LocalDateTime.now().minusDays(1);
         Set<Disaster> disasters = new HashSet<>(disasterRepository.findDisastersInAddressAfterTime(address, time));
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         member.updateGps(latestDisasterRequest.getLatitude(), latestDisasterRequest.getLongitude(), address);
         String[] locationTokens = member.getLocation().split(" ");
         switch (locationTokens.length) {
@@ -109,9 +114,11 @@ public class DisasterService {
         return false;
     }
 
-    public SituationHomeResponse getSituationHome(String email) {
+    public SituationHomeResponse getSituationHome() {
         Set<Disaster> disasters = new HashSet<>();
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         LocalDateTime time = LocalDateTime.now().minusDays(1);
         for (NotificationRegion notificationRegion : member.getNotificationRegions()) {
             disasters.addAll(disasterRepository.findDisastersInAddressAfterTime(notificationRegion.getLocation(), time));
@@ -126,7 +133,7 @@ public class DisasterService {
             conversationCnt += conversationRepository.countByDisaster(disaster);
             List<Conversation> conversations = conversationRepository.findAllByDisasterOrderByLikeCntDesc(disaster, PageRequest.of(0, 3));
             for (Conversation conversation : conversations) {
-                conversationResponses.add(conversationService.getExceptChild(email, conversation.getId()));
+                conversationResponses.add(conversationService.getExceptChild(conversation.getId()));
                 conversationCnt += conversationRepository.countByParent(conversation);
             }
             situationResponses.add(SituationResponse.of(disaster, conversationResponses, conversationCnt));
@@ -135,7 +142,7 @@ public class DisasterService {
         return SituationHomeResponse.of(situationResponses);
     }
 
-    public SituationDetailResponse getSituationDetail(String email, Long disasterId, String sort) {
+    public SituationDetailResponse getSituationDetail(Long disasterId, String sort) {
         Disaster disaster = disasterRepository.findById(disasterId)
                 .orElseThrow(NotFoundDisasterException::new);
         List<GetConversationResponse> conversationResponses = new ArrayList<>();
@@ -147,7 +154,7 @@ public class DisasterService {
         else
             throw new BadRequestConversationSortException();
         for (Conversation conversation : conversations) {
-            conversationResponses.add(conversationService.get(email, conversation.getId()));
+            conversationResponses.add(conversationService.get(conversation.getId()));
         }
         return SituationDetailResponse.of(conversationResponses);
     }

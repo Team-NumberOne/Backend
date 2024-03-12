@@ -65,8 +65,8 @@ public class ArticleService {
 
     @Transactional
     public UploadArticleResponse uploadArticle(UploadArticleRequest request) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member owner = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member owner = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
 
         // 1. 게시글 생성 ( 제목, 내용, 작성자 아이디, 태그)
@@ -148,8 +148,8 @@ public class ArticleService {
     }
 
     public GetArticleDetailResponse getArticleDetail(Long articleId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal) // 회원
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id) // 회원
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -179,8 +179,8 @@ public class ArticleService {
     }
 
     public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         List<Long> memberLikedArticleIdList = articleLikeRepository.findByMember(member)
                 .stream().map(ArticleLike::getArticleId)
@@ -207,8 +207,8 @@ public class ArticleService {
 
     @Transactional
     public CreateCommentResponse createComment(Long articleId, CreateCommentRequest request) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -236,8 +236,8 @@ public class ArticleService {
 
     @Transactional
     public ModifyArticleResponse modifyArticle(Long articleId, ModifyArticleRequest request) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);

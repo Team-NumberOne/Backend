@@ -45,8 +45,8 @@ public class LikeService {
 
     @Transactional
     public Integer increaseArticleLike(Long articleId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundApiException::new);
@@ -75,8 +75,8 @@ public class LikeService {
 
     @Transactional
     public Integer decreaseArticleLike(Long articleId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundApiException::new);
@@ -95,8 +95,8 @@ public class LikeService {
 
     @Transactional
     public Integer increaseCommentLike(Long commentId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
@@ -127,8 +127,8 @@ public class LikeService {
 
     @Transactional
     public Integer decreaseCommentLike(Long commentId) {
-        String principal = SecurityContextProvider.getAuthenticatedUserEmail();
-        Member member = memberRepository.findByEmail(principal)
+        long principal = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);

@@ -10,11 +10,14 @@ import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.like.entity.ConversationLike;
 import com.numberone.backend.domain.like.repository.ConversationLikeRepository;
 import com.numberone.backend.domain.member.entity.Member;
+import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.exception.conflict.AlreadyLikedException;
 import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
 import com.numberone.backend.exception.notfound.NotFoundConversationException;
 import com.numberone.backend.exception.notfound.NotFoundDisasterException;
+import com.numberone.backend.exception.notfound.NotFoundMemberException;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +30,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConversationService {
     private final ConversationRepository conversationRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final DisasterRepository disasterRepository;
     private final ConversationLikeRepository conversationLikeRepository;
 
     @Transactional
     public void createConversation(String email, CreateConversationRequest createConversationRequest) {
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         Disaster disaster = disasterRepository.findById(createConversationRequest.getDisasterId())
                 .orElseThrow(NotFoundDisasterException::new);
         Conversation conversation = Conversation.of(
@@ -46,7 +51,9 @@ public class ConversationService {
 
     @Transactional
     public void createChildConversation(String email, CreateChildConversationRequest createConversationRequest, Long conversationId) {
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         Conversation parent = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
         Conversation conversation = Conversation.childOf(
@@ -73,10 +80,12 @@ public class ConversationService {
         return false;
     }
 
-    public GetConversationResponse get(String email, Long conversationId) {
+    public GetConversationResponse get(Long conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         List<GetConversationResponse> childs = new ArrayList<>();
         List<Conversation> childConversations = conversationRepository.findAllByParentOrderByCreatedAt(conversation);
         for (Conversation child : childConversations) {
@@ -94,10 +103,12 @@ public class ConversationService {
                 childs);
     }
 
-    public GetConversationResponse getExceptChild(String email, Long conversationId) {
+    public GetConversationResponse getExceptChild(Long conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
-        Member member = memberService.findByEmail(email);
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         return GetConversationResponse.of(
                 conversation,
                 checkLike(member, conversation),
@@ -106,8 +117,10 @@ public class ConversationService {
     }
 
     @Transactional
-    public void increaseLike(String email, Long conversationId) {
-        Member member = memberService.findByEmail(email);
+    public void increaseLike(Long conversationId) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
         conversationLikeRepository.findByMemberAndConversation(member, conversation)
@@ -120,8 +133,10 @@ public class ConversationService {
     }
 
     @Transactional
-    public void decreaseLike(String email, Long conversationId) {
-        Member member = memberService.findByEmail(email);
+    public void decreaseLike(Long conversationId) {
+        long id = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NotFoundConversationException::new);
         ConversationLike conversationLike = conversationLikeRepository.findByMemberAndConversation(member, conversation)
