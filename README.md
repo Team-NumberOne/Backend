@@ -1,6 +1,7 @@
 ### Infra Architecture
 
-<img width="2518" alt="image" src="https://github.com/Team-NumberOne/Backend/assets/96612168/fa9b352c-85a8-4f70-a29b-69a837e7f56c">
+<img width="1610" alt="image" src="https://github.com/Team-NumberOne/Backend/assets/96612168/022eed65-53e6-43a6-914f-8fc2e743791c">
+
 
 ### 재난문자 크롤링 로직
 ![image](https://github.com/nohy6630/readme_test/assets/129354455/c9fa3c8e-9999-4141-a076-045cf334df56)
