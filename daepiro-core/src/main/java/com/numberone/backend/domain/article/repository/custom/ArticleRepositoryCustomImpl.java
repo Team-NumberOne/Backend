@@ -8,6 +8,7 @@ import com.numberone.backend.domain.article.entity.ArticleTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -17,12 +18,9 @@ import java.util.Objects;
 
 import static com.numberone.backend.domain.article.entity.QArticle.article;
 
+@RequiredArgsConstructor
 public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-
-    public ArticleRepositoryCustomImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public Slice<GetArticleListResponse> getArticlesNoOffSetPaging(ArticleSearchParameter param, Pageable pageable) {

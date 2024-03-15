@@ -9,6 +9,7 @@ import com.numberone.backend.domain.shelter.dto.QGetAllSheltersResponse_AddressD
 import com.numberone.backend.domain.shelter.dto.QGetAllSheltersResponse_ShelterDetail;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +18,10 @@ import java.util.Optional;
 import static com.numberone.backend.domain.shelter.entity.QShelter.shelter;
 
 
+@RequiredArgsConstructor
 public class CustomShelterRepositoryImpl implements CustomShelterRepository {
 
     private final JPAQueryFactory queryFactory;
-
-    public CustomShelterRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public List<GetAllSheltersResponse> findAllSheltersGroupByRegions() {

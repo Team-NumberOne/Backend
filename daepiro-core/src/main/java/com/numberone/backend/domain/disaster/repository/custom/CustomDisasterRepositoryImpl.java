@@ -3,18 +3,17 @@ package com.numberone.backend.domain.disaster.repository.custom;
 import com.numberone.backend.domain.disaster.entity.Disaster;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.numberone.backend.domain.disaster.entity.QDisaster.disaster;
 
+@RequiredArgsConstructor
 public class CustomDisasterRepositoryImpl implements CustomDisasterRepository {
     private final JPAQueryFactory queryFactory;
-
-    public CustomDisasterRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public List<Disaster> findDisastersInAddressAfterTime(String address, LocalDateTime time) {
