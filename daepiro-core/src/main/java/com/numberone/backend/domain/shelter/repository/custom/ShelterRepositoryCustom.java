@@ -5,7 +5,7 @@ import com.numberone.backend.domain.shelter.dto.GetAllSheltersResponse;
 
 import java.util.List;
 
-public interface CustomShelterRepository {
+public interface ShelterRepositoryCustom {
 
     List<GetAllSheltersResponse> findAllSheltersGroupByRegions();
     List<GetAddressResponse> getAllAddressList();

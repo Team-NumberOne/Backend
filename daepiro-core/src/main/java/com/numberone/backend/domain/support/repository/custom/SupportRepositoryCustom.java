@@ -1,5 +1,5 @@
 package com.numberone.backend.domain.support.repository.custom;
 
-public interface CustomSupportRepository {
+public interface SupportRepositoryCustom {
     Long getSupportCnt();
 }

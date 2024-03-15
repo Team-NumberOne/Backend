@@ -5,6 +5,6 @@ import com.numberone.backend.domain.disaster.entity.Disaster;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CustomDisasterRepository {
+public interface DisasterRepositoryCustom {
     List<Disaster> findDisastersInAddressAfterTime(String address, LocalDateTime time);
 }

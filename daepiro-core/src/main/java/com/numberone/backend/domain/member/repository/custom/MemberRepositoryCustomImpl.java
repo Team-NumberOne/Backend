@@ -1,7 +1,6 @@
 package com.numberone.backend.domain.member.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 import static com.numberone.backend.domain.member.entity.QMember.member;
 
 @RequiredArgsConstructor
-public class MemberRepositoryImpl implements MemberRepositoryCustom {
+public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override

@@ -11,7 +11,6 @@ import com.numberone.backend.domain.like.entity.ConversationLike;
 import com.numberone.backend.domain.like.repository.ConversationLikeRepository;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.exception.conflict.AlreadyLikedException;
 import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
 import com.numberone.backend.exception.notfound.NotFoundConversationException;

@@ -1,19 +1,18 @@
 package com.numberone.backend.domain.support.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import static com.numberone.backend.domain.support.entity.QSupport.support;
 
 @RequiredArgsConstructor
-public class CustomSupportRepositoryImpl implements CustomSupportRepository {
+public class SupportRepositoryCustomImpl implements SupportRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
     public Long getSupportCnt() {
         return queryFactory
-                .select(support.id.countDistinct())
+                .select(support.member.countDistinct())
                 .from(support)
                 .fetchOne();
     }
