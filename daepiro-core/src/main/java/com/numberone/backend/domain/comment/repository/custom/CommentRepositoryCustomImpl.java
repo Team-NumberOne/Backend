@@ -4,18 +4,16 @@ import com.numberone.backend.domain.comment.dto.GetCommentDto;
 import com.numberone.backend.domain.comment.dto.QGetCommentDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 import static com.numberone.backend.domain.article.entity.QArticle.article;
 import static com.numberone.backend.domain.comment.entity.QCommentEntity.commentEntity;
 
+@RequiredArgsConstructor
 public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-
-    public CommentRepositoryCustomImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public List<GetCommentDto> findAllByArticle(Long articleId) {

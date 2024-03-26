@@ -2,7 +2,7 @@ package com.numberone.backend.domain.shelter.repository;
 
 import com.numberone.backend.domain.shelter.dto.ShelterMapper;
 import com.numberone.backend.domain.shelter.entity.Shelter;
-import com.numberone.backend.domain.shelter.repository.custom.CustomShelterRepository;
+import com.numberone.backend.domain.shelter.repository.custom.ShelterRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ShelterRepository extends JpaRepository<Shelter, Long>, CustomShelterRepository {
+public interface ShelterRepository extends JpaRepository<Shelter, Long>, ShelterRepositoryCustom {
 
     @Query(value =
             " SELECT shelter.shelter_id AS id, shelter.facility_full_name as name, " +

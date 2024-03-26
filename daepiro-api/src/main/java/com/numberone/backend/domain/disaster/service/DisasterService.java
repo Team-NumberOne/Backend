@@ -16,7 +16,6 @@ import com.numberone.backend.domain.disaster.repository.DisasterRepository;
 import com.numberone.backend.domain.disaster.DisasterType;
 import com.numberone.backend.domain.member.entity.Member;
 import com.numberone.backend.domain.member.repository.MemberRepository;
-import com.numberone.backend.domain.member.service.MemberService;
 import com.numberone.backend.domain.notificationdisaster.entity.NotificationDisaster;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
 import com.numberone.backend.exception.badrequest.BadRequestConversationSortException;
