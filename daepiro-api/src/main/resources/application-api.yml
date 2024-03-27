@@ -4,6 +4,8 @@ spring:
       on-profile: local
 
   kakao:
+    api-url: ${KAKAO_API_URL}
+    token-info-url: ${KAKAO_TOKEN_INFO_URL}
     client-id: ${KAKAO_CLIENT_ID}
     redirect-uri: ${KAKAO_REDIRECT_URL}
     token-api-url: ${KAKAO_TOKEN_API_URL}

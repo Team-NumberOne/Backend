@@ -10,6 +10,8 @@ spring:
     ansi:
       enabled: always
   kakao:
+    api-url: <TEST>
+    token-info-url: <TEST>
     client-id: <TEST>
     redirect-uri: <TEST>
     token-api-url: <TEST>
