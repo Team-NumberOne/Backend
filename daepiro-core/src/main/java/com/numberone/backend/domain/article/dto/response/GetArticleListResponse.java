@@ -18,22 +18,25 @@ import java.util.Optional;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class GetArticleListResponse {
+public class GetArticleListResponse { // todo: record
 
     private ArticleTag tag;
     private Long id;
     private String title;
     private String content;
     private String address;
+    @Setter
     private String ownerNickName;
     private Long ownerId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     private ArticleStatus articleStatus;
+    @Setter
     private String thumbNailImageUrl;
     private Long thumbNailImageId;
 
     private Integer articleLikeCount;
+    @Setter
     private Long commentCount;
     private Boolean isLiked;
 
@@ -63,18 +66,8 @@ public class GetArticleListResponse {
         }
     }
 
-    public void setOwnerNickName(String nickName){
-        this.ownerNickName = nickName;
-    }
 
-    public void setThumbNailImageUrl(String thumbNailImageUrl){
-        this.thumbNailImageUrl = thumbNailImageUrl;
-    }
-
-    public void setCommentCount(Long commentCount){
-        this.commentCount = commentCount;
-    }
-
+    // todo: 파라미터로 optional 을 받지말자.
     public void updateInfo(Optional<Member> owner,
                            Optional<ArticleImage> articleImage,
                            List<Long> memberLikedArticleIdList,

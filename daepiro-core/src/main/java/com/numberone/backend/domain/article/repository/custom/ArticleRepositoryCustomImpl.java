@@ -24,7 +24,8 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
 
     @Override
     public Slice<GetArticleListResponse> getArticlesNoOffSetPaging(ArticleSearchParameter param, Pageable pageable) {
-        List<GetArticleListResponse> result = queryFactory.select(new QGetArticleListResponse(
+        List<GetArticleListResponse> result = queryFactory.select(
+                new QGetArticleListResponse(
                         article,
                         article.articleOwnerId,
                         article.thumbNailImageUrlId
@@ -36,10 +37,11 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
                         article.articleStatus.eq(ArticleStatus.ACTIVATED),
                         article.lv2.eq(param.getRegionLv2())
                 )
-                .orderBy(article.id.desc())
                 .limit(pageable.getPageSize() + 1)
+                .orderBy(article.id.desc())
                 .fetch();
-        return checkLastPage(pageable, result);
+
+        return new SliceImpl<>(result, pageable, checkLastPage(pageable, result));
     }
 
     private BooleanExpression checkTagCondition(ArticleTag tag) {
@@ -56,7 +58,7 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
         return article.id.lt(articleId);
     }
 
-    private Slice<GetArticleListResponse> checkLastPage(Pageable pageable, List<GetArticleListResponse> result) {
+    private boolean checkLastPage(Pageable pageable, List<GetArticleListResponse> result) {
         boolean hasNext = false;
 
         if (result.size() > pageable.getPageSize()) {
@@ -64,7 +66,7 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
             result.remove(pageable.getPageSize());
         }
 
-        return new SliceImpl<>(result, pageable, hasNext);
+        return hasNext;
     }
 
 }
