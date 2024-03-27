@@ -1,0 +1,36 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local: core,redis,auth,crawler,common,api
+      dev: core,redis,auth,crawler,common,api
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  servlet:
+    multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
+
+host:
+  url: ${EC2_HOST_URL}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  servlet:
+    multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
+
+host:
+  url: ${EC2_HOST_URL}

@@ -78,7 +78,7 @@ public class ArticleController {
             tag 가 null 이면, tag 상관 없이 전체 조회를 수행합니다.
             tag 가 null 이 아니면, 해당 tag 에 해당하는 게시글만 조회합니다.
                        
-            lastArticleId 는 직전에 조회한 게시글 중 가장 먀지막(작은) articleId 를 의미합니다.
+            lastArticleId 는 직전에 조회한 게시글 중 가장 마지막(작은) articleId 를 의미합니다.
             - 첫 페이지를 요청할 경우에는 lastArticleId 를 null 로 보내야합니다.
             - 첫 페이지 이후에 대한 요청은, 직전 페이지 요청에서 얻어온 lastArticleId 를 넣어서 보내면 그 다음 페이지를 호출합니다.
                        

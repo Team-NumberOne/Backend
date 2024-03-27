@@ -1,0 +1,7 @@
+aws:
+  secretsmanager:
+    name: numberone
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2

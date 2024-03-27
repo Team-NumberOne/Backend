@@ -1,0 +1,61 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  kakao:
+    map:
+      client-id: ${KAKAO_MAP_CLIENT_ID}
+      map-api-url: ${KAKAO_MAP_API_URL}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+      presigned-url-expired: 600000
+      path: static
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+
+fcm:
+  key:
+    path: ${FCM_KEY_PATH}
+    scope: ${FCM_SCOPE}
+    url: ${FCM_URL}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  kakao:
+    map:
+      client-id: ${KAKAO_MAP_CLIENT_ID}
+      map-api-url: ${KAKAO_MAP_API_URL}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+      presigned-url-expired: 600000
+      path: static
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+
+fcm:
+  key:
+    path: ${FCM_KEY_PATH}
+    scope: ${FCM_SCOPE}
+    url: ${FCM_URL}

@@ -28,9 +28,13 @@ out/
 
 **/src/main/resources/service-account.json
 
-*.yml
-application.yml
-application.properties
+### test properties
+!daepiro-api/src/test/resources/application.yml
+!daepiro-auth/src/testFixtures/resources/application-auth-test.yml
+!daepiro-common/src/testFixtures/resources/application-common-test.yml
+!daepiro-core/src/testFixtures/resources/application-core-test.yml
+!daepiro-crawler/src/testFixtures/resources/application-crawler-test.yml
+!daepiro-redis/src/testFixtures/resources/application-redis-test.yml
 
 ### NetBeans ###
 /nbproject/private/

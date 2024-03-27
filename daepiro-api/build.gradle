@@ -2,6 +2,10 @@ dependencies {
 	implementation project(':daepiro-core')
 	implementation project(':daepiro-common')
 	implementation project(':daepiro-redis')
+
+	testImplementation(testFixtures(project(':daepiro-core')))
+	testImplementation(testFixtures(project(':daepiro-common')))
+	testImplementation(testFixtures(project(':daepiro-redis')))
 }
 
 bootJar {
