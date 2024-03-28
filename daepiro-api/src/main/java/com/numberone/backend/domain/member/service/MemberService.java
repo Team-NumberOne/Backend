@@ -80,8 +80,6 @@ public class MemberService {
                 .orElseThrow(NotFoundMemberException::new);
         String imageUrl = s3Provider.uploadImage(image);
 
-        log.info("[회원의 프로필 이미지를 업로드하였습니다.] id:{} url:{}", member.getId(), imageUrl);
-
         member.updateProfileImageUrl(imageUrl);
 
         return UploadProfileImageResponse.of(imageUrl);
