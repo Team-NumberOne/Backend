@@ -1,0 +1,15 @@
+spring:
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    database: mysql
+    # Initial Data config
+    defer-datasource-initialization: true

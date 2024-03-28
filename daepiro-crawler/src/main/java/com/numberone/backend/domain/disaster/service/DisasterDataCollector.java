@@ -12,7 +12,6 @@ import com.numberone.backend.domain.disaster.service.dto.DisasterDataResponse;
 import com.numberone.backend.domain.disaster.service.dto.SaveDisasterRequest;
 import com.numberone.backend.exception.notfound.NotFoundApiException;
 import com.numberone.backend.exception.notfound.NotFoundCrawlingException;
-import com.numberone.backend.properties.DisasterProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -48,7 +47,6 @@ public class DisasterDataCollector {
 
     @Scheduled(fixedDelay = 60 * 1000)
     public void collectData() {
-        log.info("[ Disaster data Collector is running! ] ");
         URI uri = UriComponentsBuilder
                 .fromUriString(disasterProperties.getApiUrl())
                 .queryParam("ServiceKey", disasterProperties.getSecretKey())
@@ -62,12 +60,12 @@ public class DisasterDataCollector {
         try {
             disasterDataResponse = objectMapper.readValue(responseString, DisasterDataResponse.class);
         } catch (JsonProcessingException e) {
+            log.error("데이터 수집을 위한 API 요청이 실패했습니다.", e);
             throw new NotFoundApiException();
         }
         List<DisasterDataResponse.RowItem> disasters = disasterDataResponse.getDisasterMsg().get(1).getRowItems();
         Long topDisasterNum = Long.parseLong(disasters.get(0).getMsgId());
         if (topDisasterNum > latestDisasterNum) {
-            log.info("new disaster");
             crawlingDisasterTypeV2();
             if (disasterTypeMap.size() != disasters.size())
                 throw new NotFoundCrawlingException();
@@ -108,7 +106,6 @@ public class DisasterDataCollector {
                                 dateTime
                         )
                 );
-        log.info("재난 발생 이벤트 발행");
         eventPublisher.publishEvent(DisasterEvent.of(savedDisaster)); // 신규 재난 발생 이벤트
     }
 
@@ -153,6 +150,7 @@ public class DisasterDataCollector {
                 );
             }
         } catch (IOException e) {
+            log.error("데이터 수집을 위한 크롤링이 실패했습니다.", e);
             throw new NotFoundCrawlingException();
         }
     }

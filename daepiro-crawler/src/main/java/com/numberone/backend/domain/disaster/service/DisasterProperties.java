@@ -1,4 +1,4 @@
-package com.numberone.backend.properties;
+package com.numberone.backend.domain.disaster.service;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

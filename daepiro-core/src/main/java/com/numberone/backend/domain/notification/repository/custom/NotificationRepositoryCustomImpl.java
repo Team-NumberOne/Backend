@@ -36,7 +36,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                 .orderBy(notificationEntity.id.desc())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
-        return checkLastPage(pageable, result);
+        return new SliceImpl<>(result, pageable, checkLastPage(pageable, result));
     }
 
     private BooleanExpression checkDisasterFlag(boolean isDisaster) {
@@ -53,13 +53,14 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
         return notificationEntity.id.lt(notificationId);
     }
 
-    private Slice<NotificationTabResponse> checkLastPage(Pageable pageable, List<NotificationTabResponse> result) {
+    private boolean checkLastPage(Pageable pageable, List<NotificationTabResponse> result) {
         boolean hasNext = false;
 
         if (result.size() > pageable.getPageSize()) {
             hasNext = true;
             result.remove(pageable.getPageSize());
         }
-        return new SliceImpl<>(result, pageable, hasNext);
+
+        return hasNext;
     }
 }

@@ -5,14 +5,14 @@ import com.numberone.backend.domain.shelter.Address;
 import com.numberone.backend.domain.shelter.ShelterStatus;
 import com.numberone.backend.domain.shelter.ShelterType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 @Comment("대피소 정보")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "SHELTER")
 public class Shelter extends BaseTimeEntity {
@@ -41,4 +41,15 @@ public class Shelter extends BaseTimeEntity {
     @Comment("시설 이름")
     private String facilityFullName;
 
+    public static Shelter of(ShelterType shelterType, String facilityFullName, Double latitude, Double longitude){
+        return Shelter.builder()
+                .shelterType(shelterType)
+                .facilityFullName(facilityFullName)
+                .address(Address.builder()
+                        .latitude(latitude)
+                        .longitude(longitude)
+                        .build())
+                .status(ShelterStatus.OPEN)
+                .build();
+    }
 }
