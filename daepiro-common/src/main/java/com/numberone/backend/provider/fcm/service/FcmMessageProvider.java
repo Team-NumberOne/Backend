@@ -30,15 +30,12 @@ public class FcmMessageProvider {
         try {
             //String response = FirebaseMessaging.getInstance().send(message);
             FirebaseMessaging.getInstance().send(message);
-            log.info("Fcm 푸시 알람을 성공적으로 전송하였습니다.");
-            log.info("[FCM Message] {} : {}", title, body);
         } catch (Exception e) {
             log.error("Fcm 푸시 알람을 전송하는 도중에 에러가 발생했습니다. {}", e.getMessage());
         }
     }
 
     public void sendFcmToMembers(List<String> tokens, String title, String body) {
-        log.info("{} 건의 푸시알람을 전송합니다.", tokens.size());
         if (tokens.isEmpty()) return;
         List<Message> messages = tokens.stream().map(
                 token -> Message.builder()
@@ -65,7 +62,6 @@ public class FcmMessageProvider {
                 );
                 log.error("FCM 메세징 실패 토큰 목록 출력: {}", failedTokens);
             }
-            log.info("Fcm 푸시 알람을 전송하였습니다.");
         } catch (Exception e) {
             log.error("Fcm 푸시 알람을 전송하는 도중에 에러가 발생했습니다. {}", e.getMessage());
         }
