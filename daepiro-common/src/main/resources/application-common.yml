@@ -4,6 +4,8 @@ spring:
       on-profile: local
 
   kakao:
+    api-url: ${KAKAO_API_URL}
+    token-info-url: ${KAKAO_TOKEN_INFO_URL}
     map:
       client-id: ${KAKAO_MAP_CLIENT_ID}
       map-api-url: ${KAKAO_MAP_API_URL}
@@ -36,6 +38,8 @@ spring:
       on-profile: dev
 
   kakao:
+    api-url: ${KAKAO_API_URL}
+    token-info-url: ${KAKAO_TOKEN_INFO_URL}
     map:
       client-id: ${KAKAO_MAP_CLIENT_ID}
       map-api-url: ${KAKAO_MAP_API_URL}

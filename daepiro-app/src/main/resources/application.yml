@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
     group:
       local: core,redis,auth,crawler,common,api
       dev: core,redis,auth,crawler,common,api
