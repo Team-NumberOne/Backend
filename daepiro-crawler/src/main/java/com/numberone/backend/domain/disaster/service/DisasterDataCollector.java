@@ -47,7 +47,6 @@ public class DisasterDataCollector {
 
     @Scheduled(fixedDelay = 60 * 1000)
     public void collectData() {
-        log.info("[ Disaster data Collector is running! ] ");
         URI uri = UriComponentsBuilder
                 .fromUriString(disasterProperties.getApiUrl())
                 .queryParam("ServiceKey", disasterProperties.getSecretKey())
@@ -67,7 +66,6 @@ public class DisasterDataCollector {
         List<DisasterDataResponse.RowItem> disasters = disasterDataResponse.getDisasterMsg().get(1).getRowItems();
         Long topDisasterNum = Long.parseLong(disasters.get(0).getMsgId());
         if (topDisasterNum > latestDisasterNum) {
-            log.info("new disaster");
             crawlingDisasterTypeV2();
             if (disasterTypeMap.size() != disasters.size())
                 throw new NotFoundCrawlingException();
@@ -108,7 +106,6 @@ public class DisasterDataCollector {
                                 dateTime
                         )
                 );
-        log.info("재난 발생 이벤트 발행");
         eventPublisher.publishEvent(DisasterEvent.of(savedDisaster)); // 신규 재난 발생 이벤트
     }
 
