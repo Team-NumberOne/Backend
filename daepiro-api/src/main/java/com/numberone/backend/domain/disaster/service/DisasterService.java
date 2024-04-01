@@ -101,7 +101,6 @@ public class DisasterService {
                                 dateTime
                         )
                 );
-        log.info("재난 발생 이벤트 발행");
         eventPublisher.publishEvent(DisasterEvent.of(savedDisaster)); // 신규 재난 발생 이벤트
     }
 

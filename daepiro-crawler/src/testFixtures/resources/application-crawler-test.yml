@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+disaster:
+  api-url: <TEST>
+  secret-key: <TEST>
+  crawling-url: <TEST>

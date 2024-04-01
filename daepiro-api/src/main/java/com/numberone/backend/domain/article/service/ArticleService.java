@@ -23,7 +23,6 @@ import com.numberone.backend.domain.notification.entity.NotificationEntity;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.notification.repository.NotificationRepository;
 import com.numberone.backend.domain.notificationregion.entity.NotificationRegion;
-import com.numberone.backend.domain.notificationregion.repository.NotificationRegionRepository;
 import com.numberone.backend.exception.conflict.UnauthorizedLocationException;
 import com.numberone.backend.exception.notfound.NotFoundArticleException;
 import com.numberone.backend.exception.notfound.NotFoundMemberException;
@@ -51,13 +50,16 @@ import java.util.Optional;
 @Service
 public class ArticleService {
 
+    // todo: 리팩토링 (db 정리하고, 불필요한 쿼리 + 비효율적인 코드 모두 제거 )
+
+
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
     private final ArticleParticipantRepository articleParticipantRepository;
     private final ArticleImageRepository articleImageRepository;
     private final CommentRepository commentRepository;
     private final ArticleLikeRepository articleLikeRepository;
-    private final NotificationRegionRepository notificationRegionRepository;
+
     private final NotificationRepository notificationRepository;
     private final S3Provider s3Provider;
     private final LocationProvider locationProvider;
@@ -65,6 +67,7 @@ public class ArticleService {
 
     @Transactional
     public UploadArticleResponse uploadArticle(UploadArticleRequest request) {
+        // todo: 리팩토링
         long id = SecurityContextProvider.getAuthenticatedUserId();
         Member owner = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
@@ -82,7 +85,7 @@ public class ArticleService {
                 new ArticleParticipant(article, owner)
         );
 
-        // 2. 이미지 업로드
+        // 2. 이미지 업로드 todo: 비동기 업로드
         List<ArticleImage> articleImages = new ArrayList<>();
         List<String> imageUrls = new ArrayList<>();
         String thumbNailImageUrl = "";
@@ -185,16 +188,19 @@ public class ArticleService {
         List<Long> memberLikedArticleIdList = articleLikeRepository.findByMember(member)
                 .stream().map(ArticleLike::getArticleId)
                 .toList();
-        return new SliceImpl<>(
-                articleRepository.getArticlesNoOffSetPaging(param, pageable)
-                        .stream()
-                        .peek(article -> {
-                            updateArticleInfo(article, memberLikedArticleIdList);
-                        })
-                        .toList());
+
+        Slice<GetArticleListResponse> slices = articleRepository.getArticlesNoOffSetPaging(param, pageable);
+        List<GetArticleListResponse> content = slices.getContent().stream()
+                .peek(article -> {
+                    updateArticleInfo(article, memberLikedArticleIdList);
+                })
+                .toList();
+
+        // todo: 리팩토링 ( slices 크기가 n 일 때, n * (3) 개의 쿼리가 발생하고 있음.)
+        return new SliceImpl<>(content, pageable, slices.hasNext());
     }
 
-    public void updateArticleInfo(GetArticleListResponse articleInfo, List<Long> memberLikedArticleIdList) {
+    private void updateArticleInfo(GetArticleListResponse articleInfo, List<Long> memberLikedArticleIdList) {
         Long ownerId = articleInfo.getOwnerId();
         Long thumbNailImageUrlId = articleInfo.getThumbNailImageId();
 

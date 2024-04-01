@@ -1,10 +1,12 @@
 package com.numberone.backend.domain.shelter.service;
 
+import com.numberone.backend.domain.shelter.ShelterType;
 import com.numberone.backend.domain.shelter.dto.ShelterMapper;
 import com.numberone.backend.domain.shelter.dto.request.NearbyShelterRequest;
-import com.numberone.backend.domain.shelter.dto.response.*;
+import com.numberone.backend.domain.shelter.dto.response.GetShelterDatabaseUrlResponse;
+import com.numberone.backend.domain.shelter.dto.response.NearbyShelterListResponse;
+import com.numberone.backend.domain.shelter.dto.response.NearestShelterResponse;
 import com.numberone.backend.domain.shelter.repository.ShelterRepository;
-import com.numberone.backend.domain.shelter.ShelterType;
 import com.numberone.backend.exception.notfound.NotFoundShelterException;
 import com.numberone.backend.provider.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +67,7 @@ public class ShelterService {
         return NearbyShelterListResponse.of(result);
     }
 
-    public GetShelterDatabaseUrlResponse getShelterDatabaseInitUrl(){
+    public GetShelterDatabaseUrlResponse getShelterDatabaseInitUrl() {
         return GetShelterDatabaseUrlResponse.of(s3Provider.getS3FileUrl(databaseUploadPath));
     }
 }

@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+disaster:
+  api-url: ${DISASTER_API_URL}
+  secret-key: ${DISASTER_SECRET_KEY}
+  crawling-url: ${DISASTER_CRAWLING_URL}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+disaster:
+  api-url: ${DISASTER_API_URL}
+  secret-key: ${DISASTER_SECRET_KEY}
+  crawling-url: ${DISASTER_CRAWLING_URL}

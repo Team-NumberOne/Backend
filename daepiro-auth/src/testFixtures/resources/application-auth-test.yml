@@ -1,0 +1,5 @@
+spring:
+  jwt:
+    secret: <DAEPIRO_THIS_IS_A_TEST_JWT_SECRET_KEY>
+    refresh: 3600000 # for test
+    access: 1800000 # for test
