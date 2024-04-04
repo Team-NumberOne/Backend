@@ -28,9 +28,7 @@ public class NaverAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("유효하지 않은 OAuth 토큰입니다.");
         }
         Member member = memberRepository.findByNaverId(naverId)
-                .orElse(null);
-        if (member == null)
-            member = memberRepository.save(Member.ofNaver(naverId));
+                .orElseGet(() -> memberRepository.save(Member.ofNaver(naverId)));
         return UsernamePasswordAuthenticationToken.authenticated(member.getId(), null, null);
     }
 
