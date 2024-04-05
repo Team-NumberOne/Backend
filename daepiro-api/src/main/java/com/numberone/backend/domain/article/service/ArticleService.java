@@ -9,8 +9,6 @@ import com.numberone.backend.domain.article.entity.ArticleStatus;
 import com.numberone.backend.domain.article.repository.ArticleRepository;
 import com.numberone.backend.domain.articleimage.entity.ArticleImage;
 import com.numberone.backend.domain.articleimage.repository.ArticleImageRepository;
-import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant;
-import com.numberone.backend.domain.articleparticipant.repository.ArticleParticipantRepository;
 import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
 import com.numberone.backend.domain.comment.entity.CommentEntity;
@@ -55,7 +53,6 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
-    private final ArticleParticipantRepository articleParticipantRepository;
     private final ArticleImageRepository articleImageRepository;
     private final CommentRepository commentRepository;
     private final ArticleLikeRepository articleLikeRepository;
@@ -79,10 +76,6 @@ public class ArticleService {
                         request.getContent(),
                         owner.getId(),
                         request.getArticleTag())
-        );
-
-        articleParticipantRepository.save(
-                new ArticleParticipant(article, owner)
         );
 
         // 2. 이미지 업로드 todo: 비동기 업로드
@@ -223,9 +216,6 @@ public class ArticleService {
         );
         Member articleOwner = memberRepository.findById(article.getArticleOwnerId())
                 .orElseThrow(NotFoundMemberException::new);
-
-        articleParticipantRepository.save(new ArticleParticipant(article, member));
-
 
         String memberName = member.getNickName() != null ? member.getNickName() : member.getRealName();
         String title = String.format("""
