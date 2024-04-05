@@ -7,6 +7,7 @@ import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
 import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,8 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<UploadArticleResponse> uploadArticle(@ModelAttribute @Valid UploadArticleRequest request) {
-        return ResponseEntity.created(URI.create("/api/articles"))
-                .body(articleService.uploadArticle(request));
+        Long userId = SecurityContextProvider.getAuthenticatedUserId();
+        return ResponseEntity.created(URI.create("/api/articles")).body(articleService.uploadArticle(request, userId));
     }
 
     @Operation(summary = "게시글을 삭제하는 API 입니다.", description = """

@@ -50,89 +50,34 @@ public class ArticleService {
 
     // todo: 리팩토링 (db 정리하고, 불필요한 쿼리 + 비효율적인 코드 모두 제거 )
 
-
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
     private final ArticleImageRepository articleImageRepository;
     private final CommentRepository commentRepository;
     private final ArticleLikeRepository articleLikeRepository;
-
     private final NotificationRepository notificationRepository;
+
     private final S3Provider s3Provider;
     private final LocationProvider locationProvider;
     private final FcmMessageProvider fcmMessageProvider;
 
     @Transactional
-    public UploadArticleResponse uploadArticle(UploadArticleRequest request) {
-        // todo: 리팩토링
-        long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member owner = memberRepository.findById(id)
+    public UploadArticleResponse uploadArticle(UploadArticleRequest request, Long userId) {
+        Member owner = memberRepository.findById(userId)
                 .orElseThrow(NotFoundMemberException::new);
+        Article article = articleRepository.save(Article.of(request.title(), request.content(), owner, request.articleTag()));
 
-        // 1. 게시글 생성 ( 제목, 내용, 작성자 아이디, 태그)
-        Article article = articleRepository.save(
-                new Article(
-                        request.getTitle(),
-                        request.getContent(),
-                        owner.getId(),
-                        request.getArticleTag())
-        );
-
-        // 2. 이미지 업로드 todo: 비동기 업로드
-        List<ArticleImage> articleImages = new ArrayList<>();
-        List<String> imageUrls = new ArrayList<>();
-        String thumbNailImageUrl = "";
-        Long thumbNailImageId = 1L;
-        if (!Objects.isNull(request.getImageList())) {
-            // todo: refactoring
-            List<MultipartFile> imageList = request.getImageList();
-
-            for (int i = 0; i < imageList.size(); i++) {
-                String imageUrl = s3Provider.uploadImage(imageList.get(i));
-                imageUrls.add(imageUrl);
-
-                ArticleImage savedArticleImage = articleImageRepository.save(
-                        new ArticleImage(article, imageUrl)
-                );
-                articleImages.add(savedArticleImage);
-                if (i == 0) {
-                    thumbNailImageUrl = imageUrl;
-                    thumbNailImageId = savedArticleImage.getId();
-                }
-
-            }
+        if (request.regionAgreementCheck() && request.isValidPosition()) {
+            updateArticleAddress(request, article, owner);
         }
 
-        // 3. 게시글 - 이미지 연관 관계 설정
-        article.updateArticleImage(articleImages, thumbNailImageId);
-
-        // 4. 작성자 주소 설정
-        Double latitude = request.getLatitude();
-        Double longitude = request.getLongitude();
-        String address = "";
-        if (latitude != null && longitude != null && request.isRegionAgreementCheck()) {
-            // 주소가 null 이 아닌 경우에만 api 요청하여 update
-            address = locationProvider.pos2address(request.getLatitude(), request.getLongitude());
-            article.updateAddress(address);
+        if (request.imageList() != null) {
+            List<ArticleImage> articleImages = uploadImages(article, request.imageList());
+            article.updateThumbNailImageUrlId(articleImages.get(0).getId());
+            return UploadArticleResponse.ofImages(article, articleImages);
         }
 
-        if (!address.isEmpty()) {
-            String[] regionInfo = address.split(" ");
-            article.updateAddressDetail(regionInfo);
-            validateLocation(owner, address);
-        }
-
-        return UploadArticleResponse.of(article, imageUrls, thumbNailImageUrl);
-    }
-
-    public void validateLocation(Member member, String realLocation) {
-        List<String> regionLv2List = member.getNotificationRegions()
-                .stream().map(NotificationRegion::getLv2).toList();
-        String[] realRegions = realLocation.split(" ");
-
-        if (realRegions.length >= 1 && !regionLv2List.contains(realRegions[1])) {
-            throw new UnauthorizedLocationException();
-        }
+        return UploadArticleResponse.from(article);
     }
 
     @Transactional
@@ -268,4 +213,30 @@ public class ArticleService {
 
         return ModifyArticleResponse.of(article, imageUrls, thumbNailImageUrl);
     }
+
+    private void updateArticleAddress(UploadArticleRequest request, Article article, Member owner) {
+        String address = locationProvider.pos2address(request.latitude(), request.longitude());
+        article.updateAddress(address);
+        validateLocation(owner, address);
+    }
+
+    private List<ArticleImage> uploadImages(Article article, List<MultipartFile> images) {
+        List<ArticleImage> articleImages = new ArrayList<>();
+        for (MultipartFile image : images) {
+            String url = s3Provider.uploadImage(image);
+            articleImages.add(new ArticleImage(article, url));
+        }
+        return articleImageRepository.saveAll(articleImages);
+    }
+
+    private void validateLocation(Member member, String realLocation) {
+        List<String> regionLv2List = member.getNotificationRegions()
+                .stream().map(NotificationRegion::getLv2).toList();
+        String[] realRegions = realLocation.split(" ");
+
+        if (realRegions.length >= 1 && !regionLv2List.contains(realRegions[1])) {
+            throw new UnauthorizedLocationException();
+        }
+    }
+
 }
