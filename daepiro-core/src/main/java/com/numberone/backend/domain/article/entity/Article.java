@@ -100,6 +100,7 @@ public class Article extends BaseTimeEntity {
 
     public void updateAddressDetail (String[] addressDetails) {
         int length = addressDetails.length;
+
         this.lv1 = length > 0 ? addressDetails[0] : "";
         this.lv2 = length > 1 ? addressDetails[1] : "";
         this.lv3 = length > 2 ? addressDetails[2] : "";
