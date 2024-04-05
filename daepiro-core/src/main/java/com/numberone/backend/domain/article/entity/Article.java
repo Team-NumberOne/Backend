@@ -65,13 +65,15 @@ public class Article extends BaseTimeEntity {
     private Integer likeCount;
 
     @Comment("작성자 ID")
-    private Long articleOwnerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_owner_id")
+     private Member articleOwner;
 
     public static Article of(String title, String content, Member owner, ArticleTag tag){
         return Article.builder()
                 .title(title)
                 .content(content)
-                .articleOwnerId(owner.getId())
+                .articleOwner(owner)
                 .articleTag(tag)
                 .articleStatus(ArticleStatus.ACTIVATED)
                 .likeCount(0)

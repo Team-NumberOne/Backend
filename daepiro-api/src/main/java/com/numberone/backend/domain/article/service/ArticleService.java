@@ -37,10 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -88,35 +86,22 @@ public class ArticleService {
         return DeleteArticleResponse.of(article);
     }
 
-    public GetArticleDetailResponse getArticleDetail(Long articleId) {
-        long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(id) // 회원
+    public GetArticleDetailResponse getArticleDetail(Long articleId, Long memberId){
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
-        Article article = articleRepository.findById(articleId)
+        Article article = articleRepository.findByIdFetchJoin(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        Member owner = memberRepository.findById(article.getArticleOwnerId()) // 작성자
-                .orElseThrow(NotFoundMemberException::new);
 
-        List<String> imageUrls = articleImageRepository.findByArticle(article)
-                .stream()
-                .map(ArticleImage::getImageUrl)
-                .toList();
-
-
-        Optional<ArticleImage> thumbNailImage = articleImageRepository.findById(article.getThumbNailImageUrlId());
         Long commentCount = commentRepository.countAllByArticle(articleId);
+        boolean isLiked = getIsLikedArticle(member, articleId);
 
-        String thumbNailImageUrl = "";
-        if (thumbNailImage.isPresent()) {
-            thumbNailImageUrl = thumbNailImage.get().getImageUrl();
-        }
-
-        // 내가 좋아요 한 게시글의 ID 리스트
-        List<Long> memberLikedArticleIdList = articleLikeRepository.findByMember(member)
-                .stream().map(ArticleLike::getArticleId)
-                .toList();
-
-        return GetArticleDetailResponse.of(article, imageUrls, thumbNailImageUrl, owner, memberLikedArticleIdList, commentCount);
+        return GetArticleDetailResponse.of(
+                article,
+                article.getArticleImages(),
+                article.getArticleOwner(),
+                isLiked,
+                commentCount
+        );
     }
 
     public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
@@ -154,13 +139,12 @@ public class ArticleService {
         long id = SecurityContextProvider.getAuthenticatedUserId();
         Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
-        Article article = articleRepository.findById(articleId)
+        Article article = articleRepository.findByIdFetchJoin(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         CommentEntity savedComment = commentRepository.save(
                 new CommentEntity(request.getContent(), article, member)
         );
-        Member articleOwner = memberRepository.findById(article.getArticleOwnerId())
-                .orElseThrow(NotFoundMemberException::new);
+        Member articleOwner = article.getArticleOwner();
 
         String memberName = member.getNickName() != null ? member.getNickName() : member.getRealName();
         String title = String.format("""
@@ -237,6 +221,14 @@ public class ArticleService {
         if (realRegions.length >= 1 && !regionLv2List.contains(realRegions[1])) {
             throw new UnauthorizedLocationException();
         }
+    }
+
+    private boolean getIsLikedArticle(Member member, Long articleId){
+        Set<Long> likedArticleIds = member.getArticleLikes()
+                .stream()
+                .map(ArticleLike::getArticleId)
+                .collect(Collectors.toSet());
+        return likedArticleIds.contains(articleId);
     }
 
 }

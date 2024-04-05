@@ -3,93 +3,69 @@ package com.numberone.backend.domain.article.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.numberone.backend.domain.article.entity.Article;
 import com.numberone.backend.domain.article.entity.ArticleTag;
+import com.numberone.backend.domain.articleimage.entity.ArticleImage;
 import com.numberone.backend.domain.member.entity.Member;
-import lombok.*;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@ToString
 @Builder
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-public class GetArticleDetailResponse {
-
-    // 게시글 관련
-    private Long articleId;
-    private Integer likeCount;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm", timezone = "Asia/Seoul")
-    private LocalDateTime createdAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm", timezone = "Asia/Seoul")
-    private LocalDateTime modifiedAt;
-    private String title;
-    private String content;
-    private boolean isLiked;
-    private ArticleTag articleTag;
-    private Long commentCount;
-
-    // 작성자 관련
-    private String ownerName;
-    private String ownerNickName;
-    private String address;
-    private String regionLv2;
-    private Long ownerMemberId;
-    private String ownerProfileImageUrl;
-
-    // 이미지 관련
-    private List<String> imageUrls;
-    private String thumbNailImageUrl;
-
-    public static GetArticleDetailResponse of(
-            Article article,
-            List<String> imageUrls,
-            String thumbNailImageUrl,
-            Member owner,
-            List<Long> memberLikedArticleList,
-            Long commentCount ) {
-
-        String address = "";
-
-        String articleAddress = article.getAddress();
-        if(!articleAddress.isEmpty()){
-            String[] elements = articleAddress.split(" ");
-            switch (elements.length){
-                case 3 -> address = elements[2];
-                case 2 -> address = elements[1];
-                case 1 -> address = elements[0];
-                default ->address = "";
-            }
-        } else {
-            address = "";
-        }
-
-
+public record GetArticleDetailResponse(
+        Long articleId,
+        Integer likeCount,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm", timezone = "Asia/Seoul")
+        LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm", timezone = "Asia/Seoul")
+        LocalDateTime modifiedAt,
+        String title,
+        String content,
+        Boolean isLiked,
+        ArticleTag articleTag,
+        Long commentCount,
+        String ownerName,
+        String ownerNickName,
+        String address,
+        String regionLv2,
+        Long ownerMemberId,
+        String ownerProfileImageUrl,
+        List<String> imageUrls,
+        String thumbNailImageUrl
+) {
+    public static GetArticleDetailResponse of(Article article,
+                                              List<ArticleImage> images,
+                                              Member owner,
+                                              boolean isLiked,
+                                              Long commentCount) {
+        List<String> imageUrls = images.stream().map(ArticleImage::getImageUrl).toList();
         return GetArticleDetailResponse.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
-                .likeCount(
-                        Optional.ofNullable(
-                                article.getLikeCount()
-                        ).orElse(0)
-                )
+                .likeCount(Optional.ofNullable(article.getLikeCount()).orElse(0))
                 .createdAt(article.getCreatedAt())
                 .modifiedAt(article.getModifiedAt())
                 .ownerMemberId(owner.getId())
                 .ownerName(owner.getRealName())
                 .ownerNickName(owner.getNickName())
-                .imageUrls(imageUrls)
-                .thumbNailImageUrl(thumbNailImageUrl)
-                .address(address)
+                .imageUrls(images.stream().map(ArticleImage::getImageUrl).toList())
+                .thumbNailImageUrl(imageUrls.isEmpty() ? "" : imageUrls.get(0))
+                .address(getAddress(article))
                 .ownerProfileImageUrl(owner.getProfileImageUrl())
-                .isLiked(memberLikedArticleList.contains(article.getId()))
+                .isLiked(isLiked)
                 .articleTag(article.getArticleTag())
                 .commentCount(commentCount)
-                .regionLv2(Optional.ofNullable(article.getLv2())
-                        .orElse(""))
+                .regionLv2(Optional.ofNullable(article.getLv2()).orElse(""))
                 .build();
     }
-
+    private static String getAddress(Article article) {
+        String address = article.getAddress();
+        if (!address.isEmpty()) {
+            String[] tokens = address.split(" ");
+            int length = tokens.length;
+            return length > 0 ? tokens[length - 1] : "";
+        }
+        return "";
+    }
 }

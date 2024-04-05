@@ -62,7 +62,8 @@ public class ArticleController {
             """)
     @GetMapping("{article-id}")
     public ResponseEntity<GetArticleDetailResponse> getArticleDetails(@PathVariable("article-id") Long articleId) {
-        return ResponseEntity.ok(articleService.getArticleDetail(articleId));
+        Long userId = SecurityContextProvider.getAuthenticatedUserId();
+        return ResponseEntity.ok(articleService.getArticleDetail(articleId, userId));
     }
 
 
