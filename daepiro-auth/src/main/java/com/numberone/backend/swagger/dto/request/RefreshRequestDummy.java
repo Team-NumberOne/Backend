@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class JwtRefreshRequest {
+public class RefreshRequestDummy {
     private String token;
 }

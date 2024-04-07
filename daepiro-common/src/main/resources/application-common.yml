@@ -9,6 +9,9 @@ spring:
     map:
       client-id: ${KAKAO_MAP_CLIENT_ID}
       map-api-url: ${KAKAO_MAP_API_URL}
+  naver:
+    api-url: ${NAVER_API_URL}
+    token-info-url: ${NAVER_TOKEN_INFO_URL}
 
 cloud:
   aws:
@@ -43,6 +46,10 @@ spring:
     map:
       client-id: ${KAKAO_MAP_CLIENT_ID}
       map-api-url: ${KAKAO_MAP_API_URL}
+
+  naver:
+    api-url: ${NAVER_API_URL}
+    token-info-url: ${NAVER_TOKEN_INFO_URL}
 
 cloud:
   aws:

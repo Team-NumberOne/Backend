@@ -1,9 +1,6 @@
 package com.numberone.backend.config;
 
-import com.numberone.backend.filter.JwtAccessFilter;
-import com.numberone.backend.filter.JwtExceptionFilter;
-import com.numberone.backend.filter.JwtRefreshFilter;
-import com.numberone.backend.filter.SocialAuthenticationFilter;
+import com.numberone.backend.filter.*;
 import com.numberone.backend.handler.CustomAccessDeniedHandler;
 import com.numberone.backend.handler.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final SocialAuthenticationFilter socialAuthenticationFilter;
+    private final KakaoAuthenticationFilter kakaoAuthenticationFilter;
+    private final NaverAuthenticationFilter naverAuthenticationFilter;
     private final JwtAccessFilter jwtAccessFilter;
     private final JwtRefreshFilter jwtRefreshFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
@@ -40,8 +37,9 @@ public class SecurityConfig {
                                 "/notification/send-fcm",
                                 "/hello").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(socialAuthenticationFilter, ExceptionTranslationFilter.class)
-                .addFilterBefore(jwtAccessFilter, SocialAuthenticationFilter.class)
+                .addFilterBefore(naverAuthenticationFilter, ExceptionTranslationFilter.class)
+                .addFilterBefore(kakaoAuthenticationFilter, NaverAuthenticationFilter.class)
+                .addFilterBefore(jwtAccessFilter, KakaoAuthenticationFilter.class)
                 .addFilterBefore(jwtRefreshFilter, JwtAccessFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtRefreshFilter.class)
                 .exceptionHandling(c -> c

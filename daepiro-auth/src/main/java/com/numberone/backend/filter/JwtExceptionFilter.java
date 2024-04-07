@@ -26,10 +26,10 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException e){
-            httpResponseProvider.setErrorResponse(response,HttpServletResponse.SC_FORBIDDEN, EXPIRED_TOKEN);//to do: 프론트와 협의 후 403에서 401로 수정
-        }catch (JwtException e){
-            httpResponseProvider.setErrorResponse(response,HttpServletResponse.SC_UNAUTHORIZED, INVALID_TOKEN);
+        } catch (ExpiredJwtException e) {
+            httpResponseProvider.setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, EXPIRED_TOKEN);
+        } catch (JwtException e) {
+            httpResponseProvider.setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, INVALID_TOKEN);
         }
     }
 }

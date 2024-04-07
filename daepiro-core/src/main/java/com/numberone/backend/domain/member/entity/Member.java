@@ -31,11 +31,15 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Comment("로그인 유형")
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-    @Comment("소셜 id")
-    private Long socialId;
+    @Comment("카카오 id")
+    private Long kakaoId;
+
+    @Comment("네이버 id")
+    private String naverId;
 
     @Comment("닉네임")
     private String nickName;
@@ -111,22 +115,29 @@ public class Member extends BaseTimeEntity {
     }
 
     @Builder
-    public Member(Long socialId, String nickName, String realName, Integer heartCnt, String fcmToken, Boolean session) {
-        this.socialId = socialId;
-        this.nickName = nickName;
-        this.realName = realName;
-        this.heartCnt = heartCnt;
-        this.fcmToken = fcmToken;
+    public Member(Long kakaoId, String naverId, String email, LoginType loginType) {
+        this.kakaoId = kakaoId;
+        this.naverId = naverId;
+        this.email=email;
+        this.loginType = loginType;
+        this.heartCnt = 0;
         this.session = true;
         this.latitude = 0D;
         this.longitude = 0D;
         isOnboarding = false;
     }
 
-    public static Member of(Long socialId) {
+    public static Member ofKakao(Long kakaoId) {
         return Member.builder()
-                .socialId(socialId)
-                .heartCnt(0)
+                .kakaoId(kakaoId)
+                .loginType(LoginType.KAKAO)
+                .build();
+    }
+
+    public static Member ofNaver(String naverId){
+        return Member.builder()
+                .naverId(naverId)
+                .loginType(LoginType.NAVER)
                 .build();
     }
 
