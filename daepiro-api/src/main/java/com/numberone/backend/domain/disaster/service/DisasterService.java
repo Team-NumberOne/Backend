@@ -38,7 +38,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class DisasterService {
+public class DisasterService {//todo: 리팩토링 필요, 성능 이슈
     private final DisasterRepository disasterRepository;
     private final LocationProvider locationProvider;
     private final MemberRepository memberRepository;
@@ -113,7 +113,7 @@ public class DisasterService {
     }
 
     public SituationHomeResponse getSituationHome() {
-        Set<Disaster> disasters = new HashSet<>();
+        List<Disaster> disasters = new ArrayList<>();
         long id = SecurityContextProvider.getAuthenticatedUserId();
         Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
@@ -122,7 +122,7 @@ public class DisasterService {
             disasters.addAll(disasterRepository.findDisastersInAddressAfterTime(notificationRegion.getLocation(), time));
         }
         disasters.removeIf(disaster -> !isValidDisasterType(disaster.getDisasterType(), member.getNotificationDisasters()));
-
+        disasters.sort((a, b) -> (b.getGeneratedAt().compareTo(a.getGeneratedAt())));
 
         List<SituationResponse> situationResponses = new ArrayList<>();
         for (Disaster disaster : disasters) {
