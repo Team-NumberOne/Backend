@@ -22,4 +22,7 @@ public record UploadArticleRequest(
         public boolean isValidPosition(){
                 return (longitude != null) && (latitude != null);
         }
+        public boolean hasImage() {
+                return imageList != null && !imageList.isEmpty();
+        }
 }

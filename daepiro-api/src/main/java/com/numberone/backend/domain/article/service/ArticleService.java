@@ -37,7 +37,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,7 +72,7 @@ public class ArticleService {
             updateArticleAddress(request, article, owner);
         }
 
-        if (request.imageList() != null) {
+        if (request.hasImage()) {
             List<ArticleImage> articleImages = uploadImages(article, request.imageList());
             article.updateThumbNailImageUrlId(articleImages.get(0).getId());
             return UploadArticleResponse.ofImages(article, articleImages);
@@ -144,41 +147,17 @@ public class ArticleService {
 
     @Transactional
     public ModifyArticleResponse modifyArticle(Long articleId, ModifyArticleRequest request) {
-        long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(id)
-                .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
+        article.modify(request.title(), request.content(), request.articleTag());
 
-        article.modifyArticle(request.getTitle(), request.getContent(), request.getArticleTag());
-
-
-        List<ArticleImage> articleImages = new ArrayList<>();
-        List<String> imageUrls = new ArrayList<>();
-        String thumbNailImageUrl = "";
-        Long thumbNailImageId = 1L;
-        if (!Objects.isNull(request.getImageList())) {
-            // todo: refactoring
-            List<MultipartFile> imageList = request.getImageList();
-
-            for (int i = 0; i < imageList.size(); i++) {
-                String imageUrl = s3Provider.uploadImage(imageList.get(i));
-                imageUrls.add(imageUrl);
-
-                ArticleImage savedArticleImage = articleImageRepository.save(
-                        new ArticleImage(article, imageUrl)
-                );
-                articleImages.add(savedArticleImage);
-                if (Objects.equals(i, request.getThumbNailImageIdx())) {
-                    thumbNailImageUrl = imageUrl;
-                    thumbNailImageId = savedArticleImage.getId();
-                }
-
-            }
-            article.updateArticleImage(articleImages, thumbNailImageId);
+        if (request.hasImage()) {
+            List<ArticleImage> articleImages = uploadImages(article, request.imageList());
+            article.updateThumbNailImageUrlId(articleImages.get(0).getId());
+            return ModifyArticleResponse.ofImages(article, articleImages);
         }
 
-        return ModifyArticleResponse.of(article, imageUrls, thumbNailImageUrl);
+        return ModifyArticleResponse.from(article);
     }
 
     private void updateArticleLiked(Member member, List<GetArticleListResponse> content) {

@@ -93,7 +93,7 @@ public class Article extends BaseTimeEntity {
         this.thumbNailImageUrlId = thumbNailImageUrlId;
     }
 
-    public void modifyArticle(String title, String content, ArticleTag tag) {
+    public void modify(String title, String content, ArticleTag tag) {
         this.title = title;
         this.content = content;
         this.articleTag = tag;
