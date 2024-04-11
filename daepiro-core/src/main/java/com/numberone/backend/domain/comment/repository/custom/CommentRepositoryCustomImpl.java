@@ -3,7 +3,6 @@ package com.numberone.backend.domain.comment.repository.custom;
 import com.numberone.backend.domain.comment.dto.GetCommentDto;
 import com.numberone.backend.domain.comment.dto.QGetCommentDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

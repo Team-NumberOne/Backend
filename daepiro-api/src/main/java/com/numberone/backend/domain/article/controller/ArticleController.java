@@ -86,11 +86,13 @@ public class ArticleController {
                        
              """)
     @GetMapping
-    public ResponseEntity<Slice<GetArticleListResponse>> getArticlePages(
+    public ResponseEntity<Slice<GetArticleListResponse>> getArticleList(
             Pageable pageable,
             @ModelAttribute ArticleSearchParameterDto paramDto) {
-        return ResponseEntity.ok(articleService.getArticleListPaging(paramDto.toParameter(), pageable));
+        Long userId = SecurityContextProvider.getAuthenticatedUserId();
+        return ResponseEntity.ok(articleService.getArticleList(userId, paramDto.toParameter(), pageable));
     }
+
 
     @Operation(summary = "게시글에 댓글 작성하기", description = """
             게시글에 댓글을 작성하는 API 입니다.

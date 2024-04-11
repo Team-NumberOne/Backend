@@ -86,7 +86,7 @@ public class ArticleService {
         return DeleteArticleResponse.of(article);
     }
 
-    public GetArticleDetailResponse getArticleDetail(Long articleId, Long memberId){
+    public GetArticleDetailResponse getArticleDetail(Long articleId, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findByIdFetchJoin(articleId)
@@ -104,34 +104,17 @@ public class ArticleService {
         );
     }
 
-    public Slice<GetArticleListResponse> getArticleListPaging(ArticleSearchParameter param, Pageable pageable) {
-        long id = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(id)
+    public Slice<GetArticleListResponse> getArticleList(Long memberId, ArticleSearchParameter param, Pageable pageable) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
-        List<Long> memberLikedArticleIdList = articleLikeRepository.findByMember(member)
-                .stream().map(ArticleLike::getArticleId)
-                .toList();
 
-        Slice<GetArticleListResponse> slices = articleRepository.getArticlesNoOffSetPaging(param, pageable);
-        List<GetArticleListResponse> content = slices.getContent().stream()
-                .peek(article -> {
-                    updateArticleInfo(article, memberLikedArticleIdList);
-                })
-                .toList();
+        Slice<GetArticleListResponse> slice = articleRepository.findAllNoOffset(param, pageable);
+        List<GetArticleListResponse> content = slice.getContent();
 
-        // todo: 리팩토링 ( slices 크기가 n 일 때, n * (3) 개의 쿼리가 발생하고 있음.)
-        return new SliceImpl<>(content, pageable, slices.hasNext());
-    }
+        updateArticleCommentCount(content);
+        updateArticleLiked(member, content);
 
-    private void updateArticleInfo(GetArticleListResponse articleInfo, List<Long> memberLikedArticleIdList) {
-        Long ownerId = articleInfo.getOwnerId();
-        Long thumbNailImageUrlId = articleInfo.getThumbNailImageId();
-
-        Optional<Member> owner = memberRepository.findById(ownerId);
-        Optional<ArticleImage> articleImage = articleImageRepository.findById(thumbNailImageUrlId);
-        Long commentCount = commentRepository.countAllByArticle(articleInfo.getId());
-
-        articleInfo.updateInfo(owner, articleImage, memberLikedArticleIdList, commentCount);
+        return new SliceImpl<>(content, pageable, slice.hasNext());
     }
 
     @Transactional
@@ -198,6 +181,28 @@ public class ArticleService {
         return ModifyArticleResponse.of(article, imageUrls, thumbNailImageUrl);
     }
 
+    private void updateArticleLiked(Member member, List<GetArticleListResponse> content) {
+        Set<Long> likedArticleIds = articleLikeRepository.findByMember(member)
+                .stream().map(ArticleLike::getArticleId)
+                .collect(Collectors.toSet());
+        content.forEach(e -> {
+            if (likedArticleIds.contains(e.getId())) {
+                e.setLiked(true);
+            }
+        });
+    }
+
+    private void updateArticleCommentCount(List<GetArticleListResponse> content) {
+        Set<Long> articleIds = content.stream().map(GetArticleListResponse::getId).collect(Collectors.toSet());
+        Map<Long, Long> commentCountByArticleId = articleRepository.findCommentCountByArticleIdIn(articleIds);
+        content.forEach(e -> {
+            Long articleId = e.getId();
+            if (commentCountByArticleId.containsKey(articleId)) {
+                e.setCommentCount(commentCountByArticleId.get(articleId));
+            }
+        });
+    }
+
     private void updateArticleAddress(UploadArticleRequest request, Article article, Member owner) {
         String address = locationProvider.pos2address(request.latitude(), request.longitude());
         article.updateAddress(address);
@@ -223,7 +228,7 @@ public class ArticleService {
         }
     }
 
-    private boolean getIsLikedArticle(Member member, Long articleId){
+    private boolean getIsLikedArticle(Member member, Long articleId) {
         Set<Long> likedArticleIds = member.getArticleLikes()
                 .stream()
                 .map(ArticleLike::getArticleId)
