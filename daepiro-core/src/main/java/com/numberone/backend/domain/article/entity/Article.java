@@ -80,11 +80,6 @@ public class Article extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateArticleImage(List<ArticleImage> images, Long thumbNailImageUrlId) {
-        this.articleImages = images;
-        this.thumbNailImageUrlId = thumbNailImageUrlId;
-    }
-
     public void updateArticleStatus(ArticleStatus status) {
         this.articleStatus = status;
     }

@@ -41,8 +41,6 @@ public class LikeService {
     private final FcmMessageProvider fcmMessageProvider;
     private final NotificationRepository notificationRepository;
 
-    private final Integer BEST_ARTICLE_LIKE_COUNT = 20;
-
     @Transactional
     public Integer increaseArticleLike(Long articleId) {
         long principal = SecurityContextProvider.getAuthenticatedUserId();
