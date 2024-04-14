@@ -72,7 +72,7 @@ public class ConversationService {
 
     private boolean checkLike(Member member, Conversation conversation) {
         for (ConversationLike conversationLike : conversation.getLikes()) {
-            if (conversationLike.getMember().equals(member)) {
+            if (conversationLike.getMember().getId().equals(member.getId())) {
                 return true;
             }
         }
@@ -91,14 +91,14 @@ public class ConversationService {
             childs.add(GetConversationResponse.of(
                     child,
                     checkLike(member, child),
-                    member.equals(child.getMember()),
+                    member.getId().equals(child.getMember().getId()),
                     new ArrayList<>()
             ));
         }
         return GetConversationResponse.of(
                 conversation,
                 checkLike(member, conversation),
-                member.equals(conversation.getMember()),
+                member.getId().equals(conversation.getMember().getId()),
                 childs);
     }
 
@@ -111,7 +111,7 @@ public class ConversationService {
         return GetConversationResponse.of(
                 conversation,
                 checkLike(member, conversation),
-                member.equals(conversation.getMember()),
+                member.getId().equals(conversation.getMember().getId()),
                 new ArrayList<>());
     }
 
