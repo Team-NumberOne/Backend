@@ -6,6 +6,7 @@ import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant
 import com.numberone.backend.domain.comment.entity.CommentEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -70,6 +71,7 @@ public class Article extends BaseTimeEntity {
     @Comment("작성자 ID")
     private Long articleOwnerId;
 
+    @Builder
     public Article(String title, String content, Long articleOwnerId, ArticleTag tag) {
         this.title = title;
         this.content = content;
@@ -98,7 +100,7 @@ public class Article extends BaseTimeEntity {
         this.address = address;
     }
 
-    public void updateAddressDetail (String[] addressDetails) {
+    public void updateAddressDetail(String[] addressDetails) {
         int length = addressDetails.length;
         this.lv1 = length > 0 ? addressDetails[0] : "";
         this.lv2 = length > 1 ? addressDetails[1] : "";
@@ -113,6 +115,15 @@ public class Article extends BaseTimeEntity {
         if (this.likeCount > 0) {
             this.likeCount--;
         }
+    }
+
+    public static Article of(String title, String content, Long articleOwnerId, ArticleTag tag) {
+        return Article.builder()
+                .title(title)
+                .content(content)
+                .articleOwnerId(articleOwnerId)
+                .tag(tag)
+                .build();
     }
 
 }
