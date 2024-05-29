@@ -57,7 +57,7 @@ public class CommentService {
         CommentEntity parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(NotFoundCommentException::new);
 
-        CommentEntity childComment = commentRepository.save(new CommentEntity(request.getContent(), article, member));
+        CommentEntity childComment = commentRepository.save(CommentEntity.of(request.getContent(), article, member));
         childComment.updateParent(parentComment);
 
         articleParticipantRepository.save(new ArticleParticipant(article, member));

@@ -5,6 +5,7 @@ import com.numberone.backend.domain.comment.entity.CommentEntity;
 import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -26,8 +27,16 @@ public class CommentLike extends BaseTimeEntity {
 
     private Long commentId;
 
-    public CommentLike(Member member, CommentEntity comment) {
+    @Builder
+    private CommentLike(Member member, CommentEntity comment) {
         this.member = member;
         this.commentId = comment.getId();
+    }
+
+    public static CommentLike of(Member member, CommentEntity comment) {
+        return CommentLike.builder()
+                .member(member)
+                .comment(comment)
+                .build();
     }
 }

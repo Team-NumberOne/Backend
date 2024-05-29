@@ -103,7 +103,7 @@ class LikeServiceTest {
         given(articleRepository.findById(article.getId()))
                 .willReturn(Optional.of(article));
 
-        ArticleLike articleLike = new ArticleLike(loginMember, article);
+        ArticleLike articleLike = ArticleLike.of(loginMember, article);
         given(articleLikeRepository.existsByMemberIdAndArticleId(loginMember.getId(), article.getId()))
                 .willReturn(true);
         given(articleLikeRepository.findByMemberIdAndArticleId(loginMember.getId(), article.getId()))
@@ -165,7 +165,7 @@ class LikeServiceTest {
         given(commentRepository.findById(commentEntity.getId()))
                 .willReturn(Optional.of(commentEntity));
 
-        CommentLike commentLike = new CommentLike(loginMember, commentEntity);
+        CommentLike commentLike = CommentLike.of(loginMember, commentEntity);
         given(commentLikeRepository.existsByMemberIdAndCommentId(loginMember.getId(), commentEntity.getId()))
                 .willReturn(true);
         given(commentLikeRepository.findByMemberIdAndCommentId(loginMember.getId(), commentEntity.getId()))
@@ -198,7 +198,7 @@ class LikeServiceTest {
     }
 
     private CommentEntity getDummyComment(Article article, Member commentOwner) {
-        return spy(new CommentEntity("hello", article, commentOwner));
+        return spy(CommentEntity.of("hello", article, commentOwner));
     }
 
     private void setAuthentication() {

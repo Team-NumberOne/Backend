@@ -52,7 +52,7 @@ public class LikeService {
         if (isAlreadyLikedArticle(memberId, articleId))
             throw new AlreadyLikedException();
         article.increaseLikeCount();
-        articleLikeRepository.save(new ArticleLike(member, article));
+        articleLikeRepository.save(ArticleLike.of(member, article));
 
         Long ownerId = article.getArticleOwnerId();
         Member owner = memberRepository.findById(ownerId)
@@ -100,7 +100,7 @@ public class LikeService {
             throw new AlreadyLikedException();
 
         commentEntity.increaseLikeCount();
-        commentLikeRepository.save(new CommentLike(member, commentEntity));
+        commentLikeRepository.save(CommentLike.of(member, commentEntity));
 
 
         Long ownerId = commentEntity.getAuthorId();
