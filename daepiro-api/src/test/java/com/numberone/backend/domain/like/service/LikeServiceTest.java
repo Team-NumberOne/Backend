@@ -68,15 +68,15 @@ class LikeServiceTest {
     void increaseArticleLike() {
         // given
         Member articleOwner = getDummyArticleOwner();
+        given(articleOwner.getId())
+                .willReturn(2L);
         given(articleOwner.getFcmToken())
                 .willReturn("fcmToken123");
-        given(memberRepository.findById(articleOwner.getId()))
-                .willReturn(Optional.of(articleOwner));
 
         Article article = getDummyArticle(articleOwner);
         given(article.getId())
                 .willReturn(1L);
-        given(articleRepository.findById(article.getId()))
+        given(articleRepository.findByIdFetchJoin(article.getId()))
                 .willReturn(Optional.of(article));
 
         //when
@@ -188,13 +188,11 @@ class LikeServiceTest {
 
     private Member getDummyArticleOwner() {
         Member articleOwner = spy(Member.ofKakao(2345L));
-        given(articleOwner.getId())
-                .willReturn(2L);
         return articleOwner;
     }
 
     private Article getDummyArticle(Member articleOwner) {
-        return spy(Article.of("title1", "content1", articleOwner.getId(), ArticleTag.LIFE));
+        return spy(Article.of("title1", "content1", articleOwner, ArticleTag.LIFE));
     }
 
     private CommentEntity getDummyComment(Article article, Member commentOwner) {

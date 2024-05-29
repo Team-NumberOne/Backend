@@ -45,7 +45,7 @@ public class LikeService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findByIdFetchJoin(articleId)
-                .orElseThrow(NotFoundApiException::new);
+                .orElseThrow(NotFoundArticleException::new);
 
         if (isAlreadyLikedArticle(memberId, articleId))
             throw new AlreadyLikedException();
