@@ -128,7 +128,7 @@ public class ArticleService {
         Article article = articleRepository.findByIdFetchJoin(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         CommentEntity savedComment = commentRepository.save(
-                new CommentEntity(request.getContent(), article, member)
+                CommentEntity.of(request.getContent(), article, member)
         );
         Member articleOwner = article.getArticleOwner();
 
