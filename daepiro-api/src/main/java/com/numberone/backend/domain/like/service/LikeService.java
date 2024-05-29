@@ -83,7 +83,10 @@ public class LikeService {
 
         // 사용자의 게시글 좋아요 목록에서 제거
         List<ArticleLike> articleLikeList = articleLikeRepository.findByMember(member);
-        articleLikeList.removeIf(articleLike -> articleLike.getArticleId().equals(articleId));
+        articleLikeList.forEach(articleLike -> {
+            if (articleLike.getArticleId().equals(articleId))
+                articleLikeRepository.delete(articleLike);
+        });
 
         return article.getLikeCount();
     }
@@ -101,7 +104,6 @@ public class LikeService {
         }
         commentEntity.increaseLikeCount();
         commentLikeRepository.save(new CommentLike(member, commentEntity));
-
 
 
         Long ownerId = commentEntity.getAuthorId();
@@ -134,7 +136,10 @@ public class LikeService {
         commentEntity.decreaseLikeCount();
         // 사용자의 댓글 좋아요 목록에서 제거
         List<CommentLike> commentLikeList = commentLikeRepository.findByMember(member);
-        commentLikeList.removeIf(commentLike -> commentLike.getCommentId().equals(commentId));
+        commentLikeList.forEach(commentLike -> {
+            if (commentLike.getCommentId().equals(commentId))
+                commentLikeRepository.delete(commentLike);
+        });
 
         return commentEntity.getLikeCount();
     }
