@@ -2,8 +2,6 @@ package com.numberone.backend.domain.comment.service;
 
 import com.numberone.backend.domain.article.entity.Article;
 import com.numberone.backend.domain.article.repository.ArticleRepository;
-import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant;
-import com.numberone.backend.domain.articleparticipant.repository.ArticleParticipantRepository;
 import com.numberone.backend.domain.comment.dto.request.CreateChildCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateChildCommentResponse;
 import com.numberone.backend.domain.comment.dto.response.DeleteCommentResponse;
@@ -37,7 +35,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
-    private final ArticleParticipantRepository articleParticipantRepository;
     private final MemberRepository memberRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final NotificationRepository notificationRepository;
@@ -59,8 +56,6 @@ public class CommentService {
 
         CommentEntity childComment = commentRepository.save(CommentEntity.of(request.getContent(), article, member));
         childComment.updateParent(parentComment);
-
-        articleParticipantRepository.save(new ArticleParticipant(article, member));
 
         Member owner = memberRepository.findById(parentComment.getAuthorId())
                 .orElseThrow(NotFoundMemberException::new);

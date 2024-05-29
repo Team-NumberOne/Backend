@@ -39,6 +39,7 @@ public class S3Provider {
      * @return ImageUrl
      */
     public String uploadImage(MultipartFile multipartFile) {
+        // todo: 성능 개선
         checkInvalidUploadFile(multipartFile);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();

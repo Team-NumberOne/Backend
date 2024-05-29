@@ -2,13 +2,10 @@ package com.numberone.backend.domain.article.entity;
 
 import com.numberone.backend.config.basetime.BaseTimeEntity;
 import com.numberone.backend.domain.articleimage.entity.ArticleImage;
-import com.numberone.backend.domain.articleparticipant.entity.ArticleParticipant;
 import com.numberone.backend.domain.comment.entity.CommentEntity;
+import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
@@ -16,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Comment("동네생활 게시글 정보")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ARTICLE")
 public class Article extends BaseTimeEntity {
     @Id
@@ -28,9 +27,6 @@ public class Article extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<CommentEntity> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<ArticleParticipant> articleParticipants = new ArrayList<>();
 
     @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ArticleImage> articleImages = new ArrayList<>();
@@ -69,28 +65,30 @@ public class Article extends BaseTimeEntity {
     private Integer likeCount;
 
     @Comment("작성자 ID")
-    private Long articleOwnerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_owner_id")
+     private Member articleOwner;
 
-    @Builder
-    public Article(String title, String content, Long articleOwnerId, ArticleTag tag) {
-        this.title = title;
-        this.content = content;
-        this.articleOwnerId = articleOwnerId;
-        this.articleTag = tag;
-        this.articleStatus = ArticleStatus.ACTIVATED;
-        this.likeCount = 0;
-    }
-
-    public void updateArticleImage(List<ArticleImage> images, Long thumbNailImageUrlId) {
-        this.articleImages = images;
-        this.thumbNailImageUrlId = thumbNailImageUrlId;
+    public static Article of(String title, String content, Member owner, ArticleTag tag){
+        return Article.builder()
+                .title(title)
+                .content(content)
+                .articleOwner(owner)
+                .articleTag(tag)
+                .articleStatus(ArticleStatus.ACTIVATED)
+                .likeCount(0)
+                .build();
     }
 
     public void updateArticleStatus(ArticleStatus status) {
         this.articleStatus = status;
     }
 
-    public void modifyArticle(String title, String content, ArticleTag tag) {
+    public void updateThumbNailImageUrlId(Long thumbNailImageUrlId){
+        this.thumbNailImageUrlId = thumbNailImageUrlId;
+    }
+
+    public void modify(String title, String content, ArticleTag tag) {
         this.title = title;
         this.content = content;
         this.articleTag = tag;
@@ -98,13 +96,13 @@ public class Article extends BaseTimeEntity {
 
     public void updateAddress(String address) {
         this.address = address;
-    }
 
-    public void updateAddressDetail(String[] addressDetails) {
-        int length = addressDetails.length;
-        this.lv1 = length > 0 ? addressDetails[0] : "";
-        this.lv2 = length > 1 ? addressDetails[1] : "";
-        this.lv3 = length > 2 ? addressDetails[2] : "";
+        String [] tokens = address.split(" ");
+        int length = tokens.length;
+
+        this.lv1 = length > 0 ? tokens[0] : "";
+        this.lv2 = length > 1 ? tokens[1] : "";
+        this.lv3 = length > 2 ? tokens[2] : "";
     }
 
     public void increaseLikeCount() {
@@ -115,15 +113,6 @@ public class Article extends BaseTimeEntity {
         if (this.likeCount > 0) {
             this.likeCount--;
         }
-    }
-
-    public static Article of(String title, String content, Long articleOwnerId, ArticleTag tag) {
-        return Article.builder()
-                .title(title)
-                .content(content)
-                .articleOwnerId(articleOwnerId)
-                .tag(tag)
-                .build();
     }
 
 }

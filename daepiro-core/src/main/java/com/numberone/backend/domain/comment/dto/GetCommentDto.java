@@ -33,7 +33,6 @@ public class GetCommentDto {
     private String authorProfileImageUrl;
     private boolean isLiked;
 
-
     @QueryProjection
     public GetCommentDto(CommentEntity comment){
         if(!Objects.isNull(comment.getParent())){

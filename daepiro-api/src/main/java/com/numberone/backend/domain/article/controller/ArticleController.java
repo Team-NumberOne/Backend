@@ -7,6 +7,7 @@ import com.numberone.backend.domain.article.dto.response.*;
 import com.numberone.backend.domain.article.service.ArticleService;
 import com.numberone.backend.domain.comment.dto.request.CreateCommentRequest;
 import com.numberone.backend.domain.comment.dto.response.CreateCommentResponse;
+import com.numberone.backend.provider.security.SecurityContextProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,8 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<UploadArticleResponse> uploadArticle(@ModelAttribute @Valid UploadArticleRequest request) {
-        return ResponseEntity.created(URI.create("/api/articles"))
-                .body(articleService.uploadArticle(request));
+        Long userId = SecurityContextProvider.getAuthenticatedUserId();
+        return ResponseEntity.created(URI.create("/api/articles")).body(articleService.uploadArticle(request, userId));
     }
 
     @Operation(summary = "게시글을 삭제하는 API 입니다.", description = """
@@ -61,7 +62,8 @@ public class ArticleController {
             """)
     @GetMapping("{article-id}")
     public ResponseEntity<GetArticleDetailResponse> getArticleDetails(@PathVariable("article-id") Long articleId) {
-        return ResponseEntity.ok(articleService.getArticleDetail(articleId));
+        Long userId = SecurityContextProvider.getAuthenticatedUserId();
+        return ResponseEntity.ok(articleService.getArticleDetail(articleId, userId));
     }
 
 
@@ -84,11 +86,13 @@ public class ArticleController {
                        
              """)
     @GetMapping
-    public ResponseEntity<Slice<GetArticleListResponse>> getArticlePages(
+    public ResponseEntity<Slice<GetArticleListResponse>> getArticleList(
             Pageable pageable,
             @ModelAttribute ArticleSearchParameterDto paramDto) {
-        return ResponseEntity.ok(articleService.getArticleListPaging(paramDto.toParameter(), pageable));
+        Long userId = SecurityContextProvider.getAuthenticatedUserId();
+        return ResponseEntity.ok(articleService.getArticleList(userId, paramDto.toParameter(), pageable));
     }
+
 
     @Operation(summary = "게시글에 댓글 작성하기", description = """
             게시글에 댓글을 작성하는 API 입니다.
@@ -119,7 +123,5 @@ public class ArticleController {
             @RequestBody @Valid ModifyArticleRequest request) {
         return ResponseEntity.ok(articleService.modifyArticle(articleId, request));
     }
-
-    // todo: 게시글 신고 기능
 
 }
