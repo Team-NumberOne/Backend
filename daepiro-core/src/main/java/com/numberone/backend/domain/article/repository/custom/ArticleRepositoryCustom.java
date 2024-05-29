@@ -5,6 +5,11 @@ import com.numberone.backend.domain.article.dto.response.GetArticleListResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import java.util.Map;
+import java.util.Set;
+
 public interface ArticleRepositoryCustom {
-    Slice<GetArticleListResponse> getArticlesNoOffSetPaging(ArticleSearchParameter param, Pageable pageable);
+    Slice<GetArticleListResponse> findAllNoOffset(ArticleSearchParameter param, Pageable pageable);
+
+    Map<Long, Long> findCommentCountByArticleIdIn(Set<Long> articleIds);
 }

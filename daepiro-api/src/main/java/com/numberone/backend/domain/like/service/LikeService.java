@@ -41,14 +41,12 @@ public class LikeService {
     private final FcmMessageProvider fcmMessageProvider;
     private final NotificationRepository notificationRepository;
 
-    private final Integer BEST_ARTICLE_LIKE_COUNT = 20;
-
     @Transactional
     public Integer increaseArticleLike(Long articleId) {
         long principal = SecurityContextProvider.getAuthenticatedUserId();
         Member member = memberRepository.findById(principal)
                 .orElseThrow(NotFoundMemberException::new);
-        Article article = articleRepository.findById(articleId)
+        Article article = articleRepository.findByIdFetchJoin(articleId)
                 .orElseThrow(NotFoundApiException::new);
         if (isAlreadyLikedArticle(member, articleId)) {
             // 이미 좋아요를 누른 게시글입니다.
@@ -57,17 +55,14 @@ public class LikeService {
         article.increaseLikeCount();
         articleLikeRepository.save(new ArticleLike(member, article));
 
-        Long ownerId = article.getArticleOwnerId();
-        Member owner = memberRepository.findById(ownerId)
-                .orElseThrow(NotFoundMemberException::new);
-
+        Member articleOwner = article.getArticleOwner();
         String memberName = member.getNickName() != null ? member.getNickName() : member.getRealName();
         String title = String.format("""
                 나의 게시글에 %s님이 좋아요를 눌렀어요.""", memberName);
         String body = "대피로에 접속하여 확인하세요!";
-        fcmMessageProvider.sendFcm(owner.getFcmToken(), title, body);
+        fcmMessageProvider.sendFcm(articleOwner.getFcmToken(), title, body);
         notificationRepository.save(
-                new NotificationEntity(owner, NotificationTag.COMMUNITY, title, body, true)
+                new NotificationEntity(articleOwner, NotificationTag.COMMUNITY, title, body, true)
         );
 
         return article.getLikeCount();
