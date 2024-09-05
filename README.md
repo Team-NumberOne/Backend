@@ -1,5 +1,4 @@
 ### Infra Architecture
-
 <img width="1610" alt="image" src="https://github.com/Team-NumberOne/Backend/assets/96612168/022eed65-53e6-43a6-914f-8fc2e743791c">
 
 
