@@ -62,11 +62,12 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
         List<Tuple> tuples = queryFactory.select(article.id, commentEntity.count())
                 .from(article)
                 .leftJoin(article.comments, commentEntity)
+                .groupBy(article.id)
                 .fetch();
 
         HashMap<Long, Long> result = new HashMap<>();
         for (Tuple tuple : tuples) {
-            result.put(tuple.get(article.id), tuple.get(commentEntity.count()));
+            result.put(tuple.get(0, Long.class), tuple.get(1, Long.class));
         }
         return result;
     }
