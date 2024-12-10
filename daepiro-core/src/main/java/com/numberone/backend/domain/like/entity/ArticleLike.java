@@ -5,6 +5,7 @@ import com.numberone.backend.domain.article.entity.Article;
 import com.numberone.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -26,8 +27,16 @@ public class ArticleLike extends BaseTimeEntity {
 
     private Long articleId;
 
-    public ArticleLike(Member member, Article article){
+    @Builder
+    private ArticleLike(Member member, Article article){
         this.member = member;
         this.articleId = article.getId();
+    }
+
+    public static ArticleLike of(Member member, Article article) {
+        return ArticleLike.builder()
+                .member(member)
+                .article(article)
+                .build();
     }
 }

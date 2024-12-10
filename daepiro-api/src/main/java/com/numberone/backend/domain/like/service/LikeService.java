@@ -13,12 +13,10 @@ import com.numberone.backend.domain.member.repository.MemberRepository;
 import com.numberone.backend.domain.notification.entity.NotificationEntity;
 import com.numberone.backend.domain.notification.entity.NotificationTag;
 import com.numberone.backend.domain.notification.repository.NotificationRepository;
+import com.numberone.backend.exception.notfound.*;
 import com.numberone.backend.provider.security.SecurityContextProvider;
 import com.numberone.backend.exception.conflict.AlreadyLikedException;
 import com.numberone.backend.exception.conflict.AlreadyUnLikedException;
-import com.numberone.backend.exception.notfound.NotFoundApiException;
-import com.numberone.backend.exception.notfound.NotFoundCommentException;
-import com.numberone.backend.exception.notfound.NotFoundMemberException;
 import com.numberone.backend.provider.fcm.service.FcmMessageProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,17 +41,16 @@ public class LikeService {
 
     @Transactional
     public Integer increaseArticleLike(Long articleId) {
-        long principal = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(principal)
+        Long memberId = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findByIdFetchJoin(articleId)
-                .orElseThrow(NotFoundApiException::new);
-        if (isAlreadyLikedArticle(member, articleId)) {
-            // 이미 좋아요를 누른 게시글입니다.
+                .orElseThrow(NotFoundArticleException::new);
+
+        if (isAlreadyLikedArticle(memberId, articleId))
             throw new AlreadyLikedException();
-        }
         article.increaseLikeCount();
-        articleLikeRepository.save(new ArticleLike(member, article));
+        articleLikeRepository.save(ArticleLike.of(member, article));
 
         Member articleOwner = article.getArticleOwner();
         String memberName = member.getNickName() != null ? member.getNickName() : member.getRealName();
@@ -70,40 +67,35 @@ public class LikeService {
 
     @Transactional
     public Integer decreaseArticleLike(Long articleId) {
-        long principal = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(principal)
+        Long memberId = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundApiException::new);
-        if (!isAlreadyLikedArticle(member, articleId)) {
-            // 좋아요를 누르지 않은 게시글이라 취소할 수 없습니다.
+        if (!isAlreadyLikedArticle(member.getId(), articleId))
             throw new AlreadyUnLikedException();
-        }
-        article.decreaseLikeCount();
 
         // 사용자의 게시글 좋아요 목록에서 제거
-        List<ArticleLike> articleLikeList = articleLikeRepository.findByMember(member);
-        articleLikeList.forEach(articleLike -> {
-            if (articleLike.getArticleId().equals(articleId))
-                articleLikeRepository.delete(articleLike);
-        });
+        article.decreaseLikeCount();
+        ArticleLike articleLike = articleLikeRepository.findByMemberIdAndArticleId(memberId, articleId)
+                .orElseThrow(NotFoundArticleLikeException::new);
+        articleLikeRepository.delete(articleLike);
 
         return article.getLikeCount();
     }
 
     @Transactional
     public Integer increaseCommentLike(Long commentId) {
-        long principal = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(principal)
+        Long memberId = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
-        if (isAlreadyLikedComment(member, commentId)) {
-            // 이미 좋아요를 누른 댓글입니다.
+        if (isAlreadyLikedComment(member.getId(), commentId))
             throw new AlreadyLikedException();
-        }
+
         commentEntity.increaseLikeCount();
-        commentLikeRepository.save(new CommentLike(member, commentEntity));
+        commentLikeRepository.save(CommentLike.of(member, commentEntity));
 
 
         Long ownerId = commentEntity.getAuthorId();
@@ -124,34 +116,27 @@ public class LikeService {
 
     @Transactional
     public Integer decreaseCommentLike(Long commentId) {
-        long principal = SecurityContextProvider.getAuthenticatedUserId();
-        Member member = memberRepository.findById(principal)
+        long memberId = SecurityContextProvider.getAuthenticatedUserId();
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         CommentEntity commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
-        if (!isAlreadyLikedComment(member, commentId)) {
-            // 좋아요를 누르지 않은 댓글이라 좋아요를 취소할 수 없습니다.
+        if (!isAlreadyLikedComment(member.getId(), commentId))
             throw new AlreadyUnLikedException();
-        }
+
         commentEntity.decreaseLikeCount();
-        // 사용자의 댓글 좋아요 목록에서 제거
-        List<CommentLike> commentLikeList = commentLikeRepository.findByMember(member);
-        commentLikeList.forEach(commentLike -> {
-            if (commentLike.getCommentId().equals(commentId))
-                commentLikeRepository.delete(commentLike);
-        });
+        CommentLike commentLike = commentLikeRepository.findByMemberIdAndCommentId(memberId, commentId)
+                .orElseThrow(NotFoundCommentLikeException::new);
+        commentLikeRepository.delete(commentLike);
 
         return commentEntity.getLikeCount();
     }
 
-    private boolean isAlreadyLikedArticle(Member member, Long articleId) {
-        return articleLikeRepository.findByMember(member).stream()
-                .anyMatch(articleLike -> articleLike.getArticleId().equals(articleId));
+    private boolean isAlreadyLikedArticle(Long memberId, Long articleId) {
+        return articleLikeRepository.existsByMemberIdAndArticleId(memberId, articleId);
     }
 
-    private boolean isAlreadyLikedComment(Member member, Long commentId) {
-        return commentLikeRepository.findByMember(member).stream()
-                .anyMatch(commentLike -> commentLike.getCommentId().equals(commentId));
+    private boolean isAlreadyLikedComment(Long memberId, Long commentId) {
+        return commentLikeRepository.existsByMemberIdAndCommentId(memberId, commentId);
     }
-
 }

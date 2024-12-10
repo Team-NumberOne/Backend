@@ -42,6 +42,7 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     // article 관련 예외
     NOT_FOUND_ARTICLE("해당 게시글을 찾을 수 없습니다.", 8000),
+    NOT_FOUND_ARTICLE_LIKE("해당 게시글의 좋아요를 찾을 수 없습니다.", 8001),
 
     // article image 관련 예외
     NOT_FOUND_ARTICLE_IMAGE("해당 이미지를 찾을 수 없습니다.", 9000),
@@ -49,6 +50,7 @@ public enum CustomExceptionContext implements ExceptionContext {
 
     // comment 관련 예외
     NOT_FOUND_COMMENT("해당 댓글을 찾을 수 없습니다.", 10000),
+    NOT_FOUND_COMMENT_LIKE("해당 댓글의 좋아요를 찾을 수 없습니다.", 10001),
 
     // like 관련 예외
     ALREADY_LIKED_ERROR("이미 좋아요 처리된 엔티티입니다.", 11000),
